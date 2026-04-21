@@ -1,0 +1,53 @@
+## Pages
+- [- Admin IWS](/admincontents): No description available
+- [- Admin IWS](/admindashboard): No description available
+- [- Admin IWS](/adminpayments): No description available
+- [- Admin IWS](/adminsettings): No description available
+- [- Admin IWS](/notifications): No description available
+- [- CRM - IWS Smart Platform`}](/clientdetail): Client details and interaction history
+- [- IWS LAAYOUNE](/contact): No description available
+- [- IWS LAAYOUNE](/courseslist): No description available
+- [- IWS LAAYOUNE](/courses): No description available
+- [- IWS LAAYOUNE](/dashboard): No description available
+- [- IWS LAAYOUNE](/entreprise): No description available
+- [- IWS LAAYOUNE](/hostingerfaq): No description available
+- [- IWS LAAYOUNE](/hostingeroffers): No description available
+- [- IWS LAAYOUNE](/legal): No description available
+- [- IWS LAAYOUNE](/login): No description available
+- [- IWS LAAYOUNE](/orders): No description available
+- [- IWS LAAYOUNE](/profile): No description available
+- [- IWS LAAYOUNE](/resetpassword): No description available
+- [- IWS LAAYOUNE](/services): No description available
+- [- IWS LAAYOUNE](/settings): No description available
+- [- IWS LAAYOUNE](/store): No description available
+- [- IWS LAAYOUNE](/studio): No description available
+- [- IWS LAAYOUNE](/terms): No description available
+- [- IWS Smart Platform](/artistdashboard): No description available
+- [- IWS Smart Platform](/studentdashboard): No description available
+- [- IWS Smart Platform`}](/artistprofile): No description available
+- [- Our Store](/productdetail): No description available
+- [—](/adminformationsub): No description available
+- [— IWS Admin](/adminformation): No description available
+- [· Fiche étudiant` : 'Chargement...'} - Admin IWS](/adminstudentdetail): No description available
+- [Artists Gallery - IWS Smart Platform](/artistgallery): Discover talented artists and their music
+- [Book Studio Session - IWS Interwebservice](/studioreservation): Reserve a studio session for your next project
+- [Catalogue des formations — IWS](/coursecatalog): No description available
+- [Check Your Email - IWS Smart Platform](/passwordrecovery): No description available
+- [Client Dashboard - IWS Smart Platform](/clientdashboard): Manage your studio reservations and bookings
+- [Contactez-nous - IWS LAAYOUNE](/hostingercontact): No description available
+- [CRM Clients - IWS Smart Platform](/crmclients): Manage client relationships
+- [Formations - Admin IWS](/admincourses): No description available
+- [IWS LAAYOUNE -](/home): No description available
+- [Manage Artists - Admin - IWS Smart Platform](/adminartists): Manage artist profiles
+- [Manage Reservations - Admin - IWS Smart Platform](/adminreservations): Manage studio reservations
+- [Manage Services - Admin - IWS Smart Platform](/adminservices): Manage studio services
+- [Mes Formations — IWS](/studentcourses): No description available
+- [My Progress - IWS Smart Platform](/courseprogress): Track your learning progress across all courses
+- [My Reservations - IWS Smart Platform](/clientreservations): View and manage your studio reservations
+- [My Uploads - IWS Smart Platform](/artistuploads): Manage your music uploads
+- [Paiement —](/coursepayment): No description available
+- [Paiements Formation — IWS Admin](/adminformationpayments): No description available
+- [Payment Successful - IWS Smart Platform](/paymentsuccess): Your payment was successful. Thank you for your purchase!
+- [Reservation Confirmed - IWS Smart Platform](/reservationconfirmation): Your studio reservation has been confirmed
+- [Untitled Page](/approvalredirect): No description available
+- [Vérification Email - IWS Smart Platform](/verifyemail): No description available

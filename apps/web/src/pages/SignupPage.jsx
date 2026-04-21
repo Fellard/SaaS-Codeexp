@@ -1,0 +1,753 @@
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
+import { useAuth } from '@/contexts/AuthContext.jsx';
+import { useTranslation } from '@/i18n/useTranslation.js';
+import { useLanguage } from '@/hooks/useLanguage.jsx';
+import pb from '@/lib/pocketbaseClient';
+import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  User, Briefcase, Music, BookOpen, ShieldCheck, Eye, EyeOff,
+  ArrowLeft, ArrowRight, Check, Languages, Monitor, Code2, Star, Clock,
+  CreditCard, Lock, Gift, AlertCircle,
+} from 'lucide-react';
+import apiServerClient from '@/lib/apiServerClient';
+
+// ── Role config ──────────────────────────────────────────────────
+const ROLES = [
+  { value: 'client',    label: 'Client',        icon: User,        desc: 'Accédez à nos services et produits' },
+  { value: 'etudiant',  label: 'Étudiant',       icon: BookOpen,    desc: 'Suivez nos formations en ligne' },
+  { value: 'musicien',  label: 'Musicien',       icon: Music,       desc: 'Réservez le studio et partagez votre musique' },
+  { value: 'admin',     label: 'Administrateur', icon: ShieldCheck, desc: 'Accès soumis à validation par notre équipe' },
+];
+
+// ── Programme config (etudiant only) ────────────────────────────
+const PROGRAMMES = {
+  langues: {
+    label: 'Langues',
+    icon: Languages,
+    gradient: 'from-blue-600 to-sky-500',
+    bg: 'bg-blue-50',
+    border: 'border-blue-200',
+    subtitle: 'Français · Anglais · Arabe · Espagnol',
+    defaultCours: ['Français', 'Anglais', 'Arabe Marocain', 'Espagnol', 'Anglais des affaires'],
+    categories: ['langue', 'langues', 'français', 'anglais', 'arabe', 'espagnol'],
+    niveaux: [
+      { value: 'A1', label: 'A1 — Débutant' },
+      { value: 'A2', label: 'A2 — Élémentaire' },
+      { value: 'B1', label: 'B1 — Intermédiaire' },
+      { value: 'B2', label: 'B2 — Intermédiaire avancé' },
+      { value: 'C1', label: 'C1 — Avancé' },
+      { value: 'C2', label: 'C2 — Maîtrise' },
+    ],
+  },
+  informatique: {
+    label: 'Informatique',
+    icon: Monitor,
+    gradient: 'from-green-600 to-emerald-500',
+    bg: 'bg-green-50',
+    border: 'border-green-200',
+    subtitle: 'Bureautique · Réseaux · Maintenance',
+    defaultCours: ['Bureautique (Word / Excel)', 'Maintenance informatique', 'Réseaux & Infrastructure', 'Graphisme (Photoshop)', 'Administration Windows'],
+    categories: ['informatique', 'bureautique', 'maintenance', 'réseau', 'graphisme'],
+    niveaux: [
+      { value: 'Débutant', label: 'Débutant' },
+      { value: 'Intermédiaire', label: 'Intermédiaire' },
+      { value: 'Avancé', label: 'Avancé' },
+    ],
+  },
+  programmation: {
+    label: 'Programmation',
+    icon: Code2,
+    gradient: 'from-purple-600 to-indigo-500',
+    bg: 'bg-purple-50',
+    border: 'border-purple-200',
+    subtitle: 'Web · Mobile · Python · JavaScript',
+    defaultCours: ['HTML / CSS', 'JavaScript', 'React.js', 'Python', 'Développement Mobile', 'Node.js / Express'],
+    categories: ['programmation', 'développement', 'web', 'mobile', 'python', 'javascript'],
+    niveaux: [
+      { value: 'Débutant', label: 'Débutant' },
+      { value: 'Intermédiaire', label: 'Intermédiaire' },
+      { value: 'Avancé', label: 'Avancé' },
+    ],
+  },
+};
+
+const DEFAULT_PRICES = {
+  langues:       { A1: 600, A2: 650, B1: 700, B2: 750, C1: 800, C2: 850 },
+  informatique:  { Débutant: 700, Intermédiaire: 800, Avancé: 950 },
+  programmation: { Débutant: 800, Intermédiaire: 950, Avancé: 1100 },
+};
+
+// ── Main component ───────────────────────────────────────────────
+const SignupPage = () => {
+  const [step, setStep] = useState(1); // 1=rôle, 2=formulaire, 3=formation (étudiant), 4=coordonnées bancaires
+
+  // Common fields
+  const [role, setRole]                   = useState('');
+  const [name, setName]                   = useState('');
+  const [email, setEmail]                 = useState('');
+  const [phone, setPhone]                 = useState('');
+  const [company, setCompany]             = useState('');
+  const [password, setPassword]           = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword]   = useState(false);
+  const [loading, setLoading]             = useState(false);
+
+  // Formation fields (étudiant only)
+  const [programme, setProgramme]         = useState('');
+  // Bank details fields (étudiant only — step 4)
+  const [cardHolder, setCardHolder]       = useState('');
+  const [cardNumber, setCardNumber]       = useState('');
+  const [cardExpiry, setCardExpiry]       = useState('');
+  const [cardCvv, setCardCvv]             = useState('');
+  const [bankLoading, setBankLoading]     = useState(false);
+  const [cours, setCours]                 = useState('');
+  const [niveau, setNiveau]               = useState('');
+  const [pbCourses, setPbCourses]         = useState([]);
+  const [autoPrice, setAutoPrice]         = useState(null);
+
+  const { signup } = useAuth();
+  const navigate   = useNavigate();
+  const { t }      = useTranslation();
+  const { language } = useLanguage();
+  const isRtl      = language?.startsWith('ar');
+
+  const selectedRole  = ROLES.find(r => r.value === role);
+  const progCfg       = programme ? PROGRAMMES[programme] : null;
+
+  const handleRoleSelect = (r) => { setRole(r); setStep(2); };
+
+  // Fetch courses when programme changes
+  useEffect(() => {
+    if (!programme) return;
+    const fetch = async () => {
+      try {
+        const all = await pb.collection('courses').getFullList({ requestKey: null });
+        const cfg = PROGRAMMES[programme];
+        const filtered = all.filter(c => {
+          const cat = (c.categorie || c.category || c.section || '').toLowerCase();
+          return cfg.categories.some(k => cat.includes(k));
+        });
+        setPbCourses(filtered);
+      } catch { /* ignore */ }
+    };
+    fetch();
+  }, [programme]);
+
+  // Auto-price
+  useEffect(() => {
+    if (!programme || !niveau) { setAutoPrice(null); return; }
+    const matched = pbCourses.find(c =>
+      (c.titre || c.title || '').toLowerCase().includes(cours.toLowerCase()) && cours.length > 0
+    );
+    setAutoPrice(
+      (matched?.prix || matched?.price) || DEFAULT_PRICES[programme]?.[niveau] || null
+    );
+  }, [cours, niveau, programme, pbCourses]);
+
+  // ── Step 2: basic info → validate → if student go to step 3 ──
+  const handleStep2Next = (e) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      toast.error('Les mots de passe ne correspondent pas');
+      return;
+    }
+    if (password.length < 8) {
+      toast.error('Le mot de passe doit contenir au moins 8 caractères');
+      return;
+    }
+    if (role === 'etudiant') {
+      setStep(3); // go to programme selection
+    } else {
+      handleSubmitFinal();
+    }
+  };
+
+  // ── Final submit ─────────────────────────────────────────────
+  const handleSubmitFinal = async () => {
+    setLoading(true);
+    try {
+      if (role === 'admin') {
+        const response = await apiServerClient.fetch('/auth/request-admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password, phone, company }),
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Erreur lors de la demande');
+        toast.success('Demande envoyée ! Vous recevrez un email après validation.');
+        navigate('/pending-approval');
+      } else {
+        // Standard registration
+        const response = await apiServerClient.fetch('/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password, role }),
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Erreur lors de l\'inscription');
+
+        try {
+          await signup(email, password, name, role);
+        } catch {
+          toast.success('Compte créé ! Connectez-vous maintenant.');
+          navigate('/login');
+          return;
+        }
+
+        // For student: save formation fields + bank details (no pending order — 5 first courses are free)
+        if (role === 'etudiant' && programme && cours && niveau) {
+          try {
+            const userId = pb.authStore.model?.id;
+            if (userId) {
+              const last4 = cardNumber.replace(/\s/g, '').slice(-4);
+              await pb.collection('users').update(userId, {
+                section: programme,
+                current_course: cours,
+                Level: niveau,
+                phone: phone || null,
+                // Store masked card info (no CVV stored)
+                bank_card_holder: cardHolder || null,
+                bank_card_last4: last4 || null,
+                bank_card_expiry: cardExpiry || null,
+                payment_method_saved: true,
+              }, { requestKey: null });
+              // NOTE: No pending order created — the first 5 courses are FREE.
+              // The order will be created automatically after the 5th free course.
+            }
+          } catch { /* non-blocking */ }
+        }
+
+        toast.success('Bienvenue ! Votre compte a été créé avec succès.');
+        navigate('/dashboard');
+      }
+    } catch (error) {
+      toast.error(error.message || 'Une erreur est survenue');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleStep3Submit = (e) => {
+    e.preventDefault();
+    if (!programme || !cours || !niveau) {
+      toast.error('Veuillez sélectionner un programme, un cours et un niveau');
+      return;
+    }
+    // Go to bank details step before final submit
+    setStep(4);
+  };
+
+  // ── Step 4: bank details → final submit ──────────────────────
+  const handleStep4Submit = async (e) => {
+    e.preventDefault();
+    if (!cardHolder.trim() || cardNumber.replace(/\s/g, '').length < 16 || !cardExpiry || cardCvv.length < 3) {
+      toast.error('Veuillez renseigner vos coordonnées bancaires complètes');
+      return;
+    }
+    handleSubmitFinal();
+  };
+
+  // Course options
+  const coursOptions = progCfg
+    ? [
+        ...progCfg.defaultCours,
+        ...pbCourses
+          .map(c => c.titre || c.title)
+          .filter(t => t && !progCfg.defaultCours.some(d => d.toLowerCase() === t.toLowerCase())),
+      ]
+    : [];
+
+  return (
+    <>
+      <Helmet>
+        <title>Créer un compte — IWS LAAYOUNE</title>
+      </Helmet>
+      <div className="min-h-screen flex items-center justify-center bg-muted p-4" dir={isRtl ? 'rtl' : 'ltr'}>
+        <div className="w-full max-w-lg">
+          <Link to="/" className="inline-flex items-center gap-2 text-accent hover:text-accent/80 transition-colors mb-6 text-sm font-medium">
+            <ArrowLeft className="w-4 h-4" /> Retour à l'accueil
+          </Link>
+
+          <div className="bg-card rounded-2xl shadow-xl border border-border overflow-hidden">
+            {/* Header */}
+            <div className="bg-primary px-8 py-6 text-center">
+              <h1 className="text-2xl font-bold text-white">Créer votre compte</h1>
+              <p className="text-white/70 text-sm mt-1">IWS LAAYOUNE — Plateforme digitale</p>
+            </div>
+
+            <div className="p-8">
+
+              {/* ── Étape 1 : Choix du rôle ──────────────────────── */}
+              {step === 1 && (
+                <div className="space-y-4">
+                  <p className="text-sm text-muted-foreground text-center mb-6">
+                    Choisissez le type de compte qui correspond à votre profil
+                  </p>
+                  {ROLES.map(({ value, label, icon: Icon, desc }) => (
+                    <button
+                      key={value}
+                      onClick={() => handleRoleSelect(value)}
+                      className="w-full flex items-center gap-4 p-4 rounded-xl border-2 border-border hover:border-accent hover:bg-accent/5 transition-all text-left group"
+                    >
+                      <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-accent/10 transition-colors">
+                        <Icon className="w-6 h-6 text-primary group-hover:text-accent transition-colors" />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-primary">{label}</div>
+                        <div className="text-sm text-muted-foreground">{desc}</div>
+                      </div>
+                      {value === 'admin' && (
+                        <span className="ml-auto text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded-full font-medium">
+                          Validation requise
+                        </span>
+                      )}
+                      {value === 'etudiant' && (
+                        <span className="ml-auto text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-medium">
+                          + Choix formation
+                        </span>
+                      )}
+                    </button>
+                  ))}
+                  <div className="text-center mt-6 text-sm text-muted-foreground">
+                    Déjà inscrit ?{' '}
+                    <Link to="/login" className="text-accent hover:underline font-medium">Se connecter</Link>
+                  </div>
+                </div>
+              )}
+
+              {/* ── Étape 2 : Formulaire principal ───────────────── */}
+              {step === 2 && (
+                <div>
+                  <button
+                    onClick={() => setStep(1)}
+                    className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary mb-5 transition-colors"
+                  >
+                    <ArrowLeft className="w-4 h-4" /> Changer de type de compte
+                  </button>
+
+                  {/* Badge rôle */}
+                  {selectedRole && (
+                    <div className="flex items-center gap-3 p-3 rounded-xl bg-accent/10 border border-accent/20 mb-5">
+                      <selectedRole.icon className="w-5 h-5 text-accent" />
+                      <div>
+                        <span className="font-semibold text-primary text-sm">{selectedRole.label}</span>
+                        {role === 'admin' && (
+                          <p className="text-xs text-muted-foreground mt-0.5">
+                            Votre demande sera examinée par notre équipe.
+                          </p>
+                        )}
+                        {role === 'etudiant' && (
+                          <p className="text-xs text-muted-foreground mt-0.5">
+                            L'étape suivante vous permettra de choisir votre formation.
+                          </p>
+                        )}
+                      </div>
+                      {role === 'etudiant' && (
+                        <span className="ml-auto text-xs text-muted-foreground opacity-60 shrink-0">1/3</span>
+                      )}
+                    </div>
+                  )}
+
+                  <form onSubmit={handleStep2Next} className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="name">Nom complet *</Label>
+                        <Input
+                          id="name" required value={name}
+                          onChange={e => setName(e.target.value)}
+                          placeholder="Votre nom et prénom"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="email">Adresse email *</Label>
+                        <Input
+                          id="email" type="email" required value={email}
+                          onChange={e => setEmail(e.target.value)}
+                          placeholder="vous@exemple.com"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Phone for students and admin */}
+                    {(role === 'etudiant' || role === 'admin') && (
+                      <div className="space-y-2">
+                        <Label htmlFor="phone">Téléphone {role === 'etudiant' ? '' : ''}</Label>
+                        <Input
+                          id="phone" value={phone}
+                          onChange={e => setPhone(e.target.value)}
+                          placeholder="+212 6XX XXX XXX"
+                        />
+                      </div>
+                    )}
+
+                    {/* Company for admin */}
+                    {role === 'admin' && (
+                      <div className="space-y-2">
+                        <Label htmlFor="company">Entreprise / Organisation</Label>
+                        <Input
+                          id="company" value={company}
+                          onChange={e => setCompany(e.target.value)}
+                          placeholder="Nom de votre société"
+                        />
+                      </div>
+                    )}
+
+                    <div className="space-y-2">
+                      <Label htmlFor="password">Mot de passe *</Label>
+                      <div className="relative">
+                        <Input
+                          id="password"
+                          type={showPassword ? 'text' : 'password'}
+                          required value={password}
+                          onChange={e => setPassword(e.target.value)}
+                          placeholder="Minimum 8 caractères"
+                          className="pr-10"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary"
+                        >
+                          {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="confirmPassword">Confirmer le mot de passe *</Label>
+                      <Input
+                        id="confirmPassword"
+                        type="password" required value={confirmPassword}
+                        onChange={e => setConfirmPassword(e.target.value)}
+                        placeholder="Répétez votre mot de passe"
+                        className={confirmPassword && confirmPassword !== password ? 'border-red-400' : ''}
+                      />
+                      {confirmPassword && confirmPassword !== password && (
+                        <p className="text-xs text-red-500">Les mots de passe ne correspondent pas</p>
+                      )}
+                    </div>
+
+                    <Button
+                      type="submit"
+                      className="w-full bg-accent hover:bg-accent/90 text-primary font-bold h-12 text-base mt-2"
+                    >
+                      {role === 'admin'
+                        ? 'Soumettre ma demande'
+                        : role === 'etudiant'
+                          ? <span className="flex items-center gap-2">Étape suivante : Choisir ma formation <ArrowRight className="w-4 h-4" /></span>
+                          : 'Créer mon compte'}
+                    </Button>
+
+                    <p className="text-xs text-center text-muted-foreground">
+                      En créant un compte, vous acceptez nos{' '}
+                      <Link to="/terms" className="text-accent hover:underline">conditions d'utilisation</Link>
+                    </p>
+                  </form>
+
+                  <div className="text-center mt-4 text-sm text-muted-foreground">
+                    Déjà inscrit ?{' '}
+                    <Link to="/login" className="text-accent hover:underline font-medium">Se connecter</Link>
+                  </div>
+                </div>
+              )}
+
+              {/* ── Étape 3 : Choix de la formation (étudiant) ────── */}
+              {step === 3 && role === 'etudiant' && (
+                <div>
+                  <button
+                    onClick={() => setStep(2)}
+                    className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary mb-5 transition-colors"
+                  >
+                    <ArrowLeft className="w-4 h-4" /> Retour
+                  </button>
+
+                  <div className="flex items-center gap-3 p-3 rounded-xl bg-accent/10 border border-accent/20 mb-5">
+                    <BookOpen className="w-5 h-5 text-accent" />
+                    <div>
+                      <span className="font-semibold text-primary text-sm">Choisissez votre formation</span>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        Étape 2/3 — Ensuite vous renseignerez vos coordonnées bancaires
+                      </p>
+                    </div>
+                    <span className="ml-auto text-xs text-muted-foreground opacity-60 shrink-0">2/3</span>
+                  </div>
+
+                  <form onSubmit={handleStep3Submit} className="space-y-5">
+
+                    {/* Programme selection */}
+                    <div className="space-y-2">
+                      <Label className="font-semibold">Programme *</Label>
+                      <div className="grid grid-cols-1 gap-2">
+                        {Object.entries(PROGRAMMES).map(([key, cfg]) => {
+                          const Icon = cfg.icon;
+                          return (
+                            <button
+                              key={key}
+                              type="button"
+                              onClick={() => { setProgramme(key); setCours(''); setNiveau(''); }}
+                              className={`flex items-center gap-3 p-3 rounded-xl border-2 text-left transition-all ${
+                                programme === key
+                                  ? 'border-primary bg-primary/5'
+                                  : 'border-border hover:border-primary/40'
+                              }`}
+                            >
+                              <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${cfg.gradient} flex items-center justify-center flex-shrink-0`}>
+                                <Icon className="w-5 h-5 text-white" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="font-semibold text-foreground text-sm">{cfg.label}</p>
+                                <p className="text-xs text-muted-foreground truncate">{cfg.subtitle}</p>
+                              </div>
+                              {programme === key && <Check className="w-5 h-5 text-primary flex-shrink-0" />}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Cours (shown after programme selected) */}
+                    {programme && progCfg && (
+                      <div className="space-y-2">
+                        <Label className="font-semibold">Cours souhaité *</Label>
+                        <div className="grid grid-cols-1 gap-1.5 max-h-48 overflow-y-auto pr-1">
+                          {coursOptions.map(c => (
+                            <button
+                              key={c}
+                              type="button"
+                              onClick={() => setCours(c)}
+                              className={`flex items-center gap-2 px-3 py-2.5 rounded-lg border text-sm text-left transition-all ${
+                                cours === c
+                                  ? 'border-primary bg-primary/5 font-semibold text-primary'
+                                  : 'border-border hover:border-primary/40 text-foreground'
+                              }`}
+                            >
+                              <BookOpen className={`w-3.5 h-3.5 flex-shrink-0 ${cours === c ? 'text-primary' : 'text-muted-foreground'}`} />
+                              {c}
+                              {cours === c && <Check className="w-3.5 h-3.5 ml-auto text-primary" />}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Niveau (shown after cours selected) */}
+                    {cours && progCfg && (
+                      <div className="space-y-2">
+                        <Label className="font-semibold">Niveau *</Label>
+                        <div className="grid grid-cols-2 gap-2">
+                          {progCfg.niveaux.map(n => (
+                            <button
+                              key={n.value}
+                              type="button"
+                              onClick={() => setNiveau(n.value)}
+                              className={`px-3 py-2 rounded-lg border-2 text-sm font-medium transition-all ${
+                                niveau === n.value
+                                  ? 'border-primary bg-primary text-primary-foreground'
+                                  : 'border-border hover:border-primary/40 text-foreground'
+                              }`}
+                            >
+                              <Star className="w-3 h-3 inline mr-1 opacity-60" />
+                              {n.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Prix auto */}
+                    {cours && niveau && autoPrice && (
+                      <div className={`rounded-xl ${progCfg?.bg || 'bg-muted'} border ${progCfg?.border || 'border-border'} p-4 flex items-center justify-between`}>
+                        <div>
+                          <p className="text-sm font-semibold text-foreground">{cours}</p>
+                          <p className="text-xs text-muted-foreground">{niveau} · {progCfg?.label}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-xs text-muted-foreground">Frais de formation</p>
+                          <p className="text-2xl font-black text-primary">{autoPrice} <span className="text-sm font-normal">MAD</span></p>
+                        </div>
+                      </div>
+                    )}
+
+                    <Button
+                      type="submit"
+                      disabled={!programme || !cours || !niveau}
+                      className="w-full bg-accent hover:bg-accent/90 text-primary font-bold h-12 text-base"
+                    >
+                      <span className="flex items-center gap-2">
+                        Étape suivante : Coordonnées bancaires <ArrowRight className="w-4 h-4" />
+                      </span>
+                    </Button>
+                  </form>
+
+                  <div className="text-center mt-4 text-sm text-muted-foreground">
+                    Déjà inscrit ?{' '}
+                    <Link to="/login" className="text-accent hover:underline font-medium">Se connecter</Link>
+                  </div>
+                </div>
+              )}
+
+              {/* ── Étape 4 : Coordonnées bancaires (étudiant) ────── */}
+              {step === 4 && role === 'etudiant' && (
+                <div>
+                  <button
+                    onClick={() => setStep(3)}
+                    className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary mb-5 transition-colors"
+                  >
+                    <ArrowLeft className="w-4 h-4" /> Retour
+                  </button>
+
+                  <div className="flex items-center gap-3 p-3 rounded-xl bg-accent/10 border border-accent/20 mb-4">
+                    <CreditCard className="w-5 h-5 text-accent" />
+                    <div>
+                      <span className="font-semibold text-primary text-sm">Coordonnées bancaires</span>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        Étape 3/3 — Dernière étape avant la création de votre compte
+                      </p>
+                    </div>
+                    <span className="ml-auto text-xs text-muted-foreground opacity-60 shrink-0">3/3</span>
+                  </div>
+
+                  {/* Free tier notice — prominent */}
+                  <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-5">
+                    <div className="flex items-start gap-3">
+                      <div className="w-9 h-9 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
+                        <Gift className="w-5 h-5 text-emerald-600" />
+                      </div>
+                      <div>
+                        <p className="font-bold text-emerald-800 text-sm">🎁 Vos 5 premiers cours sont GRATUITS</p>
+                        <p className="text-xs text-emerald-700 mt-1 leading-relaxed">
+                          Aucun débit ne sera effectué sur votre carte pendant vos 5 premiers cours gratuits.
+                          Vos coordonnées bancaires seront uniquement utilisées <strong>après la fin de la période gratuite</strong>.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-5 flex items-start gap-2">
+                    <Lock className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                    <p className="text-xs text-amber-700">
+                      Vos informations sont chiffrées et sécurisées. Seuls les 4 derniers chiffres de votre carte sont conservés.
+                    </p>
+                  </div>
+
+                  <form onSubmit={handleStep4Submit} className="space-y-4">
+                    {/* Card holder */}
+                    <div className="space-y-1.5">
+                      <Label htmlFor="cardHolder">Titulaire de la carte *</Label>
+                      <Input
+                        id="cardHolder"
+                        required
+                        value={cardHolder}
+                        onChange={e => setCardHolder(e.target.value)}
+                        placeholder="NOM PRÉNOM (comme sur la carte)"
+                        className="uppercase"
+                      />
+                    </div>
+
+                    {/* Card number */}
+                    <div className="space-y-1.5">
+                      <Label htmlFor="cardNumber">Numéro de carte *</Label>
+                      <div className="relative">
+                        <Input
+                          id="cardNumber"
+                          required
+                          value={cardNumber}
+                          onChange={e => {
+                            // Format as groups of 4
+                            const v = e.target.value.replace(/\D/g, '').slice(0, 16);
+                            setCardNumber(v.replace(/(.{4})/g, '$1 ').trim());
+                          }}
+                          placeholder="1234 5678 9012 3456"
+                          maxLength={19}
+                          className="pl-10"
+                        />
+                        <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      </div>
+                    </div>
+
+                    {/* Expiry + CVV */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="space-y-1.5">
+                        <Label htmlFor="cardExpiry">Date d'expiration *</Label>
+                        <Input
+                          id="cardExpiry"
+                          required
+                          value={cardExpiry}
+                          onChange={e => {
+                            const v = e.target.value.replace(/\D/g, '').slice(0, 4);
+                            setCardExpiry(v.length > 2 ? `${v.slice(0,2)}/${v.slice(2)}` : v);
+                          }}
+                          placeholder="MM/AA"
+                          maxLength={5}
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="cardCvv">CVV *</Label>
+                        <Input
+                          id="cardCvv"
+                          required
+                          type="password"
+                          value={cardCvv}
+                          onChange={e => setCardCvv(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                          placeholder="•••"
+                          maxLength={4}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Prix récapitulatif */}
+                    {autoPrice && (
+                      <div className="rounded-xl bg-muted/50 border border-border p-3 text-xs text-muted-foreground">
+                        <div className="flex items-center justify-between">
+                          <span>Formation : {cours} · {niveau}</span>
+                          <span className="font-bold text-foreground">{autoPrice} MAD / mois</span>
+                        </div>
+                        <p className="mt-1.5 text-emerald-700 font-medium">
+                          ✓ Aucun débit pendant vos 5 premiers cours gratuits
+                        </p>
+                      </div>
+                    )}
+
+                    <Button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full bg-accent hover:bg-accent/90 text-primary font-bold h-12 text-base"
+                    >
+                      {loading ? (
+                        <span className="flex items-center gap-2">
+                          <span className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                          Création du compte...
+                        </span>
+                      ) : (
+                        <span className="flex items-center gap-2">
+                          <Lock className="w-4 h-4" /> Créer mon compte gratuitement
+                        </span>
+                      )}
+                    </Button>
+
+                    <p className="text-xs text-center text-muted-foreground">
+                      En créant un compte, vous acceptez nos{' '}
+                      <Link to="/terms" className="text-accent hover:underline">conditions d'utilisation</Link>
+                    </p>
+                  </form>
+
+                  <div className="text-center mt-4 text-sm text-muted-foreground">
+                    Déjà inscrit ?{' '}
+                    <Link to="/login" className="text-accent hover:underline font-medium">Se connecter</Link>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default SignupPage;
