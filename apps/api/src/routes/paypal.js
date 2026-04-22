@@ -69,46 +69,69 @@ router.get('/config', (req, res) => {
  * Retourne : { id: "PAYPAL_ORDER_ID" }
  */
 router.post('/create-order', async (req, res) => {
-  const { amount, description, orderId, orderType = 'formation' } = req.body;
+  const { amount, description, orderId, orderType = 'formation', courseId, userId } = req.body;
 
   if (!amount || amount <= 0) {
     return res.status(400).json({ error: 'amount requis (en MAD)' });
   }
 
   try {
-    const token = await getAccessToken();
-
-    // Conversion MAD → USD (taux approximatif — ajustez selon le taux du jour)
-    // 1 USD ≈ 10 MAD (à adapter)
     const MAD_TO_USD = parseFloat(process.env.MAD_TO_USD_RATE || '0.10');
     const amountUSD  = (amount * MAD_TO_USD).toFixed(2);
+
+    // ── Créer une commande PocketBase en attente ─────────────────
+    let pbOrderId = orderId || null;
+    if (!pbOrderId && userId) {
+      try {
+        const pbRecord = await pb.collection('orders').create({
+          user_id:        userId,
+          course_id:      courseId || null,
+          total_price:    amount,
+          payment_method: 'paypal',
+          status:         'pending',
+          note:           description || 'Paiement PayPal',
+        }, { requestKey: null });
+        pbOrderId = pbRecord.id;
+        logger.info(`PocketBase order created: ${pbOrderId} (pending)`);
+      } catch (pbErr) {
+        logger.error('PocketBase order creation failed:', pbErr.message);
+        // On continue même si PB échoue
+      }
+    }
+
+    // ── Construire l'URL de retour avec tous les paramètres ──────
+    const returnParams = new URLSearchParams({
+      order_type: orderType,
+      ...(pbOrderId  && { pb_order_id: pbOrderId }),
+      ...(courseId   && { course_id:   courseId   }),
+      ...(userId     && { user_id:     userId     }),
+    });
+    const returnUrl = `${process.env.SITE_URL}/payment/success?${returnParams}`;
+    const cancelUrl = `${process.env.SITE_URL}/payment/cancel?${courseId ? `course_id=${courseId}` : ''}`;
+
+    // ── Créer la commande PayPal ──────────────────────────────────
+    const token = await getAccessToken();
 
     const payload = {
       intent: 'CAPTURE',
       purchase_units: [{
-        amount: {
-          currency_code: 'USD',
-          value:         amountUSD,
-        },
+        amount:      { currency_code: 'USD', value: amountUSD },
         description: description || 'IWS Laayoune',
-        custom_id:   orderId || '',
+        custom_id:   pbOrderId   || '',
       }],
       application_context: {
-        brand_name:          'IWS Laayoune',
-        landing_page:        'NO_PREFERENCE',
-        user_action:         'PAY_NOW',
-        return_url:          `${process.env.SITE_URL}/payment/success`,
-        cancel_url:          `${process.env.SITE_URL}/payment/cancel`,
+        brand_name:  'IWS Laayoune',
+        landing_page:'NO_PREFERENCE',
+        user_action: 'PAY_NOW',
+        return_url:  returnUrl,
+        cancel_url:  cancelUrl,
       },
     };
 
     const response = await fetch(`${PAYPAL_BASE_URL}/v2/checkout/orders`, {
       method:  'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type':  'application/json',
-      },
-      body: JSON.stringify(payload),
+      headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body:    JSON.stringify(payload),
     });
 
     if (!response.ok) {
@@ -118,9 +141,21 @@ router.post('/create-order', async (req, res) => {
     }
 
     const data = await response.json();
-    logger.info(`PayPal order created: ${data.id} (${amountUSD} USD = ${amount} MAD)`);
 
-    res.json({ id: data.id, amountUSD, amountMAD: amount });
+    // ── Extraire l'URL d'approbation ──────────────────────────────
+    const approvalLink = data.links?.find(l => l.rel === 'approve' || l.rel === 'payer-action');
+    const approvalUrl  = approvalLink?.href || null;
+
+    logger.info(`PayPal order created: ${data.id} (${amountUSD} USD = ${amount} MAD) → approval: ${approvalUrl}`);
+
+    res.json({
+      id:          data.id,
+      paypalOrderId: data.id,
+      pbOrderId,
+      approvalUrl,
+      amountUSD,
+      amountMAD: amount,
+    });
   } catch (err) {
     logger.error('PayPal create-order:', err.message);
     res.status(500).json({ error: 'Impossible de créer la commande PayPal', detail: err.message });
@@ -177,8 +212,32 @@ router.post('/capture-order', async (req, res) => {
         }, { requestKey: null });
         logger.info(`PocketBase ${collection} ${pbOrderId} → completed`);
       } catch (pbErr) {
-        // Ne pas bloquer la réponse si PB échoue — le paiement a déjà été capturé
         logger.error(`PocketBase update failed for ${pbOrderId}:`, pbErr.message);
+      }
+    }
+
+    // ── Créer l'inscription au cours si courseId + userId fournis ─
+    const { courseId, userId } = req.body;
+    if (captureStatus === 'COMPLETED' && courseId && userId) {
+      try {
+        // Vérifier si l'inscription existe déjà
+        const existing = await pb.collection('course_enrollments').getFullList({
+          filter: `user_id="${userId}" && course_id="${courseId}"`,
+          requestKey: null,
+        });
+        if (existing.length === 0) {
+          await pb.collection('course_enrollments').create({
+            user_id:    userId,
+            course_id:  courseId,
+            progression: 0,
+            complete:   false,
+            status:     'active',
+            start_date: new Date().toISOString(),
+          }, { requestKey: null });
+          logger.info(`Enrollment created: user=${userId} course=${courseId}`);
+        }
+      } catch (enrollErr) {
+        logger.error('Enrollment creation failed:', enrollErr.message);
       }
     }
 
@@ -193,6 +252,65 @@ router.post('/capture-order', async (req, res) => {
   } catch (err) {
     logger.error('PayPal capture-order:', err.message);
     res.status(500).json({ error: 'Capture du paiement échouée', detail: err.message });
+  }
+});
+
+// ── POST /orders/:id/cancel ───────────────────────────────────────────────────
+/**
+ * Permet à un utilisateur d'annuler sa propre commande en attente.
+ * Utilisé à la place de la règle PocketBase updateRule (non supportée en v0.36).
+ *
+ * Headers : Authorization: Bearer <jwt>
+ * Retourne : { success: true }
+ */
+router.post('/orders/:id/cancel', async (req, res) => {
+  const { id } = req.params;
+  const auth  = req.headers.authorization || '';
+  const token = auth.replace(/^Bearer\s+/i, '').trim();
+
+  if (!token) return res.status(401).json({ error: 'Token manquant' });
+
+  try {
+    // Décoder le JWT pour obtenir l'user ID (sans vérification de signature)
+    const parts = token.split('.');
+    if (parts.length < 2) throw new Error('JWT malformé');
+    const payload = JSON.parse(
+      Buffer.from(parts[1].replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString('utf8')
+    );
+    if (payload.exp && Date.now() / 1000 > payload.exp) {
+      return res.status(401).json({ error: 'Token expiré' });
+    }
+    const userId = payload.id;
+    if (!userId) throw new Error('ID utilisateur absent du token');
+
+    // Récupérer la commande via le client admin
+    let order;
+    try {
+      order = await pb.collection('orders').getOne(id, { $autoCancel: false });
+    } catch {
+      return res.status(404).json({ error: 'Commande introuvable' });
+    }
+
+    // Vérifier que l'utilisateur est le propriétaire (ou admin)
+    const user = await pb.collection('users').getOne(userId, { $autoCancel: false });
+    const isAdmin = user.role === 'admin';
+    if (!isAdmin && order.user_id !== userId) {
+      return res.status(403).json({ error: 'Non autorisé — cette commande ne vous appartient pas' });
+    }
+
+    // Vérifier que la commande est bien en attente
+    if (order.status !== 'pending') {
+      return res.status(400).json({ error: `Impossible d'annuler une commande avec le statut "${order.status}"` });
+    }
+
+    // Mettre à jour via le client admin (contourne les collection rules PocketBase)
+    await pb.collection('orders').update(id, { status: 'cancelled' }, { $autoCancel: false });
+    logger.info(`Order ${id} cancelled by user ${userId}`);
+
+    return res.json({ success: true });
+  } catch (err) {
+    logger.error('Order cancel error:', err.message);
+    return res.status(500).json({ error: 'Annulation impossible', detail: err.message });
   }
 });
 

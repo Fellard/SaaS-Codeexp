@@ -78,6 +78,33 @@ router.post('/register', async (req, res) => {
       // Non bloquant
     }
 
+    // ── Auto-inscription aux 3 premiers cours gratuits (étudiant) ──
+    if (role === 'etudiant') {
+      try {
+        // On essaie d'inscrire l'étudiant aux 3 premiers cours disponibles (toutes sections).
+        // La section sera affinée plus tard via le profil. On inscrit aux 3 premiers cours globaux.
+        const freeCourses = await pb.collection('courses').getList(1, 3, {
+          sort: 'created',
+          $autoCancel: false,
+        });
+        for (const course of freeCourses.items) {
+          try {
+            await pb.collection('course_enrollments').create({
+              user_id:    newUser.id,
+              course_id:  course.id,
+              progression: 0,
+              complete:   false,
+              status:     'active',
+              start_date: new Date().toISOString(),
+            }, { $autoCancel: false });
+          } catch { /* déjà inscrit ou non-bloquant */ }
+        }
+        logger.info(`Auto-enrollment: ${freeCourses.items.length} cours gratuits pour ${newUser.id}`);
+      } catch (enrollErr) {
+        logger.warn('Auto-enrollment failed (non-bloquant):', enrollErr.message);
+      }
+    }
+
     // Envoyer email de bienvenue
     try {
       const transporter = createTransporter();

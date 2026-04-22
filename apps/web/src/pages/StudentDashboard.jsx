@@ -28,7 +28,7 @@ const PROGRAMME_CFG = {
 };
 
 // ── Formation status card ────────────────────────────────────────
-const FREE_COURSES_LIMIT = 5;
+const FREE_COURSES_LIMIT = 3;
 
 const FormationStatusCard = ({ currentUser, enrollments, orders }) => {
   const programme   = currentUser?.section;

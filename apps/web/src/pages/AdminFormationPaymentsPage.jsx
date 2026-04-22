@@ -22,14 +22,21 @@ import {
   CreditCard, TrendingUp, Clock, CheckCircle2, Search,
   Download, ChevronLeft, ChevronRight, Receipt,
   Filter, RefreshCw, GraduationCap, Languages, Monitor, Code2,
+  Check, X as XIcon, Loader2,
 } from 'lucide-react';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 // ── Status config ─────────────────────────────────────────────────
 const STATUS_CFG = {
+  completed: { label: 'Payé',      color: 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300', dot: 'bg-green-500' },
   paid:      { label: 'Payé',      color: 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300', dot: 'bg-green-500' },
   pending:   { label: 'En attente', color: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300', dot: 'bg-yellow-500' },
   cancelled: { label: 'Annulé',    color: 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300', dot: 'bg-red-500' },
 };
+
+// Helper — commande considérée comme payée (PocketBase stocke 'completed')
+const isPaid = (o) => o.status === 'completed' || o.status === 'paid';
 
 const PIE_COLORS = ['#3b82f6', '#22c55e', '#a855f7'];
 
@@ -50,6 +57,7 @@ const AdminFormationPaymentsPage = () => {
   const [sectionFilter, setSectionFilter] = useState(initSection);
   const [page, setPage] = useState(1);
   const [receipt, setReceipt] = useState(null);
+  const [actionLoading, setActionLoading] = useState(null);
 
   const locale = language === 'fr' ? 'fr-FR' : language?.startsWith('ar') ? 'ar-MA' : 'en-US';
 
@@ -58,7 +66,7 @@ const AdminFormationPaymentsPage = () => {
     setLoading(true);
     try {
       const [ordersRes, coursesRes, usersRes] = await Promise.allSettled([
-        pb.collection('orders').getFullList({ sort: '-created', expand: 'products', requestKey: null }),
+        pb.collection('orders').getFullList({ sort: '-created', expand: 'course_id', requestKey: null }),
         pb.collection('courses').getFullList({ requestKey: null }),
         pb.collection('users').getFullList({ fields: 'id,name,prenom,nom,email,role', requestKey: null }),
       ]);
@@ -88,14 +96,62 @@ const AdminFormationPaymentsPage = () => {
 
   useEffect(() => { fetchData(); }, []);
 
-  // ── Filter orders by section (via products categories) ─────────────
+  // ── Filter orders by section (via course_id) ──────────────────────
   const getOrderSection = (order) => {
-    const prods = order.expand?.products || [];
-    for (const p of prods) {
-      const found = courses.find(c => c.id === p.id || c.title === p.nom || c.title === p.name);
+    // Try expanded course first, then match by course_id
+    const expandedCourse = order.expand?.course_id;
+    if (expandedCourse) return getCourseSection(expandedCourse);
+    const courseId = order.course_id;
+    if (courseId) {
+      const found = courses.find(c => c.id === courseId);
       if (found) return getCourseSection(found);
     }
     return 'langues'; // default
+  };
+
+  // ── Admin action handlers ──────────────────────────────────────────
+  const handleMarkPaid = async (orderId) => {
+    setActionLoading(orderId + '_pay');
+    try {
+      const res = await fetch(`${API_URL}/orders/${orderId}/mark-paid`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${pb.authStore.token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ payment_method: 'especes' }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Erreur serveur');
+      toast.success('✅ Commande marquée comme payée');
+      fetchData();
+    } catch (e) {
+      toast.error(`Impossible : ${e.message}`);
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleCancelOrder = async (orderId) => {
+    if (!window.confirm('Annuler cette commande ?')) return;
+    setActionLoading(orderId + '_cancel');
+    try {
+      const res = await fetch(`${API_URL}/orders/${orderId}/cancel`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${pb.authStore.token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Erreur serveur');
+      toast.success('🚫 Commande annulée');
+      fetchData();
+    } catch (e) {
+      toast.error(`Impossible d'annuler : ${e.message}`);
+    } finally {
+      setActionLoading(null);
+    }
   };
 
   const filtered = useMemo(() => {
@@ -128,7 +184,7 @@ const AdminFormationPaymentsPage = () => {
   const sectionRevenue = useMemo(() => {
     return Object.keys(FORMATION_SECTIONS).map(key => {
       const sec = FORMATION_SECTIONS[key];
-      const secOrders = orders.filter(o => getOrderSection(o) === key && o.status === 'paid');
+      const secOrders = orders.filter(o => getOrderSection(o) === key && isPaid(o));
       return {
         key,
         label: t(`admin.formation.section.${key}`),
@@ -139,14 +195,14 @@ const AdminFormationPaymentsPage = () => {
     });
   }, [orders, courses]);
 
-  const totalRevenue = orders.filter(o => o.status === 'paid').reduce((s, o) => s + (o.total_price || 0), 0);
+  const totalRevenue = orders.filter(isPaid).reduce((s, o) => s + (o.total_price || 0), 0);
   const pendingRevenue = orders.filter(o => o.status === 'pending').reduce((s, o) => s + (o.total_price || 0), 0);
-  const paidCount = orders.filter(o => o.status === 'paid').length;
+  const paidCount = orders.filter(isPaid).length;
 
   // ── Monthly chart data ─────────────────────────────────────────────
   const monthlyData = useMemo(() => {
     const months = {};
-    orders.filter(o => o.status === 'paid').forEach(o => {
+    orders.filter(isPaid).forEach(o => {
       const d = new Date(o.created);
       const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
       months[key] = (months[key] || 0) + (o.total_price || 0);
@@ -183,7 +239,7 @@ const AdminFormationPaymentsPage = () => {
 
   // ── Open receipt ───────────────────────────────────────────────────
   const openReceipt = (order) => {
-    const prods = order.expand?.products || [];
+    const course = order.expand?.course_id || courses.find(c => c.id === order.course_id);
     setReceipt({
       id: order.id,
       ref: order.id.slice(0, 8).toUpperCase(),
@@ -191,8 +247,8 @@ const AdminFormationPaymentsPage = () => {
       service: `Centre de Formation — ${t(`admin.formation.section.${getOrderSection(order)}`)}`,
       studentName: order._studentName,
       studentEmail: order._studentEmail,
-      items: prods.length > 0
-        ? prods.map(p => ({ label: p.nom || p.name || 'Formation', qty: 1, unitPrice: p.price || p.prix || 0 }))
+      items: course
+        ? [{ label: course.title || 'Formation', qty: 1, unitPrice: order.total_price || 0 }]
         : [{ label: 'Formation', qty: 1, unitPrice: order.total_price || 0 }],
       total: order.total_price || 0,
       status: order.status,
@@ -377,7 +433,7 @@ const AdminFormationPaymentsPage = () => {
         </div>
         {/* Status filter */}
         <div className="flex gap-1.5">
-          {['all', 'paid', 'pending', 'cancelled'].map(s => (
+          {['all', 'completed', 'pending', 'cancelled'].map(s => (
             <button
               key={s}
               onClick={() => { setStatusFilter(s); setPage(1); }}
@@ -402,20 +458,21 @@ const AdminFormationPaymentsPage = () => {
                 <th className="text-left py-3 px-4 text-xs font-bold text-muted-foreground uppercase tracking-wide">{t('admin.payments.col.status')}</th>
                 <th className="text-left py-3 px-4 text-xs font-bold text-muted-foreground uppercase tracking-wide">{t('admin.payments.col.date')}</th>
                 <th className="text-right py-3 px-4 text-xs font-bold text-muted-foreground uppercase tracking-wide">Reçu</th>
+                <th className="text-right py-3 px-4 text-xs font-bold text-muted-foreground uppercase tracking-wide">Actions</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 Array.from({ length: 5 }).map((_, i) => (
                   <tr key={i} className="border-b border-border">
-                    {Array.from({ length: 7 }).map((_, j) => (
+                    {Array.from({ length: 8 }).map((_, j) => (
                       <td key={j} className="py-3 px-4"><Skeleton className="h-4 w-full" /></td>
                     ))}
                   </tr>
                 ))
               ) : paginated.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-12 text-center text-muted-foreground">
+                  <td colSpan={8} className="py-12 text-center text-muted-foreground">
                     <CreditCard className="w-10 h-10 mx-auto mb-3 opacity-20" />
                     <p>{t('admin.payments.noOrders')}</p>
                   </td>
@@ -461,6 +518,40 @@ const AdminFormationPaymentsPage = () => {
                           <Receipt className="w-3 h-3" /> Voir
                         </Button>
                       </td>
+                      <td className="py-3 px-4 text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          {order.status === 'pending' && (
+                            <>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                disabled={actionLoading === order.id + '_pay'}
+                                className="h-7 px-2 text-xs gap-1 text-green-600 hover:bg-green-50 dark:hover:bg-green-950/30"
+                                onClick={() => handleMarkPaid(order.id)}
+                                title="Marquer comme payé"
+                              >
+                                {actionLoading === order.id + '_pay'
+                                  ? <Loader2 className="w-3 h-3 animate-spin" />
+                                  : <Check className="w-3 h-3" />}
+                                Payé
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                disabled={actionLoading === order.id + '_cancel'}
+                                className="h-7 px-2 text-xs gap-1 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30"
+                                onClick={() => handleCancelOrder(order.id)}
+                                title="Annuler la commande"
+                              >
+                                {actionLoading === order.id + '_cancel'
+                                  ? <Loader2 className="w-3 h-3 animate-spin" />
+                                  : <XIcon className="w-3 h-3" />}
+                                Annuler
+                              </Button>
+                            </>
+                          )}
+                        </div>
+                      </td>
                     </tr>
                   );
                 })
@@ -471,12 +562,12 @@ const AdminFormationPaymentsPage = () => {
               <tfoot>
                 <tr className="bg-blue-50 dark:bg-blue-950/30 font-bold text-sm">
                   <td colSpan={3} className="py-3 px-4 text-blue-700 dark:text-blue-300 text-right">
-                    Total ({filtered.filter(o => o.status === 'paid').length} paiements)
+                    Total ({filtered.filter(isPaid).length} paiements)
                   </td>
                   <td className="py-3 px-4 text-blue-700 dark:text-blue-300 text-base">
-                    {filtered.filter(o => o.status === 'paid').reduce((s, o) => s + (o.total_price || 0), 0).toLocaleString('fr-FR')} MAD
+                    {filtered.filter(isPaid).reduce((s, o) => s + (o.total_price || 0), 0).toLocaleString('fr-FR')} MAD
                   </td>
-                  <td colSpan={3} />
+                  <td colSpan={4} />
                 </tr>
               </tfoot>
             )}

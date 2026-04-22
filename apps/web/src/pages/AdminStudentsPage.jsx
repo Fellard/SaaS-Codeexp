@@ -45,7 +45,7 @@ const PAYMENT_STATUS = {
   none:    { label: 'Aucun',       cls: 'bg-gray-100 text-gray-500 border-gray-300' },
 };
 
-const FREE_COURSES_LIMIT = 5;
+const FREE_COURSES_LIMIT = 3;
 
 const ENROLL_STATUS = {
   actif:    { label: 'En cours',      cls: 'bg-blue-100 text-blue-700' },

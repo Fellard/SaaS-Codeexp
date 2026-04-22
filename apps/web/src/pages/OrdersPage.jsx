@@ -4,6 +4,8 @@ import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 import pb from '@/lib/pocketbaseClient';
 import { useAuth } from '@/contexts/AuthContext.jsx';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 import DashboardLayout from '@/components/DashboardLayout.jsx';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,8 +14,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import ReceiptModal from '@/components/ReceiptModal.jsx';
 import {
   ShoppingBag, CheckCircle2, Clock, XCircle, CreditCard,
-  Printer, GraduationCap, ArrowRight, TrendingUp, Globe,
-  Monitor, Layers, Code2, Import,
+  Printer, GraduationCap, TrendingUp, Globe,
+  Monitor, Layers, Code2, Import, Trash2, AlertTriangle,
 } from 'lucide-react';
 
 const WEB_STATUS = {
@@ -46,9 +48,11 @@ const OrdersPage = () => {
   const { currentUser } = useAuth();
   const [orders, setOrders]         = useState([]);
   const [webOrders, setWebOrders]   = useState([]);
+  const [courses, setCourses]       = useState([]); // pour résoudre course_id depuis le titre
   const [loading, setLoading]       = useState(true);
   const [filter, setFilter]         = useState('all');
   const [receipt, setReceipt]       = useState(null);
+  const [cancelError, setCancelError] = useState('');
 
   const displayName = currentUser
     ? (`${currentUser.prenom || ''} ${currentUser.nom || currentUser.name || ''}`.trim() || currentUser.name || 'Étudiant')
@@ -59,7 +63,7 @@ const OrdersPage = () => {
     const load = async () => {
       setLoading(true);
       try {
-        const [formationOrders, webRes] = await Promise.all([
+        const [formationOrders, webRes, allCourses] = await Promise.all([
           pb.collection('orders').getFullList({
             filter: `user_id="${currentUser.id}"`,
             sort: '-created',
@@ -73,14 +77,56 @@ const OrdersPage = () => {
             fields: 'id,created,updated,client_id,service_nom,tech_choice,domain_name,statut,montant',
             requestKey: null,
           }).then(r => r.items.sort((a, b) => new Date(b.created) - new Date(a.created))).catch(() => []),
+          pb.collection('courses').getFullList({ fields: 'id,titre,title', requestKey: null }).catch(() => []),
         ]);
         setOrders(formationOrders);
         setWebOrders(webRes);
+        setCourses(allCourses);
       } catch { /* ignore */ }
       finally { setLoading(false); }
     };
     load();
   }, [currentUser]);
+
+  // Résoudre le course_id d'une commande (depuis course_id ou depuis le titre dans la note)
+  const resolveCourseId = (o) => {
+    if (o.course_id) return o.course_id;
+    if (o.expand?.course_id?.id) return o.expand.course_id.id;
+    // Chercher par titre dans la note
+    const title = o.note?.replace('Accès cours : ', '').trim();
+    if (title && courses.length > 0) {
+      const match = courses.find(c =>
+        c.titre === title || c.title === title ||
+        c.titre?.includes(title) || title?.includes(c.titre)
+      );
+      if (match) return match.id;
+    }
+    return null;
+  };
+
+  const handleCancel = async (orderId) => {
+    setCancelError('');
+    const ok = window.confirm('Annuler cette commande ? Cette action est irréversible.');
+    if (!ok) return;
+    try {
+      const token = pb.authStore.token;
+      const res = await fetch(`${API_URL}/orders/${orderId}/cancel`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || `Erreur serveur (${res.status})`);
+      }
+      setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: 'cancelled' } : o));
+    } catch (e) {
+      console.error('Annulation échouée :', e);
+      setCancelError('Impossible d\'annuler : ' + (e?.message || 'erreur inconnue'));
+    }
+  };
 
   const filtered = filter === 'all' ? orders : orders.filter(o => o.status === filter);
 
@@ -114,6 +160,15 @@ const OrdersPage = () => {
         receipt={receipt}
         companyName="IWS — Centre de Formation"
       />
+
+      {/* Erreur annulation */}
+      {cancelError && (
+        <div className="fixed bottom-4 right-4 z-50 bg-destructive text-white text-sm rounded-xl px-4 py-3 shadow-lg flex items-center gap-2">
+          <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+          {cancelError}
+          <button onClick={() => setCancelError('')} className="ml-2 underline text-xs">Fermer</button>
+        </div>
+      )}
 
       <div className="space-y-6 max-w-4xl mx-auto">
 
@@ -293,18 +348,27 @@ const OrdersPage = () => {
                             <Printer className="w-3.5 h-3.5" /> Reçu
                           </Button>
                         )}
-                        {o.status === 'pending' && (
-                          <Link to={
-                            // Rediriger vers le cours spécifique si course_id disponible
-                            o.course_id
-                              ? `/dashboard/courses/${o.course_id}/view`
-                              : '/dashboard/courses'
-                          }>
-                            <Button size="sm" className="h-7 px-2 text-xs gap-1 bg-amber-500 hover:bg-amber-600 text-white">
-                              <CreditCard className="w-3.5 h-3.5" /> Payer
-                            </Button>
-                          </Link>
-                        )}
+                        {o.status === 'pending' && (() => {
+                          const cid = resolveCourseId(o);
+                          return (
+                            <div className="flex gap-1.5">
+                              <Link to={cid ? `/dashboard/courses/${cid}/view` : '/dashboard/courses'}>
+                                <Button size="sm" className="h-7 px-2 text-xs gap-1 bg-amber-500 hover:bg-amber-600 text-white">
+                                  <CreditCard className="w-3.5 h-3.5" /> Payer
+                                </Button>
+                              </Link>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="h-7 px-2 text-xs gap-1 border-red-300 text-red-500 hover:bg-red-50"
+                                onClick={() => handleCancel(o.id)}
+                                title="Annuler cette commande"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </Button>
+                            </div>
+                          );
+                        })()}
                       </div>
                     </div>
                   );

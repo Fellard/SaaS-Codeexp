@@ -23,7 +23,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
 
-const FREE_COURSES_LIMIT = 5;
+const FREE_COURSES_LIMIT = 3;
 
 // ── Mini stat card ───────────────────────────────────────────────
 const StatCard = ({ title, value, sub, icon: Icon, colorClass, bgClass, loading }) => (

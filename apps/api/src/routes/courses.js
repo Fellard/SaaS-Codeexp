@@ -597,4 +597,69 @@ router.post('/:courseId/save-progress', async (req, res) => {
   }
 });
 
+/**
+ * POST /courses/chat
+ * Dialogue IA contextuel — tuteur qui répond aux messages basés sur le contenu du cours.
+ * Body: { message, courseTitle, courseContent, history, lang }
+ * Response: { reply }
+ */
+router.post('/chat', async (req, res) => {
+  const {
+    message,
+    courseTitle   = 'le cours',
+    courseContent = '',
+    history       = [],
+    lang          = 'fr',
+  } = req.body;
+
+  if (!message?.trim()) return res.status(400).json({ error: 'Message requis' });
+
+  const langMap = { fr: 'français', en: 'anglais', ar: 'arabe', 'ar-MA': 'arabe' };
+  const langName = langMap[lang] || 'français';
+
+  // Extraire un résumé de texte brut du contenu HTML des pages
+  const textContent = courseContent
+    ? courseContent.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 2000)
+    : '';
+
+  const systemPrompt = `Tu es IWS IA, un tuteur bienveillant pour le cours : "${courseTitle}".
+${textContent ? `\nRésumé du contenu du cours :\n${textContent}\n` : ''}
+Directives :
+- Réponds en ${langName} sauf si le cours apprend une autre langue (dans ce cas, mélange pour pratiquer)
+- Sois amical et pédagogique — comme un professeur via WhatsApp
+- Réponses courtes (2-4 phrases) sauf si explication détaillée nécessaire
+- Corrige poliment les erreurs de grammaire ou de vocabulaire de l'étudiant
+- Propose des exercices ou exemples supplémentaires si demandé
+- Si l'étudiant écrit "bonjour" ou démarre la conversation, présente-toi brièvement et propose de l'aider à pratiquer`;
+
+  const messages = [
+    ...history.slice(-12).map(h => ({ role: h.role, content: h.content })),
+    { role: 'user', content: message.trim() },
+  ];
+
+  // Essayer claude-sonnet-4-6 en premier, puis fallback sur claude-3-5-sonnet-20241022
+  const CHAT_MODELS = ['claude-sonnet-4-6', 'claude-3-5-sonnet-20241022'];
+  let lastErr = null;
+
+  for (const model of CHAT_MODELS) {
+    try {
+      const response = await anthropic.messages.create({
+        model,
+        max_tokens: 600,
+        system:     systemPrompt,
+        messages,
+      });
+      const reply = response.content[0]?.text || 'Je suis désolé, je ne peux pas répondre pour le moment.';
+      logger.info(`Courses /chat OK avec ${model}`);
+      return res.json({ reply });
+    } catch (err) {
+      lastErr = err;
+      logger.warn(`Courses /chat échec avec ${model}: ${err.message}`);
+    }
+  }
+
+  logger.error('Courses /chat: tous les modèles ont échoué:', lastErr?.message);
+  res.status(500).json({ error: 'Erreur IA', reply: `⚠️ Le tuteur IA est temporairement indisponible. (${lastErr?.message || 'erreur inconnue'}) Réessayez dans un instant.` });
+});
+
 export default router;

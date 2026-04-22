@@ -6,6 +6,7 @@ import authRouter from './auth.js';
 import adminRouter from './admin.js';
 import webAgencyRouter from './webAgency.js';
 import paypalRouter from './paypal.js';
+import ordersRouter from './orders.js';
 
 const router = Router();
 
@@ -18,6 +19,7 @@ export default () => {
   router.use('/admin', adminRouter);          // routes admin (delete étudiant, etc.)
   router.use('/web-agency', webAgencyRouter); // IA Web Agency
   router.use('/paypal', paypalRouter);        // PayPal Checkout
+  router.use('/orders', ordersRouter);        // Orders management (cancel, mark-paid)
 
   return router;
 };

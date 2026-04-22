@@ -14,6 +14,7 @@ import {
   AlertCircle, RefreshCw, Loader2, ArrowLeft,
   Trophy, Brain, Lightbulb, TrendingUp, Lock,
   CreditCard, Banknote, Smartphone, GraduationCap, Sparkles, PartyPopper,
+  MessageCircle, Send, ChevronRight as ChevronRightIcon,
 } from 'lucide-react';
 import pb from '@/lib/pocketbaseClient';
 import PayPalButton from '@/components/PayPalButton.jsx';
@@ -237,6 +238,15 @@ const SecureCourseViewer = () => {
   const [paymentLoading,   setPaymentLoading]   = useState(false);
   const [paymentSuccess,   setPaymentSuccess]   = useState(false);
   const [paidViaPaypal,    setPaidViaPaypal]    = useState(false);
+  const [nextCourse,       setNextCourse]       = useState(null);
+
+  // ── Chat IA ──────────────────────────────────────────────────────
+  const [chatMessages, setChatMessages] = useState([
+    { role: 'assistant', content: '👋 Bonjour ! Je suis IWS IA, votre tuteur. Posez-moi vos questions sur le cours ou demandez-moi de vous faire pratiquer !' }
+  ]);
+  const [chatInput,    setChatInput]    = useState('');
+  const [chatSending,  setChatSending]  = useState(false);
+  const chatEndRef = useRef(null);
 
   const contentRef = useRef(null);
   const saveTimer  = useRef(null);
@@ -284,6 +294,22 @@ const SecureCourseViewer = () => {
         }
         setCourse(courseData);
 
+        // ── Chercher le cours suivant (même section, trié par création) ──
+        if (courseData?.section || courseData?.cours_nom) {
+          try {
+            const filter = courseData.section
+              ? `section="${courseData.section}"`
+              : `cours_nom="${courseData.cours_nom}"`;
+            const allSection = await pb.collection('courses').getFullList({
+              filter, sort: '+created', fields: 'id,titre,title,niveau,cours_nom', requestKey: null,
+            });
+            const idx = allSection.findIndex(c => c.id === courseId);
+            if (idx >= 0 && idx < allSection.length - 1) {
+              setNextCourse(allSection[idx + 1]);
+            }
+          } catch { /* pas critique */ }
+        }
+
         // Charger les exercices depuis PocketBase
         const parsed = parseExercises(courseData?.exercises);
         setQuestions(parsed);
@@ -314,7 +340,8 @@ const SecureCourseViewer = () => {
         const coursePrice = courseData?.prix ?? courseData?.price ?? 0;
         const courseTitle = courseData?.titre || courseData?.title || '';
         const isFreePrice = coursePrice === 0;
-        const hasSection  = !!currentUser.section;
+        // hasSection : uniquement pour les admins ou comptes avec abonnement global (pas les étudiants normaux)
+        const hasSection  = currentUser.role === 'admin' || currentUser.isAdmin === true;
 
         // ── Helpers pour matcher les commandes même sans course_id (anciens enregistrements) ──
         const matchesThisCourse = (o) =>
@@ -362,7 +389,7 @@ const SecureCourseViewer = () => {
           setHasAccess(false);
         }
       } catch {
-        setHasAccess(!!currentUser?.section);
+        setHasAccess(currentUser?.role === 'admin' || currentUser?.isAdmin === true);
       }
     };
     checkAccess();
@@ -485,6 +512,63 @@ const SecureCourseViewer = () => {
   };
 
   const resetQuiz = () => { setAnswers({}); setSubmitted(false); setCorrection(null); setActiveTab('exercices'); };
+
+  // ── Envoyer un message au tuteur IA ──
+  const sendChatMessage = async () => {
+    const msg = chatInput.trim();
+    if (!msg || chatSending) return;
+    setChatInput('');
+    setChatSending(true);
+
+    const userMsg = { role: 'user', content: msg };
+    setChatMessages(prev => [...prev, userMsg]);
+
+    // Extraire un résumé textuel léger (pas tout le HTML — trop lourd)
+    // On prend juste les titres + 1ère page, max 1500 chars
+    const courseContentText = pages
+      .slice(0, 3)
+      .map(p => `${p.title || ''}: ${(p.content || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 400)}`)
+      .join('\n')
+      .slice(0, 1500);
+
+    const VITE_API = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
+    try {
+      const res = await fetch(`${VITE_API}/courses/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message:       msg,
+          courseTitle,
+          courseContent: courseContentText,
+          history:       chatMessages.slice(-10),
+          lang:          langKey,
+        }),
+      });
+
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        // Réponse non-JSON (HTML 404, etc.) → l'API n'a pas encore le endpoint
+        throw new Error(`Réponse invalide du serveur (status ${res.status}) — redémarrez l'API`);
+      }
+
+      const reply = data.reply || (data.error ? `⚠️ ${data.error}` : "Je n'ai pas pu répondre, réessayez.");
+      setChatMessages(prev => [...prev, { role: 'assistant', content: reply }]);
+    } catch (e) {
+      const errMsg = e?.message || '';
+      setChatMessages(prev => [...prev, {
+        role: 'assistant',
+        content: errMsg.includes('redémarrez')
+          ? `⚠️ ${errMsg}`
+          : '⚠️ Impossible de joindre le tuteur IA. Vérifiez que l\'API est démarrée (npm run dev dans apps/api).',
+      }]);
+    } finally {
+      setChatSending(false);
+      setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
+    }
+  };
 
   // ── Soumettre une demande de paiement ──
   const handlePayment = async () => {
@@ -635,7 +719,8 @@ const SecureCourseViewer = () => {
                   <PayPalButton
                     amount={coursePrice || 0}
                     description={`Accès cours : ${courseTitle}`}
-                    pbOrderId={null}
+                    courseId={courseId || null}
+                    userId={currentUser?.id || null}
                     orderType="formation"
                     onSuccess={async ({ transactionId }) => {
                       // 1. Créer la commande complétée dans PocketBase
@@ -738,32 +823,82 @@ const SecureCourseViewer = () => {
           </Badge>
         </div>
 
+        {/* ── Progression indicator ── */}
+        {(() => {
+          const hasReadCourse  = pages.length === 0 || currentPage >= pages.length - 1 || pdfViewerUrl;
+          const hasSubmitted   = submitted;
+          const hasPerfect     = correction?.percentage === 100;
+          const steps = [
+            { label: 'Lecture',      done: hasReadCourse },
+            { label: 'Exercices',    done: hasSubmitted  },
+            { label: 'Score 100%',   done: hasPerfect    },
+            { label: 'Dialogue IA',  done: hasPerfect    },
+          ];
+          return (
+            <div className="flex items-center gap-1 px-1">
+              {steps.map((s, i) => (
+                <React.Fragment key={s.label}>
+                  <div className={`flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-full transition-all ${
+                    s.done ? 'bg-emerald-100 text-emerald-700' : 'bg-muted text-muted-foreground'
+                  }`}>
+                    {s.done ? <CheckCircle2 className="w-3 h-3" /> : <Lock className="w-3 h-3" />}
+                    <span className="hidden sm:inline">{s.label}</span>
+                  </div>
+                  {i < steps.length - 1 && <div className={`flex-1 h-0.5 rounded-full ${s.done ? 'bg-emerald-300' : 'bg-border'}`} />}
+                </React.Fragment>
+              ))}
+            </div>
+          );
+        })()}
+
         {/* Tabs */}
         <div className="flex gap-1 bg-muted p-1 rounded-xl">
-          {[
-            { key: 'lecture',   icon: BookOpen,      label: 'Lecture' },
-            { key: 'exercices', icon: ClipboardList, label: 'Exercices' },
-            { key: 'resultats', icon: BarChart3,     label: 'Résultats' },
-          ].map(tab => {
-            const TabIcon = tab.icon;
-            return (
-              <button
-                key={tab.key}
-                onClick={() => setActiveTab(tab.key)}
-                className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-sm font-semibold transition-all ${
-                  activeTab === tab.key ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                <TabIcon className="w-4 h-4" />
-                {tab.label}
-                {tab.key === 'resultats' && correction && (
-                  <span className={`text-xs font-black ml-1 ${correction.percentage >= 70 ? 'text-emerald-600' : 'text-red-500'}`}>
-                    {correction.percentage}%
-                  </span>
-                )}
-              </button>
-            );
-          })}
+          {(() => {
+            const hasReadCourse = pages.length === 0 || currentPage >= pages.length - 1 || pdfViewerUrl;
+            const hasPerfect    = correction?.percentage === 100;
+            const tabs = [
+              { key: 'lecture',   icon: BookOpen,      label: 'Lecture',     locked: false,              lockMsg: '' },
+              { key: 'exercices', icon: ClipboardList, label: 'Exercices',   locked: false,              lockMsg: '' },
+              { key: 'resultats', icon: BarChart3,     label: 'Résultats',   locked: !submitted,         lockMsg: 'Faites les exercices d\'abord' },
+              { key: 'dialogue',  icon: MessageCircle, label: 'Dialogue IA', locked: !hasPerfect,        lockMsg: hasPerfect ? '' : (!submitted ? 'Faites les exercices puis obtenez 100%' : `Obtenez 100% aux exercices (score actuel : ${correction?.percentage ?? 0}%)`) },
+            ];
+            return tabs.map(tab => {
+              const TabIcon = tab.icon;
+              const isActive = activeTab === tab.key;
+              return (
+                <button
+                  key={tab.key}
+                  onClick={() => {
+                    if (tab.locked) return;
+                    setActiveTab(tab.key);
+                  }}
+                  title={tab.locked ? tab.lockMsg : ''}
+                  disabled={tab.locked}
+                  className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
+                    tab.locked
+                      ? 'text-muted-foreground/40 cursor-not-allowed'
+                      : isActive
+                        ? 'bg-card text-foreground shadow-sm'
+                        : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  {tab.locked
+                    ? <Lock className="w-3.5 h-3.5 flex-shrink-0" />
+                    : <TabIcon className="w-3.5 h-3.5 flex-shrink-0" />
+                  }
+                  <span className="truncate">{tab.label}</span>
+                  {tab.key === 'resultats' && correction && !tab.locked && (
+                    <span className={`text-xs font-black ${correction.percentage === 100 ? 'text-emerald-600' : correction.percentage >= 70 ? 'text-amber-600' : 'text-red-500'}`}>
+                      {correction.percentage}%
+                    </span>
+                  )}
+                  {tab.key === 'dialogue' && !tab.locked && (
+                    <span className="text-xs bg-emerald-500 text-white px-1.5 rounded-full font-bold">✓</span>
+                  )}
+                </button>
+              );
+            });
+          })()}
         </div>
 
         {/* ══ TAB : LECTURE — PDF direct (pas de pages structurées) ══ */}
@@ -975,6 +1110,116 @@ const SecureCourseViewer = () => {
           </div>
         )}
 
+        {/* ══ TAB : DIALOGUE IA ══ */}
+        {activeTab === 'dialogue' && correction?.percentage !== 100 && (
+          <div className="bg-card border border-border rounded-2xl p-12 text-center space-y-4">
+            <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto">
+              <Lock className="w-8 h-8 text-amber-500" />
+            </div>
+            <h3 className="text-lg font-black text-foreground">Dialogue IA verrouillé</h3>
+            <p className="text-sm text-muted-foreground max-w-sm mx-auto">
+              Pour accéder au tuteur IA, vous devez d'abord obtenir <strong className="text-foreground">100%</strong> aux exercices.
+              {correction && <><br/><span className="text-amber-600 font-semibold">Votre score actuel : {correction.percentage}%</span></>}
+            </p>
+            <div className="flex gap-3 justify-center pt-2">
+              {!submitted ? (
+                <Button onClick={() => setActiveTab('exercices')} className="gap-2 rounded-xl bg-primary text-primary-foreground">
+                  <ClipboardList className="w-4 h-4" /> Faire les exercices
+                </Button>
+              ) : (
+                <>
+                  <Button onClick={resetQuiz} variant="outline" className="gap-2 rounded-xl">
+                    <RefreshCw className="w-4 h-4" /> Réessayer (obtenir 100%)
+                  </Button>
+                  <Button onClick={() => { setActiveTab('lecture'); setCurrentPage(0); }} className="gap-2 rounded-xl bg-primary text-primary-foreground">
+                    <BookOpen className="w-4 h-4" /> Réviser le cours
+                  </Button>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'dialogue' && correction?.percentage === 100 && (
+          <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm flex flex-col" style={{ height: '72vh' }}>
+            {/* Header */}
+            <div className="px-5 py-3 border-b border-border bg-emerald-50/50 flex items-center gap-3">
+              <div className="w-9 h-9 rounded-full bg-emerald-500 flex items-center justify-center flex-shrink-0">
+                <Brain className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-foreground flex items-center gap-1.5">
+                  IWS IA — Tuteur <span className="text-xs bg-yellow-400 text-yellow-900 px-1.5 py-0.5 rounded-full font-black">🏆 100%</span>
+                </p>
+                <p className="text-xs text-muted-foreground">Basé sur : {courseTitle}</p>
+              </div>
+              <div className="ml-auto flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-xs text-emerald-600 font-medium">En ligne</span>
+              </div>
+            </div>
+
+            {/* Messages */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-3" style={{ scrollBehavior: 'smooth' }}>
+              {chatMessages.map((msg, i) => (
+                <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  {msg.role === 'assistant' && (
+                    <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mr-2 mt-1">
+                      <Brain className="w-3.5 h-3.5 text-primary" />
+                    </div>
+                  )}
+                  <div className={`max-w-[78%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
+                    msg.role === 'user'
+                      ? 'bg-primary text-primary-foreground rounded-tr-sm'
+                      : 'bg-muted text-foreground rounded-tl-sm'
+                  }`}>
+                    {msg.content}
+                  </div>
+                </div>
+              ))}
+              {chatSending && (
+                <div className="flex justify-start">
+                  <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mr-2">
+                    <Brain className="w-3.5 h-3.5 text-primary" />
+                  </div>
+                  <div className="bg-muted rounded-2xl rounded-tl-sm px-4 py-3 flex gap-1.5 items-center">
+                    {[0,1,2].map(d => (
+                      <span key={d} className="w-2 h-2 rounded-full bg-primary/40 animate-bounce"
+                        style={{ animationDelay: `${d * 0.15}s` }} />
+                    ))}
+                  </div>
+                </div>
+              )}
+              <div ref={chatEndRef} />
+            </div>
+
+            {/* Input */}
+            <div className="px-4 py-3 border-t border-border bg-muted/20">
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={chatInput}
+                  onChange={e => setChatInput(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendChatMessage()}
+                  placeholder="Écrivez votre message… (Entrée pour envoyer)"
+                  className="flex-1 bg-background border border-border rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50 placeholder:text-muted-foreground"
+                  disabled={chatSending}
+                />
+                <button
+                  onClick={sendChatMessage}
+                  disabled={chatSending || !chatInput.trim()}
+                  className="w-10 h-10 rounded-xl bg-primary text-primary-foreground flex items-center justify-center flex-shrink-0 hover:bg-primary/90 disabled:opacity-40 transition-all"
+                >
+                  {chatSending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                </button>
+              </div>
+              <p className="text-xs text-muted-foreground mt-1.5 text-center">
+                💡 Essayez : "Explique-moi la règle principale" · "Donne-moi un exercice" · "Corrige ma phrase"
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* ══ TAB : RÉSULTATS ══ */}
         {activeTab === 'resultats' && (
           <div className="space-y-4">
@@ -1084,13 +1329,56 @@ const SecureCourseViewer = () => {
                   </div>
                 )}
 
-                <div className="flex gap-3 justify-center pb-4">
-                  <Button onClick={resetQuiz} variant="outline" className="gap-2 rounded-xl">
-                    <RefreshCw className="w-4 h-4" /> Réessayer
-                  </Button>
-                  <Button onClick={() => { setActiveTab('lecture'); setCurrentPage(0); }} className="gap-2 rounded-xl bg-primary text-primary-foreground">
-                    <BookOpen className="w-4 h-4" /> Réviser le cours
-                  </Button>
+                {/* ── Boutons intelligents selon le score ── */}
+                <div className="flex flex-wrap gap-3 justify-center pb-4">
+                  {correction.percentage === 100 ? (
+                    <>
+                      {/* Score parfait → proposer le cours suivant ou le dialogue */}
+                      <Button
+                        onClick={() => setActiveTab('dialogue')}
+                        variant="outline"
+                        className="gap-2 rounded-xl"
+                      >
+                        <MessageCircle className="w-4 h-4" /> Pratiquer avec l'IA
+                      </Button>
+                      {nextCourse ? (
+                        <Button
+                          onClick={() => navigate(`/dashboard/courses/${nextCourse.id}/view`)}
+                          className="gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-md"
+                        >
+                          Cours suivant
+                          <ChevronRightIcon className="w-4 h-4" />
+                          <span className="text-xs opacity-80 truncate max-w-[120px]">
+                            {nextCourse.titre || nextCourse.title}
+                          </span>
+                        </Button>
+                      ) : (
+                        <Button
+                          onClick={() => navigate('/dashboard/courses')}
+                          className="gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
+                        >
+                          <GraduationCap className="w-4 h-4" /> Tous les cours
+                        </Button>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      {/* Score < 100% → réviser ou réessayer */}
+                      <Button onClick={resetQuiz} variant="outline" className="gap-2 rounded-xl">
+                        <RefreshCw className="w-4 h-4" /> Réessayer
+                      </Button>
+                      <Button onClick={() => { setActiveTab('lecture'); setCurrentPage(0); }} className="gap-2 rounded-xl bg-primary text-primary-foreground">
+                        <BookOpen className="w-4 h-4" /> Réviser le cours
+                      </Button>
+                      <Button
+                        onClick={() => setActiveTab('dialogue')}
+                        variant="outline"
+                        className="gap-2 rounded-xl border-primary/30 text-primary"
+                      >
+                        <MessageCircle className="w-4 h-4" /> Demander à l'IA
+                      </Button>
+                    </>
+                  )}
                 </div>
               </>
             )}

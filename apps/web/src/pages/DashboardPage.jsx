@@ -16,7 +16,7 @@ import {
   PlayCircle, Lock, TrendingUp, Award, Zap, User, Bell, Gift, Globe,
 } from 'lucide-react';
 
-const FREE_COURSES_LIMIT = 5;
+const FREE_COURSES_LIMIT = 3;
 
 // ── Programme config ─────────────────────────────────────────────
 const PROGRAMME_CFG = {
@@ -97,7 +97,7 @@ const DashboardPage = () => {
             requestKey: null,
           }).then(r => r.items.sort((a, b) => new Date(b.created) - new Date(a.created))),
           pb.collection('course_enrollments').getFullList({
-            filter: `user_id="${currentUser.id}"`, expand: 'course_id', sort: '-updated', requestKey: null,
+            filter: `user_id="${currentUser.id}"`, expand: 'course_id', sort: '+created', requestKey: null,
           }),
         ]);
         if (ordRes.status === 'fulfilled') setOrders(ordRes.value);
@@ -283,19 +283,27 @@ const DashboardPage = () => {
                       </div>
                     </div>
 
-                    {/* Enrolled courses */}
+                    {/* Enrolled courses — ordered sequentially */}
                     {loading ? (
-                      <div className="space-y-2">{[1,2].map(i => <Skeleton key={i} className="h-14 w-full rounded-xl" />)}</div>
+                      <div className="space-y-2">{[1,2,3].map(i => <Skeleton key={i} className="h-14 w-full rounded-xl" />)}</div>
                     ) : enrollments.length > 0 ? (
                       <div className="space-y-2">
-                        {enrollments.slice(0, 3).map(e => {
-                          const title  = e.expand?.course_id?.titre || e.expand?.course_id?.title || 'Cours';
-                          const prog   = e.progression || 0;
-                          const locked = !hasActivePayment && !isFreeTier;
+                        {enrollments.slice(0, 3).map((e, idx) => {
+                          const title    = e.expand?.course_id?.titre || e.expand?.course_id?.title || `Cours ${idx + 1}`;
+                          const prog     = e.progression || 0;
+                          const done     = e.complete || prog >= 100;
+                          const locked   = !hasActivePayment && !isFreeTier;
+                          // Premier cours non-terminé = cours actif à commencer
+                          const prevDone = idx === 0 || (enrollments[idx - 1]?.complete || (enrollments[idx - 1]?.progression || 0) >= 100);
+                          const isActive = !locked && prevDone && !done;
+                          const isNext   = !locked && !prevDone && !done;
                           return (
-                            <div key={e.id} className={`flex items-center gap-3 p-3 rounded-xl border transition-colors ${locked ? 'bg-muted/30 opacity-60' : 'bg-card hover:bg-muted/20'}`}>
-                              <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${locked ? 'bg-slate-100 text-slate-400' : 'bg-primary/10 text-primary'}`}>
-                                {locked ? <Lock className="w-4 h-4" /> : <PlayCircle className="w-4 h-4" />}
+                            <div key={e.id} className={`flex items-center gap-3 p-3 rounded-xl border transition-colors
+                              ${locked ? 'bg-muted/30 opacity-60' : done ? 'bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-200' : isActive ? 'bg-primary/5 border-primary/30 shadow-sm' : 'bg-card hover:bg-muted/20'}`}>
+                              {/* Numéro / état */}
+                              <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 font-bold text-sm
+                                ${locked ? 'bg-slate-100 text-slate-400' : done ? 'bg-emerald-100 text-emerald-600' : isActive ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
+                                {locked ? <Lock className="w-4 h-4" /> : done ? <CheckCircle2 className="w-4 h-4" /> : idx + 1}
                               </div>
                               <div className="flex-1 min-w-0">
                                 <p className="text-sm font-semibold text-foreground truncate">{title}</p>
@@ -306,16 +314,25 @@ const DashboardPage = () => {
                                   </div>
                                 )}
                               </div>
-                              {locked
-                                ? <span className="text-xs text-muted-foreground shrink-0">Verrouillé</span>
-                                : (
-                                  <Link to={e.course_id ? `/dashboard/courses/${e.course_id}/view` : '/dashboard/courses/view'}>
-                                    <Button size="sm" className="h-7 px-2.5 text-xs font-bold gap-1 bg-primary text-primary-foreground">
-                                      <PlayCircle className="w-3.5 h-3.5" /> Ouvrir
-                                    </Button>
-                                  </Link>
-                                )
-                              }
+                              {locked ? (
+                                <span className="text-xs text-muted-foreground shrink-0">Verrouillé</span>
+                              ) : done ? (
+                                <span className="text-xs font-bold text-emerald-600 shrink-0">✓ Terminé</span>
+                              ) : isActive ? (
+                                <Link to={e.course_id ? `/dashboard/courses/${e.course_id}/view` : '/dashboard/courses/view'}>
+                                  <Button size="sm" className="h-8 px-3 text-xs font-bold gap-1.5 bg-primary text-primary-foreground shadow-sm whitespace-nowrap">
+                                    <PlayCircle className="w-3.5 h-3.5" /> Commencer
+                                  </Button>
+                                </Link>
+                              ) : isNext ? (
+                                <span className="text-xs text-muted-foreground shrink-0">Suivant →</span>
+                              ) : (
+                                <Link to={e.course_id ? `/dashboard/courses/${e.course_id}/view` : '/dashboard/courses/view'}>
+                                  <Button size="sm" variant="outline" className="h-7 px-2.5 text-xs font-bold gap-1">
+                                    <PlayCircle className="w-3.5 h-3.5" /> Continuer
+                                  </Button>
+                                </Link>
+                              )}
                             </div>
                           );
                         })}

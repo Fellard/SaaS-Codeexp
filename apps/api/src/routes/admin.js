@@ -350,7 +350,7 @@ RÈGLES POUR LES PAGES (6 à 10 pages) :
 - Pages intermédiaires : <span class="prep">terme</span> · <div class="rule-box"><div class="rule-icon">emoji</div><div>règle + exemples</div></div> · <div class="info-box">💡 astuce</div> · <div class="compare-box"><div class="compare-item good">✅ bon</div><div class="compare-item bad">❌ mauvais</div></div>
 - Dernière page : <div class="summary-table"><div class="summary-row header"><div>Terme</div><div>Règle</div><div>Exemple</div></div>...</div>
 
-RÈGLES POUR LES EXERCICES : 12 à 16 QCM · 4 options chacun · answer = index 0-3 de la bonne réponse.
+RÈGLES POUR LES EXERCICES : 18 à 20 QCM · 4 options chacun · answer = index 0-3 de la bonne réponse · varier les types : compréhension, vocabulaire, grammaire, inférence.
 IMPORTANT : Réponds UNIQUEMENT avec le JSON.`;
 
   const MODELS = ['claude-sonnet-4-6', 'claude-opus-4-6'];

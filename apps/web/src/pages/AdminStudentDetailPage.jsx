@@ -96,7 +96,7 @@ const LevelRoadmap = ({ currentLevel }) => {
 };
 
 // ── Enrollment status ────────────────────────────────────────────
-const FREE_COURSES_LIMIT = 5;
+const FREE_COURSES_LIMIT = 3;
 
 const ENROLL_STATUS = {
   actif:    { label: 'En cours',               cls: 'border-blue-500   text-blue-700   bg-blue-50',   icon: PlayCircle },

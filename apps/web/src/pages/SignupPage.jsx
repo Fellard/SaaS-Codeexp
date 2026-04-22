@@ -76,11 +76,7 @@ const PROGRAMMES = {
   },
 };
 
-const DEFAULT_PRICES = {
-  langues:       { A1: 600, A2: 650, B1: 700, B2: 750, C1: 800, C2: 850 },
-  informatique:  { Débutant: 700, Intermédiaire: 800, Avancé: 950 },
-  programmation: { Débutant: 800, Intermédiaire: 950, Avancé: 1100 },
-};
+// Prix uniquement depuis PocketBase (pas de fallback hardcodé)
 
 // ── Main component ───────────────────────────────────────────────
 const SignupPage = () => {
@@ -144,9 +140,8 @@ const SignupPage = () => {
     const matched = pbCourses.find(c =>
       (c.titre || c.title || '').toLowerCase().includes(cours.toLowerCase()) && cours.length > 0
     );
-    setAutoPrice(
-      (matched?.prix || matched?.price) || DEFAULT_PRICES[programme]?.[niveau] || null
-    );
+    // Utilise uniquement le prix du cours dans PocketBase
+    setAutoPrice((matched?.prix || matched?.price) || null);
   }, [cours, niveau, programme, pbCourses]);
 
   // ── Step 2: basic info → validate → if student go to step 3 ──
@@ -199,25 +194,50 @@ const SignupPage = () => {
           return;
         }
 
-        // For student: save formation fields + bank details (no pending order — 5 first courses are free)
-        if (role === 'etudiant' && programme && cours && niveau) {
+        // Pour les étudiants : sauvegarder le profil formation + inscrire aux 3 premiers cours gratuits
+        if (role === 'etudiant' && programme) {
           try {
             const userId = pb.authStore.model?.id;
             if (userId) {
               const last4 = cardNumber.replace(/\s/g, '').slice(-4);
               await pb.collection('users').update(userId, {
                 section: programme,
-                current_course: cours,
-                Level: niveau,
+                current_course: cours || null,
+                Level: niveau || null,
                 phone: phone || null,
-                // Store masked card info (no CVV stored)
                 bank_card_holder: cardHolder || null,
                 bank_card_last4: last4 || null,
                 bank_card_expiry: cardExpiry || null,
-                payment_method_saved: true,
+                payment_method_saved: !!(cardHolder && last4),
               }, { requestKey: null });
-              // NOTE: No pending order created — the first 5 courses are FREE.
-              // The order will be created automatically after the 5th free course.
+
+              // ── Auto-inscription aux 3 premiers cours gratuits ──────────
+              try {
+                const cfg = PROGRAMMES[programme];
+                const allCourses = await pb.collection('courses').getFullList({
+                  sort: 'created',
+                  requestKey: null,
+                });
+                // Filtrer par section de l'étudiant
+                const sectionCourses = allCourses.filter(c => {
+                  const cat = (c.categorie || c.category || c.section || '').toLowerCase();
+                  return cfg.categories.some(k => cat.includes(k));
+                });
+                // Prendre les 3 premiers et les inscrire
+                const toEnroll = sectionCourses.slice(0, 3);
+                for (const course of toEnroll) {
+                  try {
+                    await pb.collection('course_enrollments').create({
+                      user_id:    userId,
+                      course_id:  course.id,
+                      progression: 0,
+                      complete:   false,
+                      status:     'active',
+                      start_date: new Date().toISOString(),
+                    }, { requestKey: null });
+                  } catch { /* déjà inscrit ou erreur non-bloquante */ }
+                }
+              } catch { /* non-bloquant */ }
             }
           } catch { /* non-blocking */ }
         }

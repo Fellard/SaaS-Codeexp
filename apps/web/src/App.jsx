@@ -18,6 +18,7 @@ import FormationInscriptionPage from '@/pages/FormationInscriptionPage.jsx';
 import StorePage from '@/pages/StorePage.jsx';
 import ProductDetailPage from '@/pages/ProductDetailPage.jsx';
 import PaymentSuccessPage from '@/pages/PaymentSuccessPage.jsx';
+import PaymentCapturePage from '@/pages/PaymentCapturePage.jsx';
 import StudioPage from '@/pages/StudioPage.jsx';
 import StudioReservationPage from '@/pages/StudioReservationPage.jsx';
 import StudioConfirmationPage from '@/pages/StudioConfirmationPage.jsx';
@@ -96,6 +97,8 @@ function App() {
               <Route path="/store" element={<StorePage />} />
               <Route path="/product/:id" element={<ProductDetailPage />} />
               <Route path="/success" element={<PaymentSuccessPage />} />
+              <Route path="/payment/success" element={<ProtectedRoute><PaymentCapturePage /></ProtectedRoute>} />
+              <Route path="/payment/cancel"  element={<ProtectedRoute><PaymentCapturePage /></ProtectedRoute>} />
               <Route path="/studio" element={<StudioPage />} />
               <Route path="/studio/reservation" element={<StudioReservationPage />} />
               <Route path="/studio/confirmation/:id" element={<StudioConfirmationPage />} />

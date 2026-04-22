@@ -87,12 +87,7 @@ const PROGRAMMES = {
   },
 };
 
-// Default prices by programme
-const DEFAULT_PRICES = {
-  langues: { A1: 600, A2: 650, B1: 700, B2: 750, C1: 800, C2: 850 },
-  informatique: { Débutant: 700, Intermédiaire: 800, Avancé: 950 },
-  programmation: { Débutant: 800, Intermédiaire: 950, Avancé: 1100 },
-};
+// Prix uniquement depuis PocketBase (pas de fallback hardcodé)
 
 // ── Step indicator ───────────────────────────────────────────────
 const StepBar = ({ step }) => {
@@ -192,11 +187,11 @@ const FormationInscriptionPage = () => {
     );
     if (matched) {
       setSelectedCourseId(matched.id);
-      setAutoPrice(matched.prix || matched.price || DEFAULT_PRICES[programme]?.[niveau] || null);
+      setAutoPrice(matched.prix || matched.price || null);
       setAutoDuration(matched.duree || matched.duration || '');
     } else {
       setSelectedCourseId(null);
-      setAutoPrice(DEFAULT_PRICES[programme]?.[niveau] || null);
+      setAutoPrice(null);
       setAutoDuration('');
     }
   }, [cours, niveau, programme, pbCourses]);

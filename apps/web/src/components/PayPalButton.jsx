@@ -1,249 +1,120 @@
 /**
- * PayPalButton — Bouton de paiement PayPal
- * Version avec diagnostic complet et timeouts
+ * PayPalButton — Bouton de paiement PayPal (flux redirect)
+ *
+ * Au lieu d'utiliser le SDK PayPal (iframe), ce composant redirige
+ * l'utilisateur vers paypal.com pour payer, puis PayPal redirige vers
+ * /payment/success pour capturer le paiement.
+ *
+ * Props :
+ *   amount      {number}  Montant en MAD
+ *   description {string}  Description de l'achat
+ *   courseId    {string}  ID du cours PocketBase
+ *   userId      {string}  ID de l'utilisateur PocketBase
+ *   orderType   {string}  "formation" | "web_agency"
+ *   onError     {function} Appelée en cas d'erreur → (message)
  */
 
-import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { Loader2, AlertCircle, RefreshCw, CheckCircle2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { Loader2, AlertCircle, RefreshCw, ExternalLink } from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 const PayPalButton = ({
   amount,
-  description   = 'IWS Laayoune',
-  pbOrderId     = null,
-  orderType     = 'formation',
-  onSuccess,
+  description = 'IWS Laayoune',
+  courseId    = null,
+  userId      = null,
+  orderType   = 'formation',
   onError,
-  onCancel,
 }) => {
-  const containerRef = useRef(null);
-  const buttonsRef   = useRef(null);
-  const [status, setStatus]     = useState('idle'); // idle | loading | ready | error
-  const [errorMsg, setErrorMsg] = useState('');
-  const [step, setStep]         = useState('');    // message de progression
+  const [loading, setLoading] = useState(false);
+  const [error,   setError]   = useState('');
 
-  const init = useCallback(async () => {
-    setStatus('loading');
-    setErrorMsg('');
+  const handlePay = async () => {
+    setLoading(true);
+    setError('');
 
     try {
-      // ── Étape 1 : Contacter l'API ───────────────────────────────
-      setStep('Contacting API…');
-      console.log('[PayPal] Fetching config from', `${API_URL}/paypal/config`);
-
-      const controller = new AbortController();
-      const apiTimer   = setTimeout(() => controller.abort(), 8000);
-
-      let configData;
-      try {
-        const res = await fetch(`${API_URL}/paypal/config`, { signal: controller.signal });
-        clearTimeout(apiTimer);
-        if (!res.ok) {
-          const err = await res.json().catch(() => ({}));
-          throw new Error(err.error || `API erreur ${res.status}`);
-        }
-        configData = await res.json();
-      } catch (e) {
-        clearTimeout(apiTimer);
-        if (e.name === 'AbortError') {
-          throw new Error(`API inaccessible — vérifiez que l'API tourne sur ${API_URL}`);
-        }
-        throw new Error(`API: ${e.message}`);
-      }
-
-      const { clientId, currency = 'USD' } = configData;
-      console.log('[PayPal] Config OK — mode:', configData.mode, '| clientId:', clientId?.substring(0, 10) + '…');
-
-      if (!clientId || clientId.length < 10) {
-        throw new Error('PAYPAL_CLIENT_ID manquant dans le .env de l\'API');
-      }
-
-      // ── Étape 2 : Charger le SDK PayPal ────────────────────────
-      setStep('Loading PayPal SDK…');
-      console.log('[PayPal] Loading SDK…');
-
-      if (!window.paypal) {
-        await withTimeout(
-          loadPayPalSDK(clientId, currency),
-          15000,
-          'Le SDK PayPal n\'a pas répondu en 15s — vérifiez la connexion internet'
-        );
-      }
-      console.log('[PayPal] SDK loaded ✓');
-
-      if (!containerRef.current) return;
-
-      // ── Étape 3 : Nettoyer l'ancien bouton si re-render ────────
-      if (buttonsRef.current) {
-        try { buttonsRef.current.close?.(); } catch {}
-        buttonsRef.current = null;
-      }
-      containerRef.current.innerHTML = '';
-
-      // ── Étape 4 : Créer + rendre les boutons PayPal ────────────
-      setStep('Initializing PayPal buttons…');
-      console.log('[PayPal] Creating buttons…');
-
-      buttonsRef.current = window.paypal.Buttons({
-        style: {
-          layout: 'vertical',
-          color:  'blue',
-          shape:  'pill',
-          label:  'pay',
-          height: 50,
-        },
-
-        createOrder: async () => {
-          const res = await fetch(`${API_URL}/paypal/create-order`, {
-            method:  'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body:    JSON.stringify({ amount, description, orderId: pbOrderId, orderType }),
-          });
-          if (!res.ok) throw new Error('Impossible de créer la commande PayPal');
-          const data = await res.json();
-          return data.id;
-        },
-
-        onApprove: async (data) => {
-          setStatus('loading');
-          setStep('Capturing payment…');
-          try {
-            const res = await fetch(`${API_URL}/paypal/capture-order`, {
-              method:  'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body:    JSON.stringify({ paypalOrderId: data.orderID, pbOrderId, orderType }),
-            });
-            const result = await res.json();
-            if (result.success) {
-              onSuccess?.({ transactionId: result.transactionId, pbOrderId });
-            } else {
-              throw new Error(result.error || 'Capture échouée');
-            }
-          } catch (e) {
-            onError?.(e.message);
-            setErrorMsg(e.message);
-            setStatus('error');
-          }
-        },
-
-        onCancel: () => onCancel?.(),
-
-        onError: (err) => {
-          console.error('[PayPal] Button error:', err);
-          const msg = typeof err === 'string' ? err : (err?.message || 'Erreur inconnue');
-          onError?.(msg);
-          setErrorMsg('Erreur PayPal : ' + msg);
-          setStatus('error');
-        },
+      const res = await fetch(`${API_URL}/paypal/create-order`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ amount, description, orderType, courseId, userId }),
       });
 
-      if (!buttonsRef.current.isEligible()) {
-        throw new Error(
-          'PayPal non disponible dans cet environnement. ' +
-          'Vérifiez que votre compte PayPal Business est vérifié et que la devise USD est activée.'
-        );
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || `Erreur serveur (${res.status})`);
       }
 
-      console.log('[PayPal] Rendering buttons…');
-      await withTimeout(
-        buttonsRef.current.render(containerRef.current),
-        30000,
-        'PayPal n\'a pas rendu les boutons en 30s — essayez en navigation privée (Ctrl+Shift+N)'
-      );
+      const data = await res.json();
 
-      console.log('[PayPal] Buttons rendered ✓');
-      setStep('');
-      setStatus('ready');
+      if (!data.approvalUrl) {
+        throw new Error("Pas d'URL de paiement retournée par le serveur");
+      }
+
+      // Redirection vers PayPal
+      window.location.href = data.approvalUrl;
 
     } catch (e) {
-      console.error('[PayPal] Init error:', e.message);
-      setErrorMsg(e.message);
-      setStatus('error');
+      setError(e.message);
+      onError?.(e.message);
+      setLoading(false);
     }
-  }, [amount, pbOrderId, orderType, description]);
+  };
 
-  useEffect(() => {
-    init();
-    return () => {
-      try { buttonsRef.current?.close?.(); } catch {}
-    };
-  }, [init]);
+  if (error) {
+    return (
+      <div className="space-y-2">
+        <div className="flex items-start gap-2 bg-destructive/10 border border-destructive/20 rounded-xl p-3 text-sm text-destructive">
+          <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="font-semibold">PayPal indisponible</p>
+            <p className="text-xs mt-0.5 opacity-80 break-words">{error}</p>
+          </div>
+        </div>
+        <button
+          onClick={handlePay}
+          className="flex items-center gap-1.5 text-xs text-muted-foreground underline underline-offset-2 hover:opacity-70"
+        >
+          <RefreshCw className="w-3 h-3" /> Réessayer
+        </button>
+      </div>
+    );
+  }
 
   return (
-    <div className="w-full space-y-2">
-      {/* Loader avec étape */}
-      {status === 'loading' && (
-        <div className="flex flex-col items-center gap-2 py-5 text-muted-foreground text-sm">
-          <Loader2 className="w-5 h-5 animate-spin" />
-          <span>{step || 'Chargement de PayPal…'}</span>
-        </div>
-      )}
-
-      {/* Erreur avec retry */}
-      {status === 'error' && (
-        <div className="bg-destructive/10 border border-destructive/20 rounded-xl p-4 text-sm text-destructive space-y-2">
-          <div className="flex items-start gap-2">
-            <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
-            <div>
-              <p className="font-semibold">PayPal indisponible</p>
-              <p className="text-xs mt-0.5 opacity-80 break-words">{errorMsg}</p>
-            </div>
-          </div>
-          <button
-            onClick={init}
-            className="flex items-center gap-1.5 text-xs underline underline-offset-2 hover:opacity-70 transition-opacity"
-          >
-            <RefreshCw className="w-3 h-3" />
-            Réessayer
-          </button>
-        </div>
-      )}
-
-      {/* Conteneur boutons PayPal */}
-      <div
-        ref={containerRef}
-        className={status === 'loading' || status === 'error' ? 'hidden' : 'block'}
-      />
-
-      {/* Note sécurité */}
-      {status === 'ready' && (
-        <p className="text-center text-xs text-muted-foreground">
-          🔒 Paiement sécurisé via PayPal — Visa, Mastercard, compte PayPal acceptés
-        </p>
-      )}
+    <div className="space-y-2">
+      <button
+        onClick={handlePay}
+        disabled={loading}
+        className="w-full flex items-center justify-center gap-3 bg-[#0070BA] hover:bg-[#003087] disabled:opacity-60 text-white font-bold rounded-full px-6 py-3.5 transition-colors shadow-md"
+      >
+        {loading ? (
+          <>
+            <Loader2 className="w-5 h-5 animate-spin" />
+            Redirection vers PayPal…
+          </>
+        ) : (
+          <>
+            <PayPalLogo />
+            Payer avec PayPal
+            <ExternalLink className="w-4 h-4 opacity-70" />
+          </>
+        )}
+      </button>
+      <p className="text-center text-xs text-muted-foreground">
+        🔒 Vous serez redirigé vers PayPal pour compléter le paiement en toute sécurité
+      </p>
     </div>
   );
 };
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
-
-function withTimeout(promise, ms, timeoutMsg) {
-  return Promise.race([
-    promise,
-    new Promise((_, reject) =>
-      setTimeout(() => reject(new Error(timeoutMsg)), ms)
-    ),
-  ]);
-}
-
-function loadPayPalSDK(clientId, currency = 'USD') {
-  return new Promise((resolve, reject) => {
-    const existing = document.getElementById('paypal-sdk');
-    if (existing) {
-      if (window.paypal) { resolve(); return; }
-      existing.addEventListener('load', resolve, { once: true });
-      existing.addEventListener('error', () => reject(new Error('Erreur chargement SDK PayPal')), { once: true });
-      return;
-    }
-
-    const script  = document.createElement('script');
-    script.id     = 'paypal-sdk';
-    script.src    = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=${currency}`;
-    script.onload = resolve;
-    script.onerror = () => reject(new Error('Impossible de charger le SDK depuis paypal.com'));
-    document.head.appendChild(script);
-  });
-}
+// Logo PayPal SVG simplifié
+const PayPalLogo = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M7.5 21L9 3h6.5c2.5 0 4.5 1 4.5 4 0 4-3 6-6.5 6H11L9.5 21H7.5z" fill="#ffffff" opacity="0.8"/>
+    <path d="M4 21l1.5-18H12c2.5 0 4.5 1 4.5 4 0 4-3 6-6.5 6H7.5L6 21H4z" fill="#ffffff"/>
+  </svg>
+);
 
 export default PayPalButton;
