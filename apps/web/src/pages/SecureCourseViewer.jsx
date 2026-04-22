@@ -240,6 +240,19 @@ const SecureCourseViewer = () => {
   const [paidViaPaypal,    setPaidViaPaypal]    = useState(false);
   const [nextCourse,       setNextCourse]       = useState(null);
 
+  // ── Progression pédagogique ─────────────────────────────────────
+  const [moduleValidated,  setModuleValidated]  = useState(false);  // ≥80% déjà obtenu
+  const [lastScore,        setLastScore]        = useState(null);   // dernier score (0-100)
+  const [scoreDecision,    setScoreDecision]    = useState(null);   // { passed, score, message, action } après soumission
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
+  // ── Tarification ─────────────────────────────────────────────────
+  // Deux options : cours individuel ($4.90) ou pack 12 cours ($49)
+  const PRICE_INDIVIDUAL = 4.90;
+  const PRICE_PACK_12    = 49.00;
+  const [selectedPlan,   setSelectedPlan]   = useState('individual'); // 'individual' | 'pack'
+  const effectivePrice = selectedPlan === 'pack' ? PRICE_PACK_12 : PRICE_INDIVIDUAL;
+
   // ── Chat IA ──────────────────────────────────────────────────────
   const [chatMessages, setChatMessages] = useState([
     { role: 'assistant', content: '👋 Bonjour ! Je suis IWS IA, votre tuteur. Posez-moi vos questions sur le cours ou demandez-moi de vous faire pratiquer !' }
@@ -395,6 +408,29 @@ const SecureCourseViewer = () => {
     checkAccess();
   }, [currentUser, courseId, langKey]);
 
+  // ── Charger le score existant (module déjà validé ?) ──────────────
+  useEffect(() => {
+    if (!currentUser || !courseId || hasAccess !== true) return;
+    const loadScore = async () => {
+      try {
+        const res  = await fetch(`${API_URL}/courses/${courseId}/my-score`, {
+          headers: { 'Authorization': `Bearer ${pb.authStore.token}` },
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.hasScore) {
+          setLastScore(data.score);
+          if (data.passed) {
+            setModuleValidated(true);
+            // Si le module est déjà validé, démarrer sur les exercices
+            setActiveTab('exercices');
+          }
+        }
+      } catch { /* non-bloquant */ }
+    };
+    loadScore();
+  }, [currentUser, courseId, hasAccess]);
+
   // ── Mise à jour des leçons si la langue change ──
   useEffect(() => {
     if (course) setPages(getLessonPages(course, langKey));
@@ -491,19 +527,46 @@ const SecureCourseViewer = () => {
     };
     setHistory(prev => [attempt, ...prev].slice(0, 10));
 
-    // ── Mise à jour de la progression directement dans PocketBase (plus de localhost) ──
-    if (enrollment?.id) {
-      try {
-        const quizPct = correctionData.percentage ?? pct;
-        // La progression quiz correspond aux 30% restants (70% leçon + 30% quiz = 100%)
-        const newProg = Math.min(100, Math.round(70 + (quizPct * 0.3)));
-        const updated = await pb.collection('course_enrollments').update(enrollment.id, {
-          progression:    Math.max(enrollment.progression || 0, newProg),
-          complete:       newProg >= 100,
-          last_activity:  new Date().toISOString(),
-        }, { requestKey: null });
-        setEnrollment(updated);
-      } catch {}
+    // ── Soumission du score au backend (règle pédagogique ≥80 / ≤79) ──
+    const quizPct = correctionData.percentage ?? pct;
+    try {
+      const scoreRes = await fetch(`${API_URL}/courses/${courseId}/submit-score`, {
+        method:  'POST',
+        headers: {
+          'Content-Type':  'application/json',
+          'Authorization': `Bearer ${pb.authStore.token}`,
+        },
+        body: JSON.stringify({ score: quizPct }),
+      });
+      if (scoreRes.ok) {
+        const decision = await scoreRes.json();
+        setScoreDecision(decision);
+        setLastScore(decision.score);
+        if (decision.passed) {
+          setModuleValidated(true);
+          // Recharger l'enrollment mis à jour par le backend
+          if (enrollment?.id) {
+            try {
+              const updated = await pb.collection('course_enrollments').getOne(enrollment.id, { requestKey: null });
+              setEnrollment(updated);
+            } catch {}
+          }
+        }
+      }
+    } catch (se) {
+      console.error('[Score] submit-score error:', se.message);
+      // Fallback local si le backend est indisponible
+      if (enrollment?.id) {
+        try {
+          const newProg = Math.min(100, Math.round(70 + (quizPct * 0.3)));
+          const updated = await pb.collection('course_enrollments').update(enrollment.id, {
+            progression: Math.max(enrollment.progression || 0, newProg),
+            complete:    newProg >= 100,
+            last_activity: new Date().toISOString(),
+          }, { requestKey: null });
+          setEnrollment(updated);
+        } catch {}
+      }
     }
 
     setSubmitted(true);
@@ -511,7 +574,23 @@ const SecureCourseViewer = () => {
     setActiveTab('resultats');
   };
 
-  const resetQuiz = () => { setAnswers({}); setSubmitted(false); setCorrection(null); setActiveTab('exercices'); };
+  const resetQuiz = () => {
+    setAnswers({});
+    setSubmitted(false);
+    setCorrection(null);
+    setScoreDecision(null);
+    // Toujours retourner aux exercices (l'étudiant peut retourner au cours manuellement)
+    setActiveTab('exercices');
+  };
+
+  const restartFromLecture = () => {
+    setAnswers({});
+    setSubmitted(false);
+    setCorrection(null);
+    setScoreDecision(null);
+    setCurrentPage(0);
+    setActiveTab('lecture');
+  };
 
   // ── Envoyer un message au tuteur IA ──
   const sendChatMessage = async () => {
@@ -570,19 +649,22 @@ const SecureCourseViewer = () => {
     }
   };
 
-  // ── Soumettre une demande de paiement ──
+  // ── Soumettre une demande de paiement (méthodes non-PayPal) ──
   const handlePayment = async () => {
     if (!currentUser || paymentLoading) return;
     setPaymentLoading(true);
     try {
       const courseTitle = course?.titre || course?.title || 'Formation IWS';
+      const isPack = selectedPlan === 'pack';
       await pb.collection('orders').create({
         user_id:        currentUser.id,
-        course_id:      courseId || null,
-        total_price:    coursePrice || 0,
+        course_id:      isPack ? null : (courseId || null),
+        total_price:    effectivePrice,
         payment_method: paymentMethod,
         status:         'pending',
-        note:           `Accès cours : ${courseTitle}`,
+        note: isPack
+          ? `Pack 12 cours IWS — $${PRICE_PACK_12} (${paymentMethod})`
+          : `Accès cours : ${courseTitle} — $${PRICE_INDIVIDUAL} (${paymentMethod})`,
       }, { requestKey: null });
       setPaymentSuccess(true);
       setTimeout(() => navigate('/dashboard/orders'), 3000);
@@ -670,12 +752,42 @@ const SecureCourseViewer = () => {
                   <p className="font-bold text-foreground text-sm truncate">{courseTitle}</p>
                   <p className="text-xs text-muted-foreground mt-0.5">Formation continue — accès illimité</p>
                 </div>
-                {coursePrice > 0 && (
-                  <div className="text-right flex-shrink-0">
-                    <p className="text-xl font-black text-primary">{coursePrice.toLocaleString('fr-FR')} MAD</p>
-                    <p className="text-xs text-muted-foreground">paiement unique</p>
-                  </div>
-                )}
+              </div>
+
+              {/* ── Choix du plan tarifaire ── */}
+              <div className="mb-5">
+                <p className="text-sm font-bold text-foreground mb-3">Choisissez votre offre :</p>
+                <div className="grid grid-cols-2 gap-3">
+                  {/* Option individuelle */}
+                  <button
+                    onClick={() => setSelectedPlan('individual')}
+                    className={`rounded-2xl border-2 p-4 text-left transition-all ${
+                      selectedPlan === 'individual'
+                        ? 'border-primary bg-primary/5 shadow-md'
+                        : 'border-border bg-card hover:border-primary/40'
+                    }`}
+                  >
+                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">1 cours</p>
+                    <p className="text-2xl font-black text-primary">${PRICE_INDIVIDUAL.toFixed(2)}</p>
+                    <p className="text-xs text-muted-foreground mt-1">Accès à ce cours uniquement</p>
+                  </button>
+                  {/* Pack 12 cours */}
+                  <button
+                    onClick={() => setSelectedPlan('pack')}
+                    className={`rounded-2xl border-2 p-4 text-left transition-all relative overflow-hidden ${
+                      selectedPlan === 'pack'
+                        ? 'border-emerald-500 bg-emerald-50 shadow-md'
+                        : 'border-border bg-card hover:border-emerald-400'
+                    }`}
+                  >
+                    <div className="absolute top-1.5 right-1.5 bg-emerald-500 text-white text-[10px] font-black px-1.5 py-0.5 rounded-full">
+                      -16%
+                    </div>
+                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">Pack 12 cours</p>
+                    <p className="text-2xl font-black text-emerald-600">${PRICE_PACK_12.toFixed(2)}</p>
+                    <p className="text-xs text-muted-foreground mt-1">≈ $4.08 / cours</p>
+                  </button>
+                </div>
               </div>
 
               {/* ── Choix méthode de paiement ── */}
@@ -716,40 +828,62 @@ const SecureCourseViewer = () => {
               {/* ── Boutons / PayPal ── */}
               {paymentMethod === 'paypal' ? (
                 <div className="space-y-3">
+                  {/* Résumé de commande avant paiement */}
+                  <div className="bg-muted rounded-xl px-4 py-3 text-sm text-center">
+                    <span className="font-bold text-foreground">
+                      {selectedPlan === 'pack' ? '🎁 Pack 12 cours' : '📚 1 cours'}
+                    </span>
+                    {' — '}
+                    <span className="font-black text-primary text-base">${effectivePrice.toFixed(2)}</span>
+                  </div>
                   <PayPalButton
-                    amount={coursePrice || 0}
-                    description={`Accès cours : ${courseTitle}`}
+                    amount={effectivePrice}
+                    description={selectedPlan === 'pack'
+                      ? `Pack 12 cours IWS — accès illimité`
+                      : `Accès cours : ${courseTitle}`}
                     courseId={courseId || null}
                     userId={currentUser?.id || null}
-                    orderType="formation"
+                    orderType={selectedPlan === 'pack' ? 'pack_12' : 'formation'}
                     onSuccess={async ({ transactionId }) => {
                       // 1. Créer la commande complétée dans PocketBase
                       try {
                         await pb.collection('orders').create({
                           user_id:         currentUser.id,
-                          course_id:       courseId || null,
-                          total_price:     coursePrice || 0,
+                          course_id:       selectedPlan === 'pack' ? null : (courseId || null),
+                          total_price:     effectivePrice,
                           payment_method:  'paypal',
                           status:          'completed',
-                          note:            `Accès cours : ${courseTitle}`,
+                          note:            selectedPlan === 'pack'
+                            ? `Pack 12 cours IWS — $${PRICE_PACK_12}`
+                            : `Accès cours : ${courseTitle}`,
                           paypal_order_id: transactionId,
                           paid_at:         new Date().toISOString(),
                         }, { requestKey: null });
                       } catch (e) {
                         console.error('PB order creation after PayPal failed:', e);
                       }
-                      // 2. Créer l'inscription au cours (donne accès immédiat)
-                      if (courseId) {
+                      // 2. Inscrire au cours (individuel) ou aux 12 premiers cours (pack)
+                      if (selectedPlan === 'pack') {
+                        try {
+                          const allCourses = await pb.collection('courses').getFullList({
+                            sort: '+created', fields: 'id', requestKey: null,
+                          });
+                          for (const c of allCourses.slice(0, 12)) {
+                            await pb.collection('course_enrollments').create({
+                              user_id: currentUser.id, course_id: c.id,
+                              progression: 0, complete: false,
+                              start_date: new Date().toISOString(),
+                            }, { requestKey: null }).catch(() => {});
+                          }
+                        } catch { /* non-bloquant */ }
+                      } else if (courseId) {
                         try {
                           await pb.collection('course_enrollments').create({
-                            user_id:    currentUser.id,
-                            course_id:  courseId,
-                            progression: 0,
-                            complete:   false,
-                            status:     'active',
+                            user_id: currentUser.id, course_id: courseId,
+                            progression: 0, complete: false,
                             start_date: new Date().toISOString(),
                           }, { requestKey: null });
-                        } catch { /* déjà inscrit — ignore */ }
+                        } catch { /* déjà inscrit */ }
                       }
                       setPaidViaPaypal(true);
                       setPaymentSuccess(true);
@@ -856,11 +990,16 @@ const SecureCourseViewer = () => {
           {(() => {
             const hasReadCourse = pages.length === 0 || currentPage >= pages.length - 1 || pdfViewerUrl;
             const hasPerfect    = correction?.percentage === 100;
+            // Lecture toujours accessible ; Dialogue débloqué uniquement à 100%
             const tabs = [
-              { key: 'lecture',   icon: BookOpen,      label: 'Lecture',     locked: false,              lockMsg: '' },
-              { key: 'exercices', icon: ClipboardList, label: 'Exercices',   locked: false,              lockMsg: '' },
-              { key: 'resultats', icon: BarChart3,     label: 'Résultats',   locked: !submitted,         lockMsg: 'Faites les exercices d\'abord' },
-              { key: 'dialogue',  icon: MessageCircle, label: 'Dialogue IA', locked: !hasPerfect,        lockMsg: hasPerfect ? '' : (!submitted ? 'Faites les exercices puis obtenez 100%' : `Obtenez 100% aux exercices (score actuel : ${correction?.percentage ?? 0}%)`) },
+              { key: 'lecture',   icon: BookOpen,      label: 'Lecture',     locked: false, lockMsg: '' },
+              { key: 'exercices', icon: ClipboardList, label: 'Exercices',   locked: false, lockMsg: '' },
+              { key: 'resultats', icon: BarChart3,     label: 'Résultats',
+                locked: !submitted,
+                lockMsg: 'Faites les exercices d\'abord' },
+              { key: 'dialogue',  icon: MessageCircle, label: 'Dialogue IA',
+                locked: !hasPerfect,
+                lockMsg: !submitted ? 'Obtenez 100% aux exercices pour débloquer' : `Score actuel : ${correction?.percentage ?? 0}% — 100% requis` },
             ];
             return tabs.map(tab => {
               const TabIcon = tab.icon;
@@ -1329,15 +1468,42 @@ const SecureCourseViewer = () => {
                   </div>
                 )}
 
-                {/* ── Boutons intelligents selon le score ── */}
+                {/* ── Résultat de la tentative ── */}
+                {correction && (
+                  <div className={`rounded-2xl border-2 p-5 ${
+                    correction.percentage === 100
+                      ? 'border-emerald-400 bg-emerald-50 dark:bg-emerald-950/20'
+                      : 'border-amber-400 bg-amber-50 dark:bg-amber-950/20'
+                  }`}>
+                    <p className={`font-black text-lg mb-1 ${correction.percentage === 100 ? 'text-emerald-700' : 'text-amber-700'}`}>
+                      {correction.percentage === 100 ? '🎉 Parfait ! 100% obtenu !' : `📊 Score : ${correction.percentage}%`}
+                    </p>
+                    <p className="text-sm text-foreground/80">
+                      {correction.percentage === 100
+                        ? 'Félicitations ! Vous pouvez maintenant pratiquer avec le tuteur IA.'
+                        : 'Continuez à pratiquer pour atteindre 100% et débloquer le dialogue IA.'}
+                    </p>
+                    {history.length >= 3 && correction.percentage < 100 && (
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {history.length} tentative{history.length > 1 ? 's' : ''} effectuée{history.length > 1 ? 's' : ''} — vous pouvez reprendre le cours depuis le début si besoin.
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                {/* ── Boutons selon la progression ── */}
                 <div className="flex flex-wrap gap-3 justify-center pb-4">
-                  {correction.percentage === 100 ? (
+                  {/* Toujours : refaire les exercices */}
+                  <Button onClick={resetQuiz} variant="outline" className="gap-2 rounded-xl">
+                    <RefreshCw className="w-4 h-4" /> Refaire les exercices
+                  </Button>
+
+                  {/* 100% obtenu → accès au dialogue + cours suivant */}
+                  {correction?.percentage === 100 && (
                     <>
-                      {/* Score parfait → proposer le cours suivant ou le dialogue */}
                       <Button
                         onClick={() => setActiveTab('dialogue')}
-                        variant="outline"
-                        className="gap-2 rounded-xl"
+                        className="gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white"
                       >
                         <MessageCircle className="w-4 h-4" /> Pratiquer avec l'IA
                       </Button>
@@ -1346,8 +1512,7 @@ const SecureCourseViewer = () => {
                           onClick={() => navigate(`/dashboard/courses/${nextCourse.id}/view`)}
                           className="gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-md"
                         >
-                          Cours suivant
-                          <ChevronRightIcon className="w-4 h-4" />
+                          Cours suivant <ChevronRightIcon className="w-4 h-4" />
                           <span className="text-xs opacity-80 truncate max-w-[120px]">
                             {nextCourse.titre || nextCourse.title}
                           </span>
@@ -1361,23 +1526,16 @@ const SecureCourseViewer = () => {
                         </Button>
                       )}
                     </>
-                  ) : (
-                    <>
-                      {/* Score < 100% → réviser ou réessayer */}
-                      <Button onClick={resetQuiz} variant="outline" className="gap-2 rounded-xl">
-                        <RefreshCw className="w-4 h-4" /> Réessayer
-                      </Button>
-                      <Button onClick={() => { setActiveTab('lecture'); setCurrentPage(0); }} className="gap-2 rounded-xl bg-primary text-primary-foreground">
-                        <BookOpen className="w-4 h-4" /> Réviser le cours
-                      </Button>
-                      <Button
-                        onClick={() => setActiveTab('dialogue')}
-                        variant="outline"
-                        className="gap-2 rounded-xl border-primary/30 text-primary"
-                      >
-                        <MessageCircle className="w-4 h-4" /> Demander à l'IA
-                      </Button>
-                    </>
+                  )}
+
+                  {/* ≥ 3 tentatives sans 100% → bouton retour au cours */}
+                  {history.length >= 3 && correction?.percentage !== 100 && (
+                    <Button
+                      onClick={restartFromLecture}
+                      className="gap-2 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold"
+                    >
+                      <BookOpen className="w-4 h-4" /> Refaire le cours depuis le début
+                    </Button>
                   )}
                 </div>
               </>

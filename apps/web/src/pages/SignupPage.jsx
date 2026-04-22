@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { useAuth } from '@/contexts/AuthContext.jsx';
@@ -11,8 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
   User, Briefcase, Music, BookOpen, ShieldCheck, Eye, EyeOff,
-  ArrowLeft, ArrowRight, Check, Languages, Monitor, Code2, Star, Clock,
-  CreditCard, Lock, Gift, AlertCircle,
+  ArrowLeft, ArrowRight, Check, Languages, Monitor, Code2, Star,
 } from 'lucide-react';
 import apiServerClient from '@/lib/apiServerClient';
 
@@ -33,7 +32,7 @@ const PROGRAMMES = {
     bg: 'bg-blue-50',
     border: 'border-blue-200',
     subtitle: 'Français · Anglais · Arabe · Espagnol',
-    defaultCours: ['Français', 'Anglais', 'Arabe Marocain', 'Espagnol', 'Anglais des affaires'],
+    defaultCours: ['Français', 'Anglais', 'Arabe', 'Espagnol'],
     categories: ['langue', 'langues', 'français', 'anglais', 'arabe', 'espagnol'],
     niveaux: [
       { value: 'A1', label: 'A1 — Débutant' },
@@ -76,11 +75,9 @@ const PROGRAMMES = {
   },
 };
 
-// Prix uniquement depuis PocketBase (pas de fallback hardcodé)
-
 // ── Main component ───────────────────────────────────────────────
 const SignupPage = () => {
-  const [step, setStep] = useState(1); // 1=rôle, 2=formulaire, 3=formation (étudiant), 4=coordonnées bancaires
+  const [step, setStep] = useState(1); // 1=rôle, 2=formulaire, 3=formation (étudiant)
 
   // Common fields
   const [role, setRole]                   = useState('');
@@ -95,16 +92,8 @@ const SignupPage = () => {
 
   // Formation fields (étudiant only)
   const [programme, setProgramme]         = useState('');
-  // Bank details fields (étudiant only — step 4)
-  const [cardHolder, setCardHolder]       = useState('');
-  const [cardNumber, setCardNumber]       = useState('');
-  const [cardExpiry, setCardExpiry]       = useState('');
-  const [cardCvv, setCardCvv]             = useState('');
-  const [bankLoading, setBankLoading]     = useState(false);
   const [cours, setCours]                 = useState('');
   const [niveau, setNiveau]               = useState('');
-  const [pbCourses, setPbCourses]         = useState([]);
-  const [autoPrice, setAutoPrice]         = useState(null);
 
   const { signup } = useAuth();
   const navigate   = useNavigate();
@@ -116,51 +105,6 @@ const SignupPage = () => {
   const progCfg       = programme ? PROGRAMMES[programme] : null;
 
   const handleRoleSelect = (r) => { setRole(r); setStep(2); };
-
-  // Fetch courses when programme changes
-  useEffect(() => {
-    if (!programme) return;
-    const fetch = async () => {
-      try {
-        const all = await pb.collection('courses').getFullList({ requestKey: null });
-        const cfg = PROGRAMMES[programme];
-        const filtered = all.filter(c => {
-          const cat = (c.categorie || c.category || c.section || '').toLowerCase();
-          return cfg.categories.some(k => cat.includes(k));
-        });
-        setPbCourses(filtered);
-      } catch { /* ignore */ }
-    };
-    fetch();
-  }, [programme]);
-
-  // Auto-price
-  useEffect(() => {
-    if (!programme || !niveau) { setAutoPrice(null); return; }
-    const matched = pbCourses.find(c =>
-      (c.titre || c.title || '').toLowerCase().includes(cours.toLowerCase()) && cours.length > 0
-    );
-    // Utilise uniquement le prix du cours dans PocketBase
-    setAutoPrice((matched?.prix || matched?.price) || null);
-  }, [cours, niveau, programme, pbCourses]);
-
-  // ── Step 2: basic info → validate → if student go to step 3 ──
-  const handleStep2Next = (e) => {
-    e.preventDefault();
-    if (password !== confirmPassword) {
-      toast.error('Les mots de passe ne correspondent pas');
-      return;
-    }
-    if (password.length < 8) {
-      toast.error('Le mot de passe doit contenir au moins 8 caractères');
-      return;
-    }
-    if (role === 'etudiant') {
-      setStep(3); // go to programme selection
-    } else {
-      handleSubmitFinal();
-    }
-  };
 
   // ── Final submit ─────────────────────────────────────────────
   const handleSubmitFinal = async () => {
@@ -194,36 +138,29 @@ const SignupPage = () => {
           return;
         }
 
-        // Pour les étudiants : sauvegarder le profil formation + inscrire aux 3 premiers cours gratuits
+        // Pour les étudiants : sauvegarder le profil formation + inscrire aux 3 premiers cours
         if (role === 'etudiant' && programme) {
           try {
             const userId = pb.authStore.model?.id;
             if (userId) {
-              const last4 = cardNumber.replace(/\s/g, '').slice(-4);
               await pb.collection('users').update(userId, {
                 section: programme,
                 current_course: cours || null,
                 Level: niveau || null,
                 phone: phone || null,
-                bank_card_holder: cardHolder || null,
-                bank_card_last4: last4 || null,
-                bank_card_expiry: cardExpiry || null,
-                payment_method_saved: !!(cardHolder && last4),
               }, { requestKey: null });
 
-              // ── Auto-inscription aux 3 premiers cours gratuits ──────────
+              // ── Auto-inscription aux 3 premiers cours ──────────────
               try {
                 const cfg = PROGRAMMES[programme];
                 const allCourses = await pb.collection('courses').getFullList({
                   sort: 'created',
                   requestKey: null,
                 });
-                // Filtrer par section de l'étudiant
                 const sectionCourses = allCourses.filter(c => {
                   const cat = (c.categorie || c.category || c.section || '').toLowerCase();
                   return cfg.categories.some(k => cat.includes(k));
                 });
-                // Prendre les 3 premiers et les inscrire
                 const toEnroll = sectionCourses.slice(0, 3);
                 for (const course of toEnroll) {
                   try {
@@ -232,7 +169,6 @@ const SignupPage = () => {
                       course_id:  course.id,
                       progression: 0,
                       complete:   false,
-                      status:     'active',
                       start_date: new Date().toISOString(),
                     }, { requestKey: null });
                   } catch { /* déjà inscrit ou erreur non-bloquante */ }
@@ -252,35 +188,36 @@ const SignupPage = () => {
     }
   };
 
+  // ── Step 2: basic info → validate ────────────────────────────
+  const handleStep2Next = (e) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      toast.error('Les mots de passe ne correspondent pas');
+      return;
+    }
+    if (password.length < 8) {
+      toast.error('Le mot de passe doit contenir au moins 8 caractères');
+      return;
+    }
+    if (role === 'etudiant') {
+      setStep(3); // go to programme selection
+    } else {
+      handleSubmitFinal();
+    }
+  };
+
+  // ── Step 3: programme → final submit ─────────────────────────
   const handleStep3Submit = (e) => {
     e.preventDefault();
     if (!programme || !cours || !niveau) {
       toast.error('Veuillez sélectionner un programme, un cours et un niveau');
       return;
     }
-    // Go to bank details step before final submit
-    setStep(4);
-  };
-
-  // ── Step 4: bank details → final submit ──────────────────────
-  const handleStep4Submit = async (e) => {
-    e.preventDefault();
-    if (!cardHolder.trim() || cardNumber.replace(/\s/g, '').length < 16 || !cardExpiry || cardCvv.length < 3) {
-      toast.error('Veuillez renseigner vos coordonnées bancaires complètes');
-      return;
-    }
     handleSubmitFinal();
   };
 
-  // Course options
-  const coursOptions = progCfg
-    ? [
-        ...progCfg.defaultCours,
-        ...pbCourses
-          .map(c => c.titre || c.title)
-          .filter(t => t && !progCfg.defaultCours.some(d => d.toLowerCase() === t.toLowerCase())),
-      ]
-    : [];
+  // Course options — only the curated list per programme (no PocketBase courses)
+  const coursOptions = progCfg ? progCfg.defaultCours : [];
 
   return (
     <>
@@ -368,7 +305,7 @@ const SignupPage = () => {
                         )}
                       </div>
                       {role === 'etudiant' && (
-                        <span className="ml-auto text-xs text-muted-foreground opacity-60 shrink-0">1/3</span>
+                        <span className="ml-auto text-xs text-muted-foreground opacity-60 shrink-0">1/2</span>
                       )}
                     </div>
                   )}
@@ -396,7 +333,7 @@ const SignupPage = () => {
                     {/* Phone for students and admin */}
                     {(role === 'etudiant' || role === 'admin') && (
                       <div className="space-y-2">
-                        <Label htmlFor="phone">Téléphone {role === 'etudiant' ? '' : ''}</Label>
+                        <Label htmlFor="phone">Téléphone</Label>
                         <Input
                           id="phone" value={phone}
                           onChange={e => setPhone(e.target.value)}
@@ -491,10 +428,10 @@ const SignupPage = () => {
                     <div>
                       <span className="font-semibold text-primary text-sm">Choisissez votre formation</span>
                       <p className="text-xs text-muted-foreground mt-0.5">
-                        Étape 2/3 — Ensuite vous renseignerez vos coordonnées bancaires
+                        Dernière étape avant la création de votre compte
                       </p>
                     </div>
-                    <span className="ml-auto text-xs text-muted-foreground opacity-60 shrink-0">2/3</span>
+                    <span className="ml-auto text-xs text-muted-foreground opacity-60 shrink-0">2/2</span>
                   </div>
 
                   <form onSubmit={handleStep3Submit} className="space-y-5">
@@ -579,163 +516,9 @@ const SignupPage = () => {
                       </div>
                     )}
 
-                    {/* Prix auto */}
-                    {cours && niveau && autoPrice && (
-                      <div className={`rounded-xl ${progCfg?.bg || 'bg-muted'} border ${progCfg?.border || 'border-border'} p-4 flex items-center justify-between`}>
-                        <div>
-                          <p className="text-sm font-semibold text-foreground">{cours}</p>
-                          <p className="text-xs text-muted-foreground">{niveau} · {progCfg?.label}</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-xs text-muted-foreground">Frais de formation</p>
-                          <p className="text-2xl font-black text-primary">{autoPrice} <span className="text-sm font-normal">MAD</span></p>
-                        </div>
-                      </div>
-                    )}
-
                     <Button
                       type="submit"
-                      disabled={!programme || !cours || !niveau}
-                      className="w-full bg-accent hover:bg-accent/90 text-primary font-bold h-12 text-base"
-                    >
-                      <span className="flex items-center gap-2">
-                        Étape suivante : Coordonnées bancaires <ArrowRight className="w-4 h-4" />
-                      </span>
-                    </Button>
-                  </form>
-
-                  <div className="text-center mt-4 text-sm text-muted-foreground">
-                    Déjà inscrit ?{' '}
-                    <Link to="/login" className="text-accent hover:underline font-medium">Se connecter</Link>
-                  </div>
-                </div>
-              )}
-
-              {/* ── Étape 4 : Coordonnées bancaires (étudiant) ────── */}
-              {step === 4 && role === 'etudiant' && (
-                <div>
-                  <button
-                    onClick={() => setStep(3)}
-                    className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary mb-5 transition-colors"
-                  >
-                    <ArrowLeft className="w-4 h-4" /> Retour
-                  </button>
-
-                  <div className="flex items-center gap-3 p-3 rounded-xl bg-accent/10 border border-accent/20 mb-4">
-                    <CreditCard className="w-5 h-5 text-accent" />
-                    <div>
-                      <span className="font-semibold text-primary text-sm">Coordonnées bancaires</span>
-                      <p className="text-xs text-muted-foreground mt-0.5">
-                        Étape 3/3 — Dernière étape avant la création de votre compte
-                      </p>
-                    </div>
-                    <span className="ml-auto text-xs text-muted-foreground opacity-60 shrink-0">3/3</span>
-                  </div>
-
-                  {/* Free tier notice — prominent */}
-                  <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-5">
-                    <div className="flex items-start gap-3">
-                      <div className="w-9 h-9 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
-                        <Gift className="w-5 h-5 text-emerald-600" />
-                      </div>
-                      <div>
-                        <p className="font-bold text-emerald-800 text-sm">🎁 Vos 5 premiers cours sont GRATUITS</p>
-                        <p className="text-xs text-emerald-700 mt-1 leading-relaxed">
-                          Aucun débit ne sera effectué sur votre carte pendant vos 5 premiers cours gratuits.
-                          Vos coordonnées bancaires seront uniquement utilisées <strong>après la fin de la période gratuite</strong>.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-5 flex items-start gap-2">
-                    <Lock className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
-                    <p className="text-xs text-amber-700">
-                      Vos informations sont chiffrées et sécurisées. Seuls les 4 derniers chiffres de votre carte sont conservés.
-                    </p>
-                  </div>
-
-                  <form onSubmit={handleStep4Submit} className="space-y-4">
-                    {/* Card holder */}
-                    <div className="space-y-1.5">
-                      <Label htmlFor="cardHolder">Titulaire de la carte *</Label>
-                      <Input
-                        id="cardHolder"
-                        required
-                        value={cardHolder}
-                        onChange={e => setCardHolder(e.target.value)}
-                        placeholder="NOM PRÉNOM (comme sur la carte)"
-                        className="uppercase"
-                      />
-                    </div>
-
-                    {/* Card number */}
-                    <div className="space-y-1.5">
-                      <Label htmlFor="cardNumber">Numéro de carte *</Label>
-                      <div className="relative">
-                        <Input
-                          id="cardNumber"
-                          required
-                          value={cardNumber}
-                          onChange={e => {
-                            // Format as groups of 4
-                            const v = e.target.value.replace(/\D/g, '').slice(0, 16);
-                            setCardNumber(v.replace(/(.{4})/g, '$1 ').trim());
-                          }}
-                          placeholder="1234 5678 9012 3456"
-                          maxLength={19}
-                          className="pl-10"
-                        />
-                        <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      </div>
-                    </div>
-
-                    {/* Expiry + CVV */}
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="space-y-1.5">
-                        <Label htmlFor="cardExpiry">Date d'expiration *</Label>
-                        <Input
-                          id="cardExpiry"
-                          required
-                          value={cardExpiry}
-                          onChange={e => {
-                            const v = e.target.value.replace(/\D/g, '').slice(0, 4);
-                            setCardExpiry(v.length > 2 ? `${v.slice(0,2)}/${v.slice(2)}` : v);
-                          }}
-                          placeholder="MM/AA"
-                          maxLength={5}
-                        />
-                      </div>
-                      <div className="space-y-1.5">
-                        <Label htmlFor="cardCvv">CVV *</Label>
-                        <Input
-                          id="cardCvv"
-                          required
-                          type="password"
-                          value={cardCvv}
-                          onChange={e => setCardCvv(e.target.value.replace(/\D/g, '').slice(0, 4))}
-                          placeholder="•••"
-                          maxLength={4}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Prix récapitulatif */}
-                    {autoPrice && (
-                      <div className="rounded-xl bg-muted/50 border border-border p-3 text-xs text-muted-foreground">
-                        <div className="flex items-center justify-between">
-                          <span>Formation : {cours} · {niveau}</span>
-                          <span className="font-bold text-foreground">{autoPrice} MAD / mois</span>
-                        </div>
-                        <p className="mt-1.5 text-emerald-700 font-medium">
-                          ✓ Aucun débit pendant vos 5 premiers cours gratuits
-                        </p>
-                      </div>
-                    )}
-
-                    <Button
-                      type="submit"
-                      disabled={loading}
+                      disabled={!programme || !cours || !niveau || loading}
                       className="w-full bg-accent hover:bg-accent/90 text-primary font-bold h-12 text-base"
                     >
                       {loading ? (
@@ -745,7 +528,7 @@ const SignupPage = () => {
                         </span>
                       ) : (
                         <span className="flex items-center gap-2">
-                          <Lock className="w-4 h-4" /> Créer mon compte gratuitement
+                          <Check className="w-4 h-4" /> Créer mon compte gratuitement
                         </span>
                       )}
                     </Button>

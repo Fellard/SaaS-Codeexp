@@ -39,6 +39,7 @@ import OrdersPage from '@/pages/OrdersPage.jsx';
 import CoursesPage from '@/pages/CoursesPage.jsx';
 import SettingsPage from '@/pages/SettingsPage.jsx';
 import SecureCourseViewer from '@/pages/SecureCourseViewer.jsx';
+import RecallPage from '@/pages/RecallPage.jsx';
 
 // Admin Pages
 import AdminDashboard from '@/pages/AdminDashboard.jsx';
@@ -124,6 +125,7 @@ function App() {
               <Route path="/dashboard/orders" element={<ProtectedRoute><OrdersPage /></ProtectedRoute>} />
               <Route path="/dashboard/courses" element={<ProtectedRoute><CoursesPage /></ProtectedRoute>} />
               <Route path="/dashboard/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+              <Route path="/dashboard/recall"   element={<ProtectedRoute><RecallPage /></ProtectedRoute>} />
               <Route path="/dashboard/courses/:courseId/view" element={<ProtectedRoute><SecureCourseViewer /></ProtectedRoute>} />
               <Route path="/dashboard/courses/view" element={<ProtectedRoute><SecureCourseViewer /></ProtectedRoute>} />
               

@@ -662,4 +662,180 @@ Directives :
   res.status(500).json({ error: 'Erreur IA', reply: `⚠️ Le tuteur IA est temporairement indisponible. (${lastErr?.message || 'erreur inconnue'}) Réessayez dans un instant.` });
 });
 
+// ── Auto-création collection course_scores ────────────────────────
+let scoresCollectionReady = false;
+async function ensureScoresCollection() {
+  if (scoresCollectionReady) return true;
+  try {
+    await pb.collection('course_scores').getList(1, 1, { $autoCancel: false });
+    scoresCollectionReady = true;
+    return true;
+  } catch {
+    try {
+      const usersColl   = await pb.send('/api/collections/_pb_users_auth_', { method: 'GET' }).catch(() => ({ id: '_pb_users_auth_' }));
+      const coursesColl = await pb.send('/api/collections/courses',          { method: 'GET' }).catch(() => ({ id: 'courses' }));
+      await pb.send('/api/collections', {
+        method: 'POST',
+        body: {
+          name: 'course_scores',
+          type: 'base',
+          listRule:   "@request.auth.id = user_id || @request.auth.role = 'admin'",
+          viewRule:   "@request.auth.id = user_id || @request.auth.role = 'admin'",
+          createRule: "@request.auth.id != ''",
+          updateRule: "@request.auth.role = 'admin'",
+          deleteRule: "@request.auth.role = 'admin'",
+          fields: [
+            { name: 'user_id',        type: 'relation', collectionId: usersColl.id,   maxSelect: 1, cascadeDelete: true, required: true  },
+            { name: 'course_id',      type: 'relation', collectionId: coursesColl.id, maxSelect: 1, cascadeDelete: true, required: true  },
+            { name: 'score',          type: 'number',   min: 0, max: 100,  required: true  },
+            { name: 'passed',         type: 'bool',     required: false },
+            { name: 'attempt_number', type: 'number',   min: 1, onlyInt: true, required: false },
+            { name: 'submitted_at',   type: 'date',     required: false },
+          ],
+        },
+      });
+      scoresCollectionReady = true;
+      return true;
+    } catch (ce) {
+      if (ce?.message?.includes('already exists')) { scoresCollectionReady = true; return true; }
+      logger.error('ensureScoresCollection:', ce.message);
+      return false;
+    }
+  }
+}
+
+/**
+ * POST /courses/:courseId/submit-score
+ * Valide le score d'un quiz et applique la règle pédagogique ≥80 / ≤79.
+ * Body : { score: number 0-100 }
+ * Response : { passed, score, action, message, nextStep }
+ */
+router.post('/:courseId/submit-score', verifyToken, async (req, res) => {
+  const { courseId } = req.params;
+  const { score }    = req.body;
+  const userId       = req.userId;
+
+  if (score === undefined || score === null) {
+    return res.status(400).json({ error: 'Champ score (0-100) requis' });
+  }
+
+  const scoreNum = Math.min(100, Math.max(0, Math.round(Number(score))));
+  const PASS_THRESHOLD = 80;
+  const passed = scoreNum >= PASS_THRESHOLD;
+
+  logger.info(`submit-score | user=${userId} course=${courseId} score=${scoreNum} passed=${passed}`);
+
+  await ensureScoresCollection();
+
+  try {
+    // ── 1. Chercher l'enrollment ──────────────────────────────────
+    const enrollments = await pb.collection('course_enrollments').getFullList({
+      filter: `user_id="${userId}" && course_id="${courseId}"`,
+      $autoCancel: false,
+    });
+
+    // ── 2. Compter les tentatives précédentes ─────────────────────
+    let attemptNumber = 1;
+    try {
+      const prev = await pb.collection('course_scores').getFullList({
+        filter: `user_id="${userId}" && course_id="${courseId}"`,
+        $autoCancel: false,
+      });
+      attemptNumber = prev.length + 1;
+    } catch { /* première tentative */ }
+
+    // ── 3. Sauvegarder le score dans course_scores ────────────────
+    try {
+      await pb.collection('course_scores').create({
+        user_id:        userId,
+        course_id:      courseId,
+        score:          scoreNum,
+        passed,
+        attempt_number: attemptNumber,
+        submitted_at:   new Date().toISOString(),
+      }, { $autoCancel: false });
+    } catch (se) {
+      logger.warn('save course_scores:', se.message);
+    }
+
+    // ── 4. Mettre à jour l'enrollment ─────────────────────────────
+    if (enrollments.length > 0) {
+      const enroll = enrollments[0];
+      try {
+        if (passed) {
+          // Validé : progression 100%, module complet
+          await pb.collection('course_enrollments').update(enroll.id, {
+            progression:   100,
+            complete:      true,
+            last_activity: new Date().toISOString(),
+          }, { $autoCancel: false });
+        } else {
+          // Échoué : remettre la progression à max 70% (partie lecture seulement)
+          await pb.collection('course_enrollments').update(enroll.id, {
+            progression:   Math.min(enroll.progression || 0, 70),
+            complete:      false,
+            last_activity: new Date().toISOString(),
+          }, { $autoCancel: false });
+        }
+      } catch (ue) {
+        logger.warn('update enrollment:', ue.message);
+      }
+    }
+
+    // ── 5. Réponse ────────────────────────────────────────────────
+    return res.json({
+      passed,
+      score:    scoreNum,
+      attempt:  attemptNumber,
+      // action que le frontend doit exécuter
+      action:   passed ? 'proceed_to_next' : 'restart_lecture',
+      message:  passed
+        ? `✅ Félicitations ! Module validé avec ${scoreNum}/100. Vous pouvez passer à la suite.`
+        : `❌ Score insuffisant : ${scoreNum}/100 (minimum requis : ${PASS_THRESHOLD}). Révisez le cours et réessayez.`,
+      nextStep: passed
+        ? 'Passez au cours suivant ou au dialogue IA pour pratiquer.'
+        : 'Reprenez la leçon depuis le début, puis retentez les exercices.',
+    });
+  } catch (err) {
+    logger.error('submit-score error:', err.message);
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+/**
+ * GET /courses/:courseId/my-score
+ * Retourne le dernier score de l'utilisateur pour ce cours.
+ * Response : { score, passed, attempt, hasScore }
+ */
+router.get('/:courseId/my-score', verifyToken, async (req, res) => {
+  const { courseId } = req.params;
+  const userId       = req.userId;
+
+  await ensureScoresCollection();
+
+  try {
+    const scores = await pb.collection('course_scores').getFullList({
+      filter: `user_id="${userId}" && course_id="${courseId}"`,
+      sort:   '-submitted_at',
+      $autoCancel: false,
+    });
+
+    if (scores.length === 0) {
+      return res.json({ hasScore: false });
+    }
+
+    const best = scores.reduce((a, b) => (b.score > a.score ? b : a), scores[0]);
+    return res.json({
+      hasScore:    true,
+      score:       best.score,
+      passed:      best.passed,
+      attempt:     scores.length,
+      lastAttempt: scores[0],
+    });
+  } catch (err) {
+    // Collection pas encore créée → aucun score
+    return res.json({ hasScore: false });
+  }
+});
+
 export default router;

@@ -13,7 +13,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import {
   ShoppingBag, BookOpen, GraduationCap, Languages, Monitor, Code2,
   CreditCard, CheckCircle2, AlertCircle, Clock, Star, ArrowRight,
-  PlayCircle, Lock, TrendingUp, Award, Zap, User, Bell, Gift, Globe,
+  PlayCircle, Lock, TrendingUp, Award, Zap, User, Bell, Gift, Globe, Brain,
 } from 'lucide-react';
 
 const FREE_COURSES_LIMIT = 3;
@@ -383,8 +383,34 @@ const DashboardPage = () => {
             </Card>
           </div>
 
-          {/* Right side — orders + shortcuts (2 cols) */}
+          {/* Right side — recall + orders + shortcuts (2 cols) */}
           <div className="lg:col-span-2 space-y-5">
+
+            {/* ── IWS Recall card ──────────────────────────────── */}
+            {enrollments.length > 0 && (
+              <Card className="border-2 border-indigo-200 dark:border-indigo-800 overflow-hidden">
+                <div className="h-1 bg-gradient-to-r from-indigo-500 to-purple-500" />
+                <CardContent className="pt-5 pb-4">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center flex-shrink-0">
+                      <Brain className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-foreground text-sm">IWS Recall</p>
+                      <p className="text-xs text-muted-foreground">Révision espacée intelligente</p>
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
+                    Consolidez vos apprentissages avec des cartes générées par l'IA à partir de vos cours. 5 minutes par jour suffisent.
+                  </p>
+                  <Link to="/dashboard/recall">
+                    <Button className="w-full gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold rounded-xl shadow-md shadow-indigo-500/20">
+                      <Brain className="w-4 h-4" /> Réviser maintenant
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Recent orders */}
             <Card className="border border-border">

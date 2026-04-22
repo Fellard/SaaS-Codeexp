@@ -7,6 +7,7 @@ import adminRouter from './admin.js';
 import webAgencyRouter from './webAgency.js';
 import paypalRouter from './paypal.js';
 import ordersRouter from './orders.js';
+import recallRouter from './recall.js';
 
 const router = Router();
 
@@ -20,6 +21,7 @@ export default () => {
   router.use('/web-agency', webAgencyRouter); // IA Web Agency
   router.use('/paypal', paypalRouter);        // PayPal Checkout
   router.use('/orders', ordersRouter);        // Orders management (cancel, mark-paid)
+  router.use('/recall', recallRouter);        // IWS Recall — spaced repetition
 
   return router;
 };
