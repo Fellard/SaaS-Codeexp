@@ -3,15 +3,21 @@ import express from 'express';
 import Anthropic from '@anthropic-ai/sdk';
 import pb from '../utils/pocketbaseClient.js';
 import logger from '../utils/logger.js';
+import { requireRole } from '../middleware/auth.js';
 
 const router = express.Router();
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
+// ─── Alias RBAC : routes pédagogiques réservées aux étudiants et admins ──────
+// Utilisation : router.post('/route', requireEtudiant, handler)
+const requireEtudiant = requireRole('etudiant', 'admin', 'manager');
+
 /**
  * Middleware: vérifie qu'un token Bearer valide est présent.
  * N'exige pas de rôle spécifique — tout utilisateur connecté est accepté.
+ * @deprecated Préférer requireEtudiant ou requireRole() explicitement
  */
 async function verifyToken(req, res, next) {
   const auth = req.headers.authorization || '';
@@ -374,7 +380,7 @@ Assurez-vous que:
  * Body: { courseId, courseTitle, courseDescription, pdfUrl }
  * Returns: { resume, objectifs, taches, points_cles }
  */
-router.post('/analyze-course', verifyToken, async (req, res) => {
+router.post('/analyze-course', requireEtudiant, async (req, res) => {
   const { courseId, courseTitle, courseDescription, pdfUrl } = req.body;
 
   if (!courseId || !courseTitle) {
@@ -398,7 +404,7 @@ router.post('/analyze-course', verifyToken, async (req, res) => {
  * Params: courseId
  * Returns: { courseId, resume, objectifs, taches, points_cles }
  */
-router.post('/:courseId/generate-analysis', verifyToken, async (req, res) => {
+router.post('/:courseId/generate-analysis', requireEtudiant, async (req, res) => {
   const { courseId } = req.params;
 
   if (!courseId) {
@@ -546,7 +552,7 @@ ${percentage === 100 ? 'Le score est parfait, félicite chaleureusement.' : perc
  * POST /courses/:courseId/save-progress
  * Save student quiz attempt to PocketBase
  */
-router.post('/:courseId/save-progress', async (req, res) => {
+router.post('/:courseId/save-progress', requireEtudiant, async (req, res) => {
   const { courseId } = req.params;
   const { userId, score, total, percentage, attemptData } = req.body;
 
@@ -710,7 +716,7 @@ async function ensureScoresCollection() {
  * Body : { score: number 0-100 }
  * Response : { passed, score, action, message, nextStep }
  */
-router.post('/:courseId/submit-score', verifyToken, async (req, res) => {
+router.post('/:courseId/submit-score', requireEtudiant, async (req, res) => {
   const { courseId } = req.params;
   const { score }    = req.body;
   const userId       = req.userId;
@@ -807,7 +813,7 @@ router.post('/:courseId/submit-score', verifyToken, async (req, res) => {
  * Retourne le dernier score de l'utilisateur pour ce cours.
  * Response : { score, passed, attempt, hasScore }
  */
-router.get('/:courseId/my-score', verifyToken, async (req, res) => {
+router.get('/:courseId/my-score', requireEtudiant, async (req, res) => {
   const { courseId } = req.params;
   const userId       = req.userId;
 

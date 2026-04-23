@@ -10,8 +10,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
-  User, Briefcase, Music, BookOpen, ShieldCheck, Eye, EyeOff,
-  ArrowLeft, ArrowRight, Check, Languages, Monitor, Code2, Star,
+  User, Music, BookOpen, ShieldCheck, Eye, EyeOff,
+  ArrowLeft, ArrowRight, Check,
 } from 'lucide-react';
 import apiServerClient from '@/lib/apiServerClient';
 
@@ -23,57 +23,13 @@ const ROLES = [
   { value: 'admin',     label: 'Administrateur', icon: ShieldCheck, desc: 'Accès soumis à validation par notre équipe' },
 ];
 
-// ── Programme config (etudiant only) ────────────────────────────
-const PROGRAMMES = {
-  langues: {
-    label: 'Langues',
-    icon: Languages,
-    gradient: 'from-blue-600 to-sky-500',
-    bg: 'bg-blue-50',
-    border: 'border-blue-200',
-    subtitle: 'Français · Anglais · Arabe · Espagnol',
-    defaultCours: ['Français', 'Anglais', 'Arabe', 'Espagnol'],
-    categories: ['langue', 'langues', 'français', 'anglais', 'arabe', 'espagnol'],
-    niveaux: [
-      { value: 'A1', label: 'A1 — Débutant' },
-      { value: 'A2', label: 'A2 — Élémentaire' },
-      { value: 'B1', label: 'B1 — Intermédiaire' },
-      { value: 'B2', label: 'B2 — Intermédiaire avancé' },
-      { value: 'C1', label: 'C1 — Avancé' },
-      { value: 'C2', label: 'C2 — Maîtrise' },
-    ],
-  },
-  informatique: {
-    label: 'Informatique',
-    icon: Monitor,
-    gradient: 'from-green-600 to-emerald-500',
-    bg: 'bg-green-50',
-    border: 'border-green-200',
-    subtitle: 'Bureautique · Réseaux · Maintenance',
-    defaultCours: ['Bureautique (Word / Excel)', 'Maintenance informatique', 'Réseaux & Infrastructure', 'Graphisme (Photoshop)', 'Administration Windows'],
-    categories: ['informatique', 'bureautique', 'maintenance', 'réseau', 'graphisme'],
-    niveaux: [
-      { value: 'Débutant', label: 'Débutant' },
-      { value: 'Intermédiaire', label: 'Intermédiaire' },
-      { value: 'Avancé', label: 'Avancé' },
-    ],
-  },
-  programmation: {
-    label: 'Programmation',
-    icon: Code2,
-    gradient: 'from-purple-600 to-indigo-500',
-    bg: 'bg-purple-50',
-    border: 'border-purple-200',
-    subtitle: 'Web · Mobile · Python · JavaScript',
-    defaultCours: ['HTML / CSS', 'JavaScript', 'React.js', 'Python', 'Développement Mobile', 'Node.js / Express'],
-    categories: ['programmation', 'développement', 'web', 'mobile', 'python', 'javascript'],
-    niveaux: [
-      { value: 'Débutant', label: 'Débutant' },
-      { value: 'Intermédiaire', label: 'Intermédiaire' },
-      { value: 'Avancé', label: 'Avancé' },
-    ],
-  },
-};
+// ── Langues disponibles (étudiant only) ─────────────────────────
+const LANGUES = [
+  { value: 'Français',  label: 'Français',  flag: '🇫🇷', desc: 'Apprenez le français avec nos formateurs certifiés' },
+  { value: 'Anglais',   label: 'Anglais',   flag: '🇬🇧', desc: 'Maîtrisez l\'anglais de A1 à C2' },
+  { value: 'Arabe',     label: 'Arabe',     flag: '🌍', desc: 'Arabe classique et darija avec nos professeurs' },
+  { value: 'Espagnole', label: 'Espagnole', flag: '🇪🇸', desc: 'Découvrez l\'espagnol, langue de nos voisins' },
+];
 
 // ── Main component ───────────────────────────────────────────────
 const SignupPage = () => {
@@ -90,19 +46,16 @@ const SignupPage = () => {
   const [showPassword, setShowPassword]   = useState(false);
   const [loading, setLoading]             = useState(false);
 
-  // Formation fields (étudiant only)
-  const [programme, setProgramme]         = useState('');
+  // Formation field (étudiant only) — langue choisie
   const [cours, setCours]                 = useState('');
-  const [niveau, setNiveau]               = useState('');
 
-  const { signup } = useAuth();
+  const { signup, getDashboardPath } = useAuth();
   const navigate   = useNavigate();
   const { t }      = useTranslation();
   const { language } = useLanguage();
   const isRtl      = language?.startsWith('ar');
 
-  const selectedRole  = ROLES.find(r => r.value === role);
-  const progCfg       = programme ? PROGRAMMES[programme] : null;
+  const selectedRole = ROLES.find(r => r.value === role);
 
   const handleRoleSelect = (r) => { setRole(r); setStep(2); };
 
@@ -138,48 +91,22 @@ const SignupPage = () => {
           return;
         }
 
-        // Pour les étudiants : sauvegarder le profil formation + inscrire aux 3 premiers cours
-        if (role === 'etudiant' && programme) {
+        // Pour les étudiants : sauvegarder la langue choisie dans le profil
+        if (role === 'etudiant' && cours) {
           try {
             const userId = pb.authStore.model?.id;
             if (userId) {
               await pb.collection('users').update(userId, {
-                section: programme,
-                current_course: cours || null,
-                Level: niveau || null,
+                section: 'langues',
+                current_course: cours,
                 phone: phone || null,
               }, { requestKey: null });
-
-              // ── Auto-inscription aux 3 premiers cours ──────────────
-              try {
-                const cfg = PROGRAMMES[programme];
-                const allCourses = await pb.collection('courses').getFullList({
-                  sort: 'created',
-                  requestKey: null,
-                });
-                const sectionCourses = allCourses.filter(c => {
-                  const cat = (c.categorie || c.category || c.section || '').toLowerCase();
-                  return cfg.categories.some(k => cat.includes(k));
-                });
-                const toEnroll = sectionCourses.slice(0, 3);
-                for (const course of toEnroll) {
-                  try {
-                    await pb.collection('course_enrollments').create({
-                      user_id:    userId,
-                      course_id:  course.id,
-                      progression: 0,
-                      complete:   false,
-                      start_date: new Date().toISOString(),
-                    }, { requestKey: null });
-                  } catch { /* déjà inscrit ou erreur non-bloquante */ }
-                }
-              } catch { /* non-bloquant */ }
             }
           } catch { /* non-blocking */ }
         }
 
         toast.success('Bienvenue ! Votre compte a été créé avec succès.');
-        navigate('/dashboard');
+        navigate(getDashboardPath(role));
       }
     } catch (error) {
       toast.error(error.message || 'Une erreur est survenue');
@@ -200,24 +127,21 @@ const SignupPage = () => {
       return;
     }
     if (role === 'etudiant') {
-      setStep(3); // go to programme selection
+      setStep(3); // go to language selection
     } else {
       handleSubmitFinal();
     }
   };
 
-  // ── Step 3: programme → final submit ─────────────────────────
+  // ── Step 3: langue → final submit ─────────────────────────
   const handleStep3Submit = (e) => {
     e.preventDefault();
-    if (!programme || !cours || !niveau) {
-      toast.error('Veuillez sélectionner un programme, un cours et un niveau');
+    if (!cours) {
+      toast.error('Veuillez sélectionner une langue');
       return;
     }
     handleSubmitFinal();
   };
-
-  // Course options — only the curated list per programme (no PocketBase courses)
-  const coursOptions = progCfg ? progCfg.defaultCours : [];
 
   return (
     <>
@@ -265,7 +189,7 @@ const SignupPage = () => {
                       )}
                       {value === 'etudiant' && (
                         <span className="ml-auto text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-medium">
-                          + Choix formation
+                          + Choix de la langue
                         </span>
                       )}
                     </button>
@@ -300,7 +224,7 @@ const SignupPage = () => {
                         )}
                         {role === 'etudiant' && (
                           <p className="text-xs text-muted-foreground mt-0.5">
-                            L'étape suivante vous permettra de choisir votre formation.
+                            L'étape suivante vous permettra de choisir votre langue.
                           </p>
                         )}
                       </div>
@@ -396,7 +320,7 @@ const SignupPage = () => {
                       {role === 'admin'
                         ? 'Soumettre ma demande'
                         : role === 'etudiant'
-                          ? <span className="flex items-center gap-2">Étape suivante : Choisir ma formation <ArrowRight className="w-4 h-4" /></span>
+                          ? <span className="flex items-center gap-2">Étape suivante : Choisir ma langue <ArrowRight className="w-4 h-4" /></span>
                           : 'Créer mon compte'}
                     </Button>
 
@@ -413,7 +337,7 @@ const SignupPage = () => {
                 </div>
               )}
 
-              {/* ── Étape 3 : Choix de la formation (étudiant) ────── */}
+              {/* ── Étape 3 : Choix de la langue (étudiant) ────── */}
               {step === 3 && role === 'etudiant' && (
                 <div>
                   <button
@@ -426,7 +350,7 @@ const SignupPage = () => {
                   <div className="flex items-center gap-3 p-3 rounded-xl bg-accent/10 border border-accent/20 mb-5">
                     <BookOpen className="w-5 h-5 text-accent" />
                     <div>
-                      <span className="font-semibold text-primary text-sm">Choisissez votre formation</span>
+                      <span className="font-semibold text-primary text-sm">Choisissez votre langue</span>
                       <p className="text-xs text-muted-foreground mt-0.5">
                         Dernière étape avant la création de votre compte
                       </p>
@@ -436,89 +360,38 @@ const SignupPage = () => {
 
                   <form onSubmit={handleStep3Submit} className="space-y-5">
 
-                    {/* Programme selection */}
+                    {/* Langue selection */}
                     <div className="space-y-2">
-                      <Label className="font-semibold">Programme *</Label>
-                      <div className="grid grid-cols-1 gap-2">
-                        {Object.entries(PROGRAMMES).map(([key, cfg]) => {
-                          const Icon = cfg.icon;
-                          return (
-                            <button
-                              key={key}
-                              type="button"
-                              onClick={() => { setProgramme(key); setCours(''); setNiveau(''); }}
-                              className={`flex items-center gap-3 p-3 rounded-xl border-2 text-left transition-all ${
-                                programme === key
-                                  ? 'border-primary bg-primary/5'
-                                  : 'border-border hover:border-primary/40'
-                              }`}
-                            >
-                              <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${cfg.gradient} flex items-center justify-center flex-shrink-0`}>
-                                <Icon className="w-5 h-5 text-white" />
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <p className="font-semibold text-foreground text-sm">{cfg.label}</p>
-                                <p className="text-xs text-muted-foreground truncate">{cfg.subtitle}</p>
-                              </div>
-                              {programme === key && <Check className="w-5 h-5 text-primary flex-shrink-0" />}
-                            </button>
-                          );
-                        })}
+                      <Label className="font-semibold">Quelle langue souhaitez-vous apprendre ? *</Label>
+                      <div className="grid grid-cols-2 gap-3">
+                        {LANGUES.map(lang => (
+                          <button
+                            key={lang.value}
+                            type="button"
+                            onClick={() => setCours(lang.value)}
+                            className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 text-center transition-all ${
+                              cours === lang.value
+                                ? 'border-primary bg-primary/5 shadow-md'
+                                : 'border-border hover:border-primary/40 bg-card'
+                            }`}
+                          >
+                            <span className="text-3xl">{lang.flag}</span>
+                            <span className={`text-sm font-bold ${cours === lang.value ? 'text-primary' : 'text-foreground'}`}>
+                              {lang.label}
+                            </span>
+                            {cours === lang.value && (
+                              <span className="w-5 h-5 bg-primary rounded-full flex items-center justify-center">
+                                <Check className="w-3 h-3 text-primary-foreground" />
+                              </span>
+                            )}
+                          </button>
+                        ))}
                       </div>
                     </div>
 
-                    {/* Cours (shown after programme selected) */}
-                    {programme && progCfg && (
-                      <div className="space-y-2">
-                        <Label className="font-semibold">Cours souhaité *</Label>
-                        <div className="grid grid-cols-1 gap-1.5 max-h-48 overflow-y-auto pr-1">
-                          {coursOptions.map(c => (
-                            <button
-                              key={c}
-                              type="button"
-                              onClick={() => setCours(c)}
-                              className={`flex items-center gap-2 px-3 py-2.5 rounded-lg border text-sm text-left transition-all ${
-                                cours === c
-                                  ? 'border-primary bg-primary/5 font-semibold text-primary'
-                                  : 'border-border hover:border-primary/40 text-foreground'
-                              }`}
-                            >
-                              <BookOpen className={`w-3.5 h-3.5 flex-shrink-0 ${cours === c ? 'text-primary' : 'text-muted-foreground'}`} />
-                              {c}
-                              {cours === c && <Check className="w-3.5 h-3.5 ml-auto text-primary" />}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Niveau (shown after cours selected) */}
-                    {cours && progCfg && (
-                      <div className="space-y-2">
-                        <Label className="font-semibold">Niveau *</Label>
-                        <div className="grid grid-cols-2 gap-2">
-                          {progCfg.niveaux.map(n => (
-                            <button
-                              key={n.value}
-                              type="button"
-                              onClick={() => setNiveau(n.value)}
-                              className={`px-3 py-2 rounded-lg border-2 text-sm font-medium transition-all ${
-                                niveau === n.value
-                                  ? 'border-primary bg-primary text-primary-foreground'
-                                  : 'border-border hover:border-primary/40 text-foreground'
-                              }`}
-                            >
-                              <Star className="w-3 h-3 inline mr-1 opacity-60" />
-                              {n.label}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
                     <Button
                       type="submit"
-                      disabled={!programme || !cours || !niveau || loading}
+                      disabled={!cours || loading}
                       className="w-full bg-accent hover:bg-accent/90 text-primary font-bold h-12 text-base"
                     >
                       {loading ? (

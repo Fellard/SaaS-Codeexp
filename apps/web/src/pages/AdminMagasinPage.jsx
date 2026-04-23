@@ -19,6 +19,7 @@ import {
   Trash2, Eye, X, Search, RefreshCw, Download,
   CheckCircle2, Clock, XCircle, AlertCircle, DollarSign,
   ArrowUpRight, ArrowDownRight, Box, Tag, Loader2,
+  Users, Phone, History, ChevronDown, ChevronRight,
 } from 'lucide-react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -1089,12 +1090,244 @@ const StatistiquesTab = ({ storeKey, section, cfg }) => {
   );
 };
 
+// ─── Tab: Clients ─────────────────────────────────────────────────────────────
+const ClientsTab = ({ storeKey, cfg }) => {
+  const [orders, setOrders]     = useState([]);
+  const [loading, setLoading]   = useState(true);
+  const [search, setSearch]     = useState('');
+  const [expanded, setExpanded] = useState(null); // client key currently expanded
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    try {
+      let result = [];
+      try {
+        // Essai 1 : filtre serveur (plus rapide si le champ existe)
+        result = await pb.collection('store_orders').getFullList({
+          filter: `store="${storeKey}"`,
+          sort: '-created',
+          requestKey: null,
+        });
+      } catch {
+        try {
+          // Essai 2 : fetch global puis filtre côté client (si champ "store" absent du schéma)
+          const all = await pb.collection('store_orders').getFullList({
+            sort: '-created',
+            requestKey: null,
+          });
+          result = all.filter(o => !o.store || o.store === storeKey);
+        } catch {
+          // Collection absente ou accès refusé → liste vide sans crash
+          result = [];
+        }
+      }
+      setOrders(result);
+    } catch {
+      setOrders([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [storeKey]);
+
+  useEffect(() => { load(); }, [load]);
+
+  // ── Construire la liste des clients uniques ──
+  const clients = (() => {
+    const map = {};
+    for (const o of orders) {
+      const nom = (o.client_nom || '').trim() || 'Client inconnu';
+      const tel = (o.client_tel || '').trim();
+      // clé unique : nom + tel (pour éviter les doublons dus à des fautes de frappe mineures)
+      const key = `${nom.toLowerCase()}||${tel}`;
+      if (!map[key]) {
+        map[key] = { key, nom, tel, orders: [], total: 0, lastDate: null };
+      }
+      map[key].orders.push(o);
+      map[key].total += o.total || 0;
+      const d = new Date(o.created);
+      if (!map[key].lastDate || d > map[key].lastDate) map[key].lastDate = d;
+    }
+    return Object.values(map).sort((a, b) => b.lastDate - a.lastDate);
+  })();
+
+  const filtered = clients.filter(c => {
+    const q = search.toLowerCase();
+    return !q || c.nom.toLowerCase().includes(q) || c.tel.includes(q);
+  });
+
+  const totalClients  = clients.length;
+  const totalRevenue  = clients.reduce((s, c) => s + c.total, 0);
+  const topClient     = clients.length ? clients.reduce((a, b) => a.total > b.total ? a : b) : null;
+  const avgOrderValue = orders.length ? (orders.reduce((s, o) => s + (o.total || 0), 0) / orders.length) : 0;
+
+  return (
+    <div className="space-y-5">
+      {/* KPI cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[
+          { label: 'Clients uniques',    value: totalClients,                  icon: Users,       color: 'text-blue-600' },
+          { label: 'Meilleur client',    value: topClient ? topClient.nom : '—', icon: TrendingUp,  color: 'text-emerald-600' },
+          { label: 'Panier moyen',       value: `${avgOrderValue.toFixed(0)} MAD`, icon: ShoppingCart, color: 'text-purple-600' },
+          { label: 'CA clients',         value: `${totalRevenue.toFixed(0)} MAD`, icon: DollarSign,  color: 'text-amber-600' },
+        ].map(({ label, value, icon: Icon, color }) => (
+          <Card key={label} className="border">
+            <CardContent className="pt-4 pb-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-muted-foreground">{label}</p>
+                  <p className="text-lg font-bold mt-0.5 truncate max-w-[130px]" title={value}>{value}</p>
+                </div>
+                <Icon className={`w-6 h-6 ${color} opacity-70 flex-shrink-0`} />
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Search */}
+      <div className="flex items-center gap-2">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input className="pl-9" placeholder="Rechercher par nom ou téléphone…" value={search} onChange={e => setSearch(e.target.value)} />
+        </div>
+        <Button variant="outline" size="icon" onClick={load}><RefreshCw className="w-4 h-4" /></Button>
+      </div>
+
+      {/* Client list */}
+      {loading ? (
+        <div className="flex items-center justify-center h-40 text-muted-foreground">
+          <Loader2 className="w-6 h-6 animate-spin mr-2" />Chargement…
+        </div>
+      ) : filtered.length === 0 ? (
+        <div className="flex flex-col items-center justify-center h-40 text-muted-foreground gap-2">
+          <Users className="w-10 h-10 opacity-30" />
+          <p className="text-sm text-center px-4">
+            {clients.length === 0
+              ? 'Aucun client encore. Les clients apparaîtront ici dès qu\'une commande est créée dans ce magasin.'
+              : 'Aucun résultat pour cette recherche.'}
+          </p>
+        </div>
+      ) : (
+        <div className="rounded-xl border overflow-hidden divide-y divide-border">
+          {filtered.map((c) => {
+            const isOpen = expanded === c.key;
+            const paidOrders = c.orders.filter(o => o.status === 'paid' || o.status === 'completed');
+            return (
+              <div key={c.key}>
+                {/* Client row */}
+                <button
+                  onClick={() => setExpanded(isOpen ? null : c.key)}
+                  className="w-full flex items-center gap-4 px-4 py-3.5 hover:bg-muted/30 transition-colors text-left"
+                >
+                  {/* Avatar */}
+                  <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${cfg.gradient} flex items-center justify-center flex-shrink-0 text-white font-bold text-sm`}>
+                    {c.nom.charAt(0).toUpperCase()}
+                  </div>
+
+                  {/* Info */}
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-foreground truncate">{c.nom}</p>
+                    <div className="flex items-center gap-3 mt-0.5 flex-wrap">
+                      {c.tel && (
+                        <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <Phone className="w-3 h-3" />{c.tel}
+                        </span>
+                      )}
+                      <span className="text-xs text-muted-foreground">
+                        {c.orders.length} commande{c.orders.length > 1 ? 's' : ''}
+                      </span>
+                      <span className="text-xs font-semibold text-foreground">
+                        {c.total.toFixed(2)} MAD
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Last date */}
+                  <div className="text-right hidden sm:block flex-shrink-0">
+                    <p className="text-xs text-muted-foreground">Dernier achat</p>
+                    <p className="text-xs font-medium text-foreground">
+                      {c.lastDate?.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
+                    </p>
+                  </div>
+
+                  {/* Fidélité badge */}
+                  <div className="flex-shrink-0">
+                    {c.orders.length >= 5 ? (
+                      <span className="text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded-full font-semibold">⭐ Fidèle</span>
+                    ) : c.orders.length >= 2 ? (
+                      <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-semibold">Régulier</span>
+                    ) : (
+                      <span className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded-full">Nouveau</span>
+                    )}
+                  </div>
+
+                  {/* Chevron */}
+                  {isOpen
+                    ? <ChevronDown className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                    : <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                  }
+                </button>
+
+                {/* Expanded: historique commandes */}
+                {isOpen && (
+                  <div className="bg-muted/20 px-4 pb-4 pt-2 border-t border-border">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                      <History className="w-3.5 h-3.5" />Historique des commandes
+                    </p>
+                    <div className="space-y-2">
+                      {c.orders.map(o => {
+                        let items = [];
+                        try { items = JSON.parse(o.items || '[]'); } catch {}
+                        return (
+                          <div key={o.id} className="bg-card rounded-xl border px-4 py-3 flex items-center gap-4 flex-wrap">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className="font-mono text-xs text-muted-foreground">#{o.id?.slice(-6).toUpperCase()}</span>
+                                <StatusBadge status={o.status} />
+                              </div>
+                              {items.length > 0 && (
+                                <p className="text-xs text-muted-foreground mt-1 truncate">
+                                  {items.map(it => `${it.name} ×${it.qty}`).join(' · ')}
+                                </p>
+                              )}
+                            </div>
+                            <div className="text-right flex-shrink-0">
+                              <p className="font-bold text-foreground">{(o.total || 0).toFixed(2)} MAD</p>
+                              <p className="text-xs text-muted-foreground">
+                                {new Date(o.created).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
+                              </p>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Récap client */}
+                    <div className="mt-3 flex items-center gap-4 text-sm text-muted-foreground border-t pt-3">
+                      <span>{c.orders.length} commande{c.orders.length > 1 ? 's' : ''}</span>
+                      <span>|</span>
+                      <span>{paidOrders.length} payée{paidOrders.length > 1 ? 's' : ''}</span>
+                      <span>|</span>
+                      <span className="font-semibold text-foreground">{c.total.toFixed(2)} MAD total</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+};
+
 // ─── Main page ────────────────────────────────────────────────────────────────
 const TABS = [
-  { key: 'produits', label: 'Produits', icon: Package },
-  { key: 'commandes', label: 'Commandes', icon: ShoppingCart },
-  { key: 'comptabilite', label: 'Comptabilité', icon: CreditCard },
-  { key: 'statistiques', label: 'Statistiques', icon: BarChart2 },
+  { key: 'produits',      label: 'Produits',      icon: Package },
+  { key: 'commandes',     label: 'Commandes',     icon: ShoppingCart },
+  { key: 'clients',       label: 'Clients',       icon: Users },
+  { key: 'comptabilite',  label: 'Comptabilité',  icon: CreditCard },
+  { key: 'statistiques',  label: 'Statistiques',  icon: BarChart2 },
 ];
 
 const AdminMagasinPage = () => {
@@ -1168,10 +1401,11 @@ const AdminMagasinPage = () => {
             ))}
           </div>
 
-          {activeTab === 'produits'       && <ProduitsTab     storeKey={store} section={cfg.section} cfg={cfg} />}
-          {activeTab === 'commandes'      && <CommandesTab    storeKey={store} section={cfg.section} cfg={cfg} />}
-          {activeTab === 'comptabilite'   && <ComptabiliteTab storeKey={store} section={cfg.section} cfg={cfg} />}
-          {activeTab === 'statistiques'   && <StatistiquesTab storeKey={store} section={cfg.section} cfg={cfg} />}
+          {activeTab === 'produits'      && <ProduitsTab     storeKey={store} section={cfg.section} cfg={cfg} />}
+          {activeTab === 'commandes'     && <CommandesTab    storeKey={store} section={cfg.section} cfg={cfg} />}
+          {activeTab === 'clients'       && <ClientsTab      storeKey={store} cfg={cfg} />}
+          {activeTab === 'comptabilite'  && <ComptabiliteTab storeKey={store} section={cfg.section} cfg={cfg} />}
+          {activeTab === 'statistiques'  && <StatistiquesTab storeKey={store} section={cfg.section} cfg={cfg} />}
 
           {/* Store navigation */}
           <div className="flex items-center gap-3 flex-wrap mt-8 pt-6 border-t">

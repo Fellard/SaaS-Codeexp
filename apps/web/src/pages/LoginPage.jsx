@@ -14,7 +14,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, getDashboardPath } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
@@ -27,13 +27,10 @@ const LoginPage = () => {
     try {
       const user = await login(email, password);
       toast.success(t('auth.login.success', 'Connexion réussie'));
-      // Redirige vers la page d'origine si elle existe, sinon vers l'espace par défaut
+      // Redirige vers l'espace du rôle (ou la page d'origine si elle appartient au bon espace)
       const from = location.state?.from?.pathname || null;
-      if (user.role === 'admin' || user.role === 'manager') {
-        navigate(from || '/admin', { replace: true });
-      } else {
-        navigate(from || '/dashboard', { replace: true });
-      }
+      const dest = getDashboardPath(user.role);
+      navigate(from || dest, { replace: true });
     } catch (error) {
       const msg = error?.message || '';
       if (msg.includes('attente') || msg.includes('validation') || msg.includes('activé')) {

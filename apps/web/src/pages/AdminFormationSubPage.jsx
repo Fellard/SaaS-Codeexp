@@ -42,6 +42,32 @@ const SECTION_CFG = {
   programmation: { cours: ['HTML / CSS','JavaScript','React','Python','PHP','Mobile','Autre'],               niveaux: ['Débutant','Intermédiaire','Avancé'],   defaultNiveau: 'Débutant' },
 };
 
+// ── Config visuelle par matière (langue / discipline) ─────────────
+const MATIERE_CFG = {
+  // Langues
+  'Français':      { flag: '🇫🇷', gradient: 'from-blue-600 to-blue-400',      headerBg: 'bg-blue-600',    lightBg: 'bg-blue-50',    border: 'border-blue-200',   badge: 'bg-blue-100 text-blue-700'      },
+  'Anglais':       { flag: '🇬🇧', gradient: 'from-red-600 to-rose-400',        headerBg: 'bg-red-600',     lightBg: 'bg-red-50',     border: 'border-red-200',    badge: 'bg-red-100 text-red-700'        },
+  'Arabe':         { flag: '🌍',  gradient: 'from-emerald-600 to-teal-400',    headerBg: 'bg-emerald-600', lightBg: 'bg-emerald-50', border: 'border-emerald-200',badge: 'bg-emerald-100 text-emerald-700' },
+  'Espagnol':      { flag: '🇪🇸', gradient: 'from-yellow-500 to-orange-400',   headerBg: 'bg-yellow-500',  lightBg: 'bg-yellow-50',  border: 'border-yellow-200', badge: 'bg-yellow-100 text-yellow-700'  },
+  'Allemand':      { flag: '🇩🇪', gradient: 'from-gray-700 to-gray-500',       headerBg: 'bg-gray-700',    lightBg: 'bg-gray-50',    border: 'border-gray-200',   badge: 'bg-gray-100 text-gray-700'      },
+  'Italien':       { flag: '🇮🇹', gradient: 'from-green-600 to-red-500',       headerBg: 'bg-green-600',   lightBg: 'bg-green-50',   border: 'border-green-200',  badge: 'bg-green-100 text-green-700'    },
+  // Informatique
+  'Bureautique':         { flag: '💼', gradient: 'from-sky-600 to-sky-400',       headerBg: 'bg-sky-600',     lightBg: 'bg-sky-50',     border: 'border-sky-200',    badge: 'bg-sky-100 text-sky-700'        },
+  'Excel / Word':        { flag: '📊', gradient: 'from-green-600 to-emerald-400', headerBg: 'bg-green-600',   lightBg: 'bg-green-50',   border: 'border-green-200',  badge: 'bg-green-100 text-green-700'    },
+  'Maintenance':         { flag: '🔧', gradient: 'from-slate-600 to-slate-400',   headerBg: 'bg-slate-600',   lightBg: 'bg-slate-50',   border: 'border-slate-200',  badge: 'bg-slate-100 text-slate-700'    },
+  'Réseaux':             { flag: '🌐', gradient: 'from-cyan-600 to-cyan-400',     headerBg: 'bg-cyan-600',    lightBg: 'bg-cyan-50',    border: 'border-cyan-200',   badge: 'bg-cyan-100 text-cyan-700'      },
+  'Graphisme':           { flag: '🎨', gradient: 'from-pink-600 to-rose-400',     headerBg: 'bg-pink-600',    lightBg: 'bg-pink-50',    border: 'border-pink-200',   badge: 'bg-pink-100 text-pink-700'      },
+  'Sécurité':            { flag: '🔒', gradient: 'from-red-700 to-red-500',       headerBg: 'bg-red-700',     lightBg: 'bg-red-50',     border: 'border-red-200',    badge: 'bg-red-100 text-red-700'        },
+  // Programmation
+  'HTML / CSS':          { flag: '🌐', gradient: 'from-orange-500 to-amber-400',  headerBg: 'bg-orange-500',  lightBg: 'bg-orange-50',  border: 'border-orange-200', badge: 'bg-orange-100 text-orange-700'  },
+  'JavaScript':          { flag: '⚡', gradient: 'from-yellow-500 to-yellow-400', headerBg: 'bg-yellow-500',  lightBg: 'bg-yellow-50',  border: 'border-yellow-200', badge: 'bg-yellow-100 text-yellow-700'  },
+  'React':               { flag: '⚛️', gradient: 'from-cyan-600 to-sky-400',     headerBg: 'bg-cyan-600',    lightBg: 'bg-cyan-50',    border: 'border-cyan-200',   badge: 'bg-cyan-100 text-cyan-700'      },
+  'Python':              { flag: '🐍', gradient: 'from-blue-700 to-yellow-500',   headerBg: 'bg-blue-700',    lightBg: 'bg-blue-50',    border: 'border-blue-200',   badge: 'bg-blue-100 text-blue-700'      },
+  'PHP':                 { flag: '🐘', gradient: 'from-violet-700 to-purple-500', headerBg: 'bg-violet-700',  lightBg: 'bg-violet-50',  border: 'border-violet-200', badge: 'bg-violet-100 text-violet-700'  },
+  'Mobile':              { flag: '📱', gradient: 'from-teal-600 to-emerald-400',  headerBg: 'bg-teal-600',    lightBg: 'bg-teal-50',    border: 'border-teal-200',   badge: 'bg-teal-100 text-teal-700'      },
+  'Autre':               { flag: '📚', gradient: 'from-violet-600 to-purple-400', headerBg: 'bg-violet-600',  lightBg: 'bg-violet-50',  border: 'border-violet-200', badge: 'bg-violet-100 text-violet-700'  },
+};
+
 // Champs Select obligatoires dans PocketBase
 const LANGUE_OPTIONS    = ['Francais', 'Anglais', 'Arabe'];
 const CAT_AGE_OPTIONS   = ['Enfants (6-12 ans)', 'Ados (13-17 ans)', 'Adultes (18+ ans)'];
@@ -160,6 +186,26 @@ const AdminFormationSubPage = () => {
     const revenue  = courses.reduce((s, c) => s + (c.prix || 0) * enrollments.filter(e => e.course_id === c.id).length, 0);
     return { uniqueStudents, avgPrice, revenue };
   }, [courses, enrollments]);
+
+  // ── Groupement des cours affichés par matière (cours_nom) ────────
+  const groupedDisplayed = useMemo(() => {
+    const groups = {};
+    displayed.forEach(c => {
+      const key = c.cours_nom || 'Autre';
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(c);
+    });
+    // Conserver l'ordre de SECTION_CFG.cours pour avoir Français avant Anglais avant Arabe…
+    const order = secCfg.cours;
+    return Object.entries(groups).sort(([a], [b]) => {
+      const ia = order.indexOf(a);
+      const ib = order.indexOf(b);
+      if (ia === -1 && ib === -1) return a.localeCompare(b);
+      if (ia === -1) return 1;
+      if (ib === -1) return -1;
+      return ia - ib;
+    });
+  }, [displayed, secCfg.cours]);
 
   // ── API helper ───────────────────────────────────────────────────
   const apiCourse = async (method, path, body) => {
@@ -357,6 +403,29 @@ const AdminFormationSubPage = () => {
   const enrollCount = (id) => enrollments.filter(e => e.course_id === id).length;
   const sectionName = t(`admin.formation.section.${section}`);
 
+  // ── Génération automatique de description ────────────────────────
+  const [generatingDesc, setGeneratingDesc] = useState(null); // id du cours en cours
+
+  const handleGenerateDescription = async (course) => {
+    setGeneratingDesc(course.id);
+    try {
+      const token = pb.authStore.token;
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      const res = await fetch(`${API_URL}/admin/courses/${course.id}/generate-description`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || `Erreur ${res.status}`);
+      toast.success('✅ Description générée avec succès !');
+      fetchData(); // Recharger la liste
+    } catch (err) {
+      toast.error('Erreur : ' + err.message);
+    } finally {
+      setGeneratingDesc(null);
+    }
+  };
+
   // ── Render ───────────────────────────────────────────────────────
   return (
     <AdminLayout>
@@ -429,10 +498,17 @@ const AdminFormationSubPage = () => {
         </Select>
       </div>
 
-      {/* Grid */}
+      {/* Cours groupés par matière */}
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[1,2,3,4,5,6].map(i => <Skeleton key={i} className="h-56 rounded-xl" />)}
+        <div className="space-y-6">
+          {[1, 2].map(i => (
+            <div key={i} className="rounded-2xl border-2 border-border overflow-hidden">
+              <Skeleton className="h-14 w-full" />
+              <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[1,2,3].map(j => <Skeleton key={j} className="h-48 rounded-xl" />)}
+              </div>
+            </div>
+          ))}
         </div>
       ) : displayed.length === 0 ? (
         <div className={`flex flex-col items-center justify-center py-16 px-6 rounded-2xl border-2 border-dashed ${cfg.border} ${cfg.bg}`}>
@@ -444,54 +520,94 @@ const AdminFormationSubPage = () => {
           </Button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {displayed.map(course => (
-            <Card key={course.id} className="border hover:shadow-lg transition-all duration-300 overflow-hidden">
-              <div className={`h-1.5 bg-gradient-to-r ${cfg.gradient}`} />
-              <CardContent className="pt-5 pb-4">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex-1 min-w-0 pr-2">
-                    <h3 className="font-semibold text-foreground truncate text-sm">{course.titre}</h3>
-                    <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5">{course.description}</p>
+        <div className="space-y-6">
+          {groupedDisplayed.map(([matiere, matieresCourses]) => {
+            const mcfg = MATIERE_CFG[matiere] || MATIERE_CFG['Autre'];
+            const totalInscrits = matieresCourses.reduce((s, c) => s + enrollCount(c.id), 0);
+            return (
+              <div key={matiere} className={`rounded-2xl border-2 overflow-hidden ${mcfg.border} shadow-sm`}>
+                {/* En-tête du groupe */}
+                <div className={`bg-gradient-to-r ${mcfg.gradient} px-5 py-3.5 flex items-center justify-between`}>
+                  <div className="flex items-center gap-3">
+                    <span className="text-xl">{mcfg.flag}</span>
+                    <div>
+                      <h3 className="font-black text-white text-base">{matiere}</h3>
+                      <p className="text-white/70 text-xs">
+                        {matieresCourses.length} cours · {totalInscrits} inscription(s)
+                      </p>
+                    </div>
                   </div>
-                  <Badge className={`${LEVEL_COLORS[course.niveau] || 'bg-gray-100 text-gray-700'} text-xs shrink-0`}>
-                    {course.niveau}
-                  </Badge>
-                </div>
-                <div className="flex items-center gap-3 text-xs text-muted-foreground mb-3">
-                  <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {course.duree || 0}min</span>
-                  <span className="flex items-center gap-1"><Users className="w-3 h-3" /> {enrollCount(course.id)} inscrits</span>
-                  <span className="flex items-center gap-1 font-semibold text-foreground">
-                    <DollarSign className="w-3 h-3" /> {(course.prix || 0).toLocaleString('fr-FR')} MAD
-                  </span>
-                </div>
-                {course.cours_nom && (
-                  <div className="mb-3">
-                    <Badge variant="outline" className="text-xs">
-                      <Tag className="w-2.5 h-2.5 mr-1" />{course.cours_nom}
-                    </Badge>
-                    {course.langue && (
-                      <Badge variant="outline" className="text-xs ml-1">
-                        {LANGUE_LABEL[course.langue] || course.langue}
-                      </Badge>
-                    )}
-                  </div>
-                )}
-                <div className="flex gap-2 pt-1 border-t border-border">
-                  <Button size="sm" variant="ghost" className="flex-1 text-xs h-8" onClick={() => setViewCourse(course)}>
-                    <Eye className="w-3.5 h-3.5 mr-1" /> Voir
-                  </Button>
-                  <Button size="sm" variant="ghost" className={`flex-1 text-xs h-8 ${cfg.color}`} onClick={() => openEdit(course)}>
-                    <Edit className="w-3.5 h-3.5 mr-1" /> Modifier
-                  </Button>
-                  <Button size="sm" variant="ghost" className="text-xs h-8 text-destructive hover:bg-destructive/10 px-2"
-                    onClick={() => { setDeleteConfirm({ id: course.id, titre: course.titre }); setDeleteConfirmText(''); }}>
-                    <Trash2 className="w-3.5 h-3.5" />
+                  <Button
+                    size="sm"
+                    onClick={openCreate}
+                    className="bg-white/20 hover:bg-white/30 text-white border border-white/30 gap-1.5 text-xs font-semibold"
+                  >
+                    <Plus className="w-3 h-3" /> Ajouter
                   </Button>
                 </div>
-              </CardContent>
-            </Card>
-          ))}
+
+                {/* Grille des cours */}
+                <div className={`p-4 ${mcfg.lightBg} grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4`}>
+                  {matieresCourses.map(course => (
+                    <Card key={course.id} className="border bg-card hover:shadow-lg transition-all duration-300 overflow-hidden">
+                      <div className={`h-1.5 bg-gradient-to-r ${mcfg.gradient}`} />
+                      <CardContent className="pt-4 pb-3">
+                        <div className="flex items-start justify-between mb-2">
+                          <div className="flex-1 min-w-0 pr-2">
+                            <h3 className="font-semibold text-foreground truncate text-sm">{course.titre}</h3>
+                            {course.description ? (
+                              <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5">{course.description}</p>
+                            ) : (
+                              <button
+                                onClick={() => handleGenerateDescription(course)}
+                                disabled={generatingDesc === course.id}
+                                className="mt-1 flex items-center gap-1 text-xs text-amber-600 hover:text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-2 py-0.5 rounded-md transition-colors disabled:opacity-60"
+                              >
+                                {generatingDesc === course.id ? (
+                                  <><span className="w-3 h-3 border border-amber-500 border-t-transparent rounded-full animate-spin inline-block" /> Génération…</>
+                                ) : (
+                                  <>✨ Générer la description</>
+                                )}
+                              </button>
+                            )}
+                          </div>
+                          <Badge className={`${LEVEL_COLORS[course.niveau] || 'bg-gray-100 text-gray-700'} text-xs shrink-0`}>
+                            {course.niveau}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center gap-3 text-xs text-muted-foreground mb-2.5">
+                          <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {course.duree || 0}min</span>
+                          <span className="flex items-center gap-1"><Users className="w-3 h-3" /> {enrollCount(course.id)} inscrits</span>
+                          <span className={`flex items-center gap-1 font-semibold ${course.prix > 0 ? 'text-orange-600' : 'text-emerald-600'}`}>
+                            <DollarSign className="w-3 h-3" /> {course.prix > 0 ? `${(course.prix).toLocaleString('fr-FR')} MAD` : 'Gratuit'}
+                          </span>
+                        </div>
+                        {course.langue && (
+                          <div className="mb-2.5">
+                            <Badge variant="outline" className={`text-xs ${mcfg.badge}`}>
+                              {LANGUE_LABEL[course.langue] || course.langue}
+                            </Badge>
+                          </div>
+                        )}
+                        <div className="flex gap-2 pt-2 border-t border-border">
+                          <Button size="sm" variant="ghost" className="flex-1 text-xs h-8" onClick={() => setViewCourse(course)}>
+                            <Eye className="w-3.5 h-3.5 mr-1" /> Voir
+                          </Button>
+                          <Button size="sm" variant="ghost" className={`flex-1 text-xs h-8 ${cfg.color}`} onClick={() => openEdit(course)}>
+                            <Edit className="w-3.5 h-3.5 mr-1" /> Modifier
+                          </Button>
+                          <Button size="sm" variant="ghost" className="text-xs h-8 text-destructive hover:bg-destructive/10 px-2"
+                            onClick={() => { setDeleteConfirm({ id: course.id, titre: course.titre }); setDeleteConfirmText(''); }}>
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
 

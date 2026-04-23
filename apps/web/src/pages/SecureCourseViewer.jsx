@@ -377,28 +377,38 @@ const SecureCourseViewer = () => {
         setCoursePrice(coursePrice);
 
         // ── Règles d'accès ────────────────────────────────────────────
-        // 1. Cours gratuit (prix = 0)               → accès libre
-        // 2. Commande complétée pour ce cours       → accès payé confirmé
-        // 3. Inscrit ET aucune commande pending     → accès grandfathered (avant la mise à jour du prix)
-        // 4. Admin / section spéciale               → accès spécial
-        // ─ BLOQUÉ : cours payant + commande pending + non inscrit avant → mur de paiement
-        if (isFreePrice || hasPaid || isGrandfathered || hasSection) {
+        // 1. Admin                          → accès total
+        // 2. Commande PayPal complétée      → accès payé confirmé
+        // 3. Pack acheté (order pack_12)    → accès à tous les cours
+        // 4. Déjà inscrit à ce cours        → accès (grandfathered ou cours gratuit)
+        // 5. Moins de 3 cours au total      → les 3 premiers cours sont gratuits
+        // ─ BLOQUÉ sinon                    → mur de paiement (4ème cours et au-delà)
+
+        const FREE_COURSE_LIMIT = 3;
+        const hasPackOrder = orders.some(o => o.status === 'completed' && o.order_type === 'pack_12');
+        const grantAccess  = hasSection || hasPaid || hasPackOrder || enrolled || totalEnrollments < FREE_COURSE_LIMIT;
+
+        setTotalEnrollments(totalEnrollments);
+        setCoursePrice(coursePrice);
+
+        if (grantAccess) {
           setHasAccess(true);
 
           if (enrollList.length > 0) {
             setEnrollment(enrollList[0]);
           } else if (courseId) {
-            // Auto-inscription : cours gratuit OU cours payé (hasPaid)
+            // Auto-inscription au premier accès (cours gratuit ou payé)
             try {
               const newEnroll = await pb.collection('course_enrollments').create({
                 user_id: currentUser.id, course_id: courseId,
-                progression: 0, complete: false, status: 'active',
+                progression: 0, complete: false,
                 start_date: new Date().toISOString(),
               }, { requestKey: null });
               setEnrollment(newEnroll);
             } catch {}
           }
         } else {
+          // 4ème cours et au-delà sans paiement → mur de paiement
           setHasAccess(false);
         }
       } catch {
@@ -727,19 +737,20 @@ const SecureCourseViewer = () => {
             </div>
           ) : (
             <>
-              {/* ── En-tête félicitations ── */}
+              {/* ── En-tête ── */}
               <div className="text-center mb-6">
                 <div className="w-20 h-20 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
                   <GraduationCap className="w-10 h-10 text-white" />
                 </div>
                 <div className="inline-flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold px-3 py-1.5 rounded-full mb-3">
-                  <Sparkles className="w-3.5 h-3.5" /> {totalEnrollments} cours complétés
+                  <Sparkles className="w-3.5 h-3.5" /> {totalEnrollments} cours gratuits utilisés sur 3
                 </div>
                 <h2 className="text-2xl font-black text-foreground leading-tight">
-                  🔒 Ce cours est payant
+                  Continuez votre apprentissage 🚀
                 </h2>
                 <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
-                  Pour accéder à <strong className="text-foreground">{courseTitle}</strong>, veuillez choisir votre mode de paiement ci-dessous.
+                  Vous avez profité de vos <strong className="text-foreground">3 cours gratuits</strong>.<br/>
+                  Pour accéder à <strong className="text-foreground">{courseTitle}</strong> et à la suite, choisissez votre offre ci-dessous.
                 </p>
               </div>
 

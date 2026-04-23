@@ -331,27 +331,166 @@ router.post('/courses/parse-pdf', requireAdmin, async (req, res) => {
   const docName = pdf_filename || 'document.pdf';
   logger.info(`Extraction PDF via Claude : ${docName}`);
 
-  const extractionPrompt = `Tu es un expert pédagogique. Analyse ce document PDF et structure son contenu pour une plateforme d'apprentissage en ligne.
+  const extractionPrompt = `Tu es un ingénieur pédagogique senior. Analyse ce document PDF et génère un cours structuré pour une plateforme e-learning professionnelle (IWS Laayoune).
 
-Génère une réponse JSON valide (sans markdown, sans bloc de code) avec cette structure EXACTE :
+⚠️ RÈGLE ABSOLUE : Tu dois produire EXACTEMENT 7 pages dans cet ordre immuable. Aucune déviation n'est autorisée.
+
+═══════════════════════════════════════════════════════
+STRUCTURE PÉDAGOGIQUE OBLIGATOIRE (7 pages fixes)
+═══════════════════════════════════════════════════════
+
+PAGE 1 — TITRE & INTRODUCTION
+Rôle : Accrocher l'apprenant, poser le contexte, annoncer les objectifs.
+HTML imposé :
+<div class="lesson-intro">
+  <div class="lesson-badge">📚 [Matière extraite du PDF]</div>
+  <h2>[Titre clair du cours]</h2>
+  <p class="lead">[Phrase d'accroche engageante — 2-3 phrases simples, vocabulaire courant]</p>
+  <div class="lesson-objectives">
+    <h4>🎯 Ce que tu vas apprendre</h4>
+    <ul><li>[Objectif 1]</li><li>[Objectif 2]</li><li>[Objectif 3]</li></ul>
+  </div>
+  <div class="info-box">💡 <strong>Pourquoi c'est important ?</strong> [Explication motivante en 1 phrase]</div>
+</div>
+
+PAGE 2 — EXPLICATION DES RÈGLES
+Rôle : Poser les règles grammaticales / concepts clés. Clarté maximale, pas de jargon non expliqué.
+HTML imposé :
+<div class="lesson-content">
+  <h3>📖 Les règles essentielles</h3>
+  [Pour chaque règle principale, utiliser :]
+  <div class="rule-box">
+    <div class="rule-icon">🔑</div>
+    <div>
+      <strong>[Nom de la règle]</strong>
+      <p>[Explication simple en 2-3 phrases. Utiliser <span class="prep">[terme clé]</span> pour les mots importants]</p>
+    </div>
+  </div>
+  [Répéter pour chaque règle — minimum 3 règles]
+  <div class="info-box">💡 <strong>Astuce :</strong> [Conseil mnémotechnique ou raccourci]</div>
+</div>
+
+PAGE 3 — EXEMPLES (MINIMUM 5, IDÉALEMENT 8-10)
+Rôle : Montrer les règles en action avec des exemples concrets, variés et progressifs.
+HTML imposé :
+<div class="lesson-content">
+  <h3>✏️ Exemples concrets</h3>
+  <p class="lead">[Phrase introductive courte]</p>
+  [Pour chaque exemple :]
+  <div class="example-block">
+    <div class="example-number">[N°]</div>
+    <div class="example-content">
+      <p class="example-sentence"><span class="highlight">[Phrase exemple complète]</span></p>
+      <p class="example-explain">→ [Explication de POURQUOI cette phrase est correcte — référencer la règle de la page 2]</p>
+    </div>
+  </div>
+  [OBLIGATOIRE : minimum 5 exemples, maximum 10. Varier les contextes : quotidien, professionnel, voyage…]
+</div>
+
+PAGE 4 — ERREURS COURANTES
+Rôle : Anticiper et corriger les pièges typiques des apprenants. Très pédagogique.
+HTML imposé :
+<div class="lesson-content">
+  <h3>⚠️ Erreurs fréquentes à éviter</h3>
+  <p class="lead">[Introduction motivante : "Ces erreurs sont très courantes — les connaître, c'est déjà les éviter !"]</p>
+  [Pour chaque erreur — minimum 4 erreurs :]
+  <div class="compare-box">
+    <div class="compare-item bad">❌ <strong>[Phrase incorrecte typique]</strong><br/><small>[Pourquoi c'est faux]</small></div>
+    <div class="compare-item good">✅ <strong>[Phrase correcte]</strong><br/><small>[Règle appliquée]</small></div>
+  </div>
+  <div class="info-box">🎯 <strong>Rappel :</strong> [Conseil pour ne plus faire ces erreurs]</div>
+</div>
+
+PAGE 5 — PRATIQUE GUIDÉE
+Rôle : Exercices interactifs courts intégrés dans la leçon (avant les QCM). Ponts entre théorie et quiz.
+HTML imposé :
+<div class="lesson-content">
+  <h3>🏋️ Pratique guidée</h3>
+  <p class="lead">Essayons ensemble avant de passer aux exercices !</p>
+  [Pour chaque mini-exercice (3 à 5) :]
+  <div class="rule-box">
+    <div class="rule-icon">❓</div>
+    <div>
+      <p><strong>[Question ou phrase à compléter avec ___ ]</strong></p>
+      <details>
+        <summary>👁️ Voir la réponse</summary>
+        <p class="example-explain">✅ [Réponse + explication courte]</p>
+      </details>
+    </div>
+  </div>
+</div>
+
+PAGE 6 — RÉSUMÉ RÉCAPITULATIF
+Rôle : Synthèse visuelle de tout ce qui a été appris. Tableau de référence à consulter.
+HTML imposé :
+<div class="lesson-content">
+  <h3>📋 Récapitulatif</h3>
+  <p class="lead">Voici tout ce que tu as appris dans ce cours :</p>
+  <div class="summary-table">
+    <div class="summary-row header"><div>Concept</div><div>Règle</div><div>Exemple</div></div>
+    [Une ligne par règle principale apprise :]
+    <div class="summary-row"><div>[Terme clé]</div><div>[Règle en 1 phrase]</div><div>[Exemple]</div></div>
+  </div>
+  <div class="info-box">🚀 <strong>Tu es prêt(e) pour les exercices !</strong> Rappelle-toi les points clés ci-dessus.</div>
+</div>
+
+PAGE 7 — EXERCICES BILAN
+Rôle : Renvoyer vers les QCM + encouragements. C'est la dernière page avant le quiz.
+HTML imposé :
+<div class="lesson-intro">
+  <div class="lesson-badge">📝 Exercices</div>
+  <h2>Mets tes connaissances à l'épreuve !</h2>
+  <p class="lead">Tu as terminé la leçon — bravo ! Il est temps de tester ce que tu as retenu.</p>
+  <div class="lesson-objectives">
+    <h4>📌 Les exercices portent sur :</h4>
+    <ul>
+      <li>[Point clé 1 évalué]</li>
+      <li>[Point clé 2 évalué]</li>
+      <li>[Point clé 3 évalué]</li>
+    </ul>
+  </div>
+  <div class="info-box">💪 <strong>Conseil :</strong> Relis le récapitulatif si tu bloques sur une question.</div>
+</div>
+
+═══════════════════════════════════════════════════════
+EXERCICES QCM (20 questions obligatoires)
+═══════════════════════════════════════════════════════
+- EXACTEMENT 20 questions QCM, 4 options chacune
+- answer = index 0-3 de la bonne réponse
+- Répartition obligatoire :
+  • 5 questions de compréhension des règles (page 2)
+  • 7 questions basées sur les exemples (page 3)
+  • 4 questions sur les erreurs courantes (page 4)
+  • 4 questions de synthèse (pages 5-6)
+- Difficulté progressive : les 5 premières faciles, les 10 suivantes moyennes, les 5 dernières difficiles
+
+═══════════════════════════════════════════════════════
+TITRE ET DESCRIPTION (obligatoires)
+═══════════════════════════════════════════════════════
+- title : Titre court et accrocheur (ex: "Les prépositions de lieu en Anglais — Niveau A1")
+- description : OBLIGATOIRE — 3 phrases minimum décrivant : (1) le sujet, (2) ce que l'apprenant va maîtriser, (3) à qui s'adresse ce cours
+
+═══════════════════════════════════════════════════════
+FORMAT DE RÉPONSE
+═══════════════════════════════════════════════════════
+Réponds UNIQUEMENT avec ce JSON valide (aucun markdown, aucun bloc de code) :
 {
-  "title": "Titre suggéré du cours",
-  "description": "Description du cours en 2-3 phrases résumant les objectifs",
+  "title": "...",
+  "description": "...",
   "pages": [
-    { "id": 1, "title": "Titre de la page", "content": "Contenu HTML de la page" }
+    { "id": 1, "title": "Introduction", "content": "..." },
+    { "id": 2, "title": "Règles", "content": "..." },
+    { "id": 3, "title": "Exemples", "content": "..." },
+    { "id": 4, "title": "Erreurs courantes", "content": "..." },
+    { "id": 5, "title": "Pratique guidée", "content": "..." },
+    { "id": 6, "title": "Récapitulatif", "content": "..." },
+    { "id": 7, "title": "Exercices", "content": "..." }
   ],
   "exercises": [
-    { "id": "q1", "question": "Question avec ___ pour le blanc", "options": ["a","b","c","d"], "answer": 0 }
+    { "id": "q1", "question": "...", "options": ["a","b","c","d"], "answer": 0 }
   ]
 }
-
-RÈGLES POUR LES PAGES (6 à 10 pages) :
-- Page 1 : <div class="lesson-intro"><div class="lesson-badge">📚 Matière</div><h2>Titre</h2><p class="lead">Accroche</p><div class="lesson-objectives"><h4>🎯 Objectifs</h4><ul><li>...</li></ul></div></div>
-- Pages intermédiaires : <span class="prep">terme</span> · <div class="rule-box"><div class="rule-icon">emoji</div><div>règle + exemples</div></div> · <div class="info-box">💡 astuce</div> · <div class="compare-box"><div class="compare-item good">✅ bon</div><div class="compare-item bad">❌ mauvais</div></div>
-- Dernière page : <div class="summary-table"><div class="summary-row header"><div>Terme</div><div>Règle</div><div>Exemple</div></div>...</div>
-
-RÈGLES POUR LES EXERCICES : 18 à 20 QCM · 4 options chacun · answer = index 0-3 de la bonne réponse · varier les types : compréhension, vocabulaire, grammaire, inférence.
-IMPORTANT : Réponds UNIQUEMENT avec le JSON.`;
+IMPORTANT : Produis EXACTEMENT 7 pages dans l'ordre imposé. Jamais moins, jamais plus.`;
 
   const MODELS = ['claude-sonnet-4-6', 'claude-opus-4-6'];
   let lastError = null;
@@ -376,15 +515,35 @@ IMPORTANT : Réponds UNIQUEMENT avec le JSON.`;
       if (!jsonMatch) throw new Error('Réponse invalide — aucun JSON trouvé');
 
       const data = JSON.parse(jsonMatch[0]);
-      const pages = (data.pages || []).map((p, i) => ({ id: p.id ?? i+1, title: p.title || `Page ${i+1}`, content: p.content || '' }));
+      const pages = (data.pages || []).map((p, i) => ({
+        id: p.id ?? i + 1,
+        title: p.title || `Page ${i + 1}`,
+        content: p.content || '',
+      }));
       const exercises = (data.exercises || []).map((ex, i) => ({
-        id: ex.id || `q${i+1}`, question: ex.question || '',
-        options: Array.isArray(ex.options) ? ex.options.slice(0,4) : ['','','',''],
+        id: ex.id || `q${i + 1}`,
+        question: ex.question || '',
+        options: Array.isArray(ex.options) ? ex.options.slice(0, 4) : ['', '', '', ''],
         answer: typeof ex.answer === 'number' ? ex.answer : 0,
       }));
 
+      // Validation de la structure pédagogique obligatoire
+      if (pages.length !== 7) {
+        logger.warn(`[parse-pdf][${model}] Structure incorrecte : ${pages.length} pages au lieu de 7 attendues`);
+      }
+      if (exercises.length < 15) {
+        logger.warn(`[parse-pdf][${model}] Exercices insuffisants : ${exercises.length} au lieu de 20 attendus`);
+      }
+      if (!data.description || data.description.trim().length < 20) {
+        logger.warn(`[parse-pdf][${model}] Description manquante ou trop courte`);
+      }
+
+      const description = (data.description && data.description.trim().length >= 20)
+        ? data.description
+        : `Ce cours "${data.title || ''}" couvre les concepts essentiels, les règles clés et des exercices pratiques pour progresser rapidement.`;
+
       logger.info(`[parse-pdf][${model}] OK : ${pages.length} pages, ${exercises.length} exercices`);
-      return res.json({ title: data.title || '', description: data.description || '', pages, exercises });
+      return res.json({ title: data.title || '', description, pages, exercises });
 
     } catch (err) {
       lastError = err;
@@ -393,17 +552,93 @@ IMPORTANT : Réponds UNIQUEMENT avec le JSON.`;
     }
   }
 
-  // Fallback : retourne un template vide avec le message d'erreur
+  // Fallback : retourne le template pédagogique en 7 pages avec le message d'erreur
   const name = (pdf_filename || 'cours').replace(/\.pdf$/i, '').replace(/[-_]/g, ' ');
   const errMsg = lastError?.message || 'Erreur inconnue';
   const errStatus = lastError?.status || '';
-  logger.warn(`[parse-pdf] Fallback template. Erreur : ${errMsg}`);
+  logger.warn(`[parse-pdf] Fallback template 7 pages. Erreur : ${errMsg}`);
   return res.json({
-    title: name, description: '',
-    pages: [{ id: 1, title: 'Introduction', content: `<div class="lesson-intro"><div class="lesson-badge">📚 Cours</div><h2>${name}</h2><p class="lead">Contenu à compléter.</p></div>` }],
+    title: name,
+    description: `Ce cours porte sur le sujet "${name}". Il vous guidera à travers les règles essentielles, des exemples concrets et des exercices pratiques pour maîtriser ce sujet.`,
+    pages: [
+      { id: 1, title: 'Introduction', content: `<div class="lesson-intro"><div class="lesson-badge">📚 Cours</div><h2>${name}</h2><p class="lead">Bienvenue dans ce cours ! Vous allez découvrir les concepts essentiels de manière progressive et structurée.</p><div class="lesson-objectives"><h4>🎯 Ce que tu vas apprendre</h4><ul><li>Comprendre les règles fondamentales</li><li>Appliquer les concepts à travers des exemples</li><li>Éviter les erreurs les plus courantes</li></ul></div><div class="info-box">💡 <strong>Conseil :</strong> Lisez chaque page attentivement avant de passer aux exercices.</div></div>` },
+      { id: 2, title: 'Règles', content: `<div class="lesson-content"><h3>📖 Les règles essentielles</h3><div class="rule-box"><div class="rule-icon">🔑</div><div><strong>Règle principale</strong><p>Complétez cette section avec le contenu de votre PDF en cliquant sur "Modifier" dans la liste des cours.</p></div></div><div class="info-box">💡 <strong>Astuce :</strong> Importez votre PDF avec le bouton "Générer avec Claude" pour remplir automatiquement ce contenu.</div></div>` },
+      { id: 3, title: 'Exemples', content: `<div class="lesson-content"><h3>✏️ Exemples concrets</h3><p class="lead">Des exemples pratiques seront générés automatiquement à partir de votre PDF.</p><div class="example-block"><div class="example-number">1</div><div class="example-content"><p class="example-sentence"><span class="highlight">Exemple à compléter</span></p><p class="example-explain">→ Importez votre PDF pour générer des exemples automatiquement.</p></div></div></div>` },
+      { id: 4, title: 'Erreurs courantes', content: `<div class="lesson-content"><h3>⚠️ Erreurs fréquentes à éviter</h3><p class="lead">Ces erreurs sont très courantes — les connaître, c'est déjà les éviter !</p><div class="compare-box"><div class="compare-item bad">❌ <strong>Erreur typique</strong><br/><small>À compléter depuis votre PDF</small></div><div class="compare-item good">✅ <strong>Forme correcte</strong><br/><small>À compléter depuis votre PDF</small></div></div></div>` },
+      { id: 5, title: 'Pratique guidée', content: `<div class="lesson-content"><h3>🏋️ Pratique guidée</h3><p class="lead">Essayons ensemble avant de passer aux exercices !</p><div class="rule-box"><div class="rule-icon">❓</div><div><p><strong>Complétez la phrase : Je ___ à Paris. (habiter)</strong></p><details><summary>👁️ Voir la réponse</summary><p class="example-explain">✅ J'habite à Paris. — Utilisez la forme conjuguée au présent.</p></details></div></div></div>` },
+      { id: 6, title: 'Récapitulatif', content: `<div class="lesson-content"><h3>📋 Récapitulatif</h3><p class="lead">Voici un résumé de ce que vous avez appris :</p><div class="summary-table"><div class="summary-row header"><div>Concept</div><div>Règle</div><div>Exemple</div></div><div class="summary-row"><div>À compléter</div><div>À compléter</div><div>À compléter</div></div></div><div class="info-box">🚀 <strong>Tu es prêt(e) pour les exercices !</strong></div></div>` },
+      { id: 7, title: 'Exercices', content: `<div class="lesson-intro"><div class="lesson-badge">📝 Exercices</div><h2>Mets tes connaissances à l'épreuve !</h2><p class="lead">Tu as terminé la leçon — bravo ! Il est temps de tester ce que tu as retenu.</p><div class="lesson-objectives"><h4>📌 Les exercices portent sur :</h4><ul><li>La compréhension des règles</li><li>L'application des exemples</li><li>L'identification des erreurs</li></ul></div><div class="info-box">💪 <strong>Conseil :</strong> Relis le récapitulatif si tu bloques sur une question.</div></div>` },
+    ],
     exercises: [],
     warning: `Erreur API Claude${errStatus ? ` (HTTP ${errStatus})` : ''} : ${errMsg}`,
   });
+});
+
+// ── POST /admin/courses/:id/generate-description ─────────────────────
+// Génère automatiquement une description pour un cours existant sans description.
+// Utilise le titre, la matière, le niveau et le contenu des pages existantes.
+router.post('/courses/:id/generate-description', requireAdmin, async (req, res) => {
+  const { id } = req.params;
+  try {
+    // 1. Charger le cours depuis PocketBase
+    const course = await pb.collection('courses').getOne(id, { $autoCancel: false });
+
+    const titre    = course.titre || course.title || '';
+    const coursNom = course.cours_nom || course.current_course || '';
+    const niveau   = course.niveau || course.level || course.Level || '';
+    const section  = course.section || '';
+
+    // Extraire le texte brut des pages existantes (HTML → texte)
+    let pagesText = '';
+    try {
+      const pages = JSON.parse(course.pages || '[]');
+      pagesText = pages
+        .map(p => `[${p.title}] ${(p.content || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()}`)
+        .join('\n')
+        .slice(0, 3000); // Limiter pour le contexte Claude
+    } catch { pagesText = ''; }
+
+    const prompt = `Tu es un rédacteur pédagogique. Génère une description professionnelle et engageante pour ce cours en ligne.
+
+Informations du cours :
+- Titre : ${titre}
+- Matière / Langue : ${coursNom}
+- Niveau : ${niveau}
+- Programme : ${section}
+${pagesText ? `\nContenu des leçons :\n${pagesText}` : ''}
+
+INSTRUCTIONS :
+- Rédige exactement 3 phrases
+- Phrase 1 : présenter le sujet principal du cours
+- Phrase 2 : ce que l'apprenant va maîtriser concrètement après le cours
+- Phrase 3 : à qui s'adresse ce cours (niveau, contexte)
+- Ton : professionnel, motivant, clair
+- Langue : français
+- Pas de bullet points, pas de markdown, uniquement du texte
+
+Réponds UNIQUEMENT avec les 3 phrases de description, rien d'autre.`;
+
+    const message = await anthropic.messages.create({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 300,
+      messages: [{ role: 'user', content: prompt }],
+    });
+
+    const description = message.content[0]?.text?.trim() || '';
+    if (!description || description.length < 20) {
+      return res.status(500).json({ error: 'Description générée invalide' });
+    }
+
+    // 2. Mettre à jour le cours dans PocketBase
+    await pb.collection('courses').update(id, { description }, { $autoCancel: false });
+
+    logger.info(`[generate-description] Cours ${id} — description générée (${description.length} chars)`);
+    return res.json({ success: true, description });
+
+  } catch (err) {
+    logger.error(`[generate-description] Erreur cours ${id} :`, err);
+    return res.status(500).json({ error: err.message || 'Erreur interne' });
+  }
 });
 
 // ── GET /admin/all-students ─────────────────────────────────────────

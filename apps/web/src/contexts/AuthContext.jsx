@@ -72,6 +72,18 @@ export const AuthProvider = ({ children }) => {
   const isAdmin   = () => currentRole === 'admin';
   const isManager = () => currentRole === 'manager' || currentRole === 'admin';
 
+  // ── Retourne le chemin du tableau de bord selon le rôle ───────────
+  const getDashboardPath = (role) => {
+    switch (role) {
+      case 'admin':
+      case 'manager':  return '/admin';
+      case 'etudiant': return '/etudiant/dashboard';
+      case 'client':   return '/client/dashboard';
+      case 'musicien': return '/musicien/dashboard';
+      default:         return '/dashboard';
+    }
+  };
+
   // Connexion
   const login = async (email, password) => {
     const authData = await pb.collection('users').authWithPassword(email, password, { requestKey: null });
@@ -95,6 +107,7 @@ export const AuthProvider = ({ children }) => {
     return authData.record;
   };
 
+  // Déconnexion → retour à l'accueil
   const logout = () => {
     pb.authStore.clear();
     setCurrentUser(null);
@@ -117,6 +130,7 @@ export const AuthProvider = ({ children }) => {
       isAuthenticated: !!currentUser,
       isAdmin,
       isManager,
+      getDashboardPath,
       login,
       signup,
       logout,

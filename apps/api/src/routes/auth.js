@@ -416,4 +416,59 @@ router.post('/forgot-password', async (req, res) => {
   }
 });
 
+// ─── POST /verify-role — Vérification côté serveur du rôle utilisateur ───────
+// Utilisé par le frontend après login pour confirmer le rôle réel (double check).
+// Body: { token: string }
+// Returns: { role, email, approved, dashboardPath }
+router.post('/verify-role', async (req, res) => {
+  const { token } = req.body;
+  if (!token) return res.status(400).json({ error: 'Token requis.' });
+
+  try {
+    const parts = token.split('.');
+    if (parts.length < 2) throw new Error('JWT malformé');
+
+    const payload = JSON.parse(
+      Buffer.from(parts[1].replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString('utf8')
+    );
+
+    if (payload.exp && Date.now() / 1000 > payload.exp) {
+      return res.status(401).json({ error: 'Token expiré' });
+    }
+
+    const userId = payload.id || payload.sub;
+    if (!userId) throw new Error('ID absent du token');
+
+    // Charge l'utilisateur réel depuis la DB (source de vérité)
+    const user = await pb.collection('users').getOne(userId, { $autoCancel: false });
+
+    // Vérifie que le compte admin est approuvé
+    if (user.role === 'admin' && !user.approved) {
+      return res.status(403).json({ error: 'Compte en attente de validation' });
+    }
+
+    // Mappe le rôle vers le chemin du dashboard
+    const dashboardPaths = {
+      admin:    '/admin',
+      manager:  '/admin',
+      etudiant: '/etudiant/dashboard',
+      client:   '/client/dashboard',
+      musicien: '/musicien/dashboard',
+    };
+
+    logger.info(`[VERIFY-ROLE] ${user.email} → rôle: ${user.role}`);
+
+    res.json({
+      success:       true,
+      role:          user.role,
+      email:         user.email,
+      approved:      user.approved,
+      dashboardPath: dashboardPaths[user.role] || '/dashboard',
+    });
+  } catch (err) {
+    logger.error('Verify-role error:', err);
+    res.status(401).json({ error: 'Token invalide ou utilisateur introuvable' });
+  }
+});
+
 export default router;
