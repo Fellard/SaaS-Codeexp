@@ -62,6 +62,149 @@ const getCourseSection = (course) => {
   return null;
 };
 
+// ── Détection langue depuis les données du cours ─────────────────
+const detectLang = (course) => {
+  const hay = [
+    course.cours_nom,
+    course.categorie,
+    course.category,
+    course.titre,
+    course.title,
+    course.title_fr,
+  ].filter(Boolean).join(' ').toLowerCase();
+  if (/anglais|english|brit|uk/.test(hay)) return 'en';
+  if (/arab|عرب/.test(hay)) return 'ar';
+  if (/français|french|franc/.test(hay)) return 'fr';
+  return null;
+};
+
+// ── Couverture SVG par langue ─────────────────────────────────────
+const LANG_COVERS = {
+  fr: {
+    g1: '#00274D', g2: '#003d73',
+    label: 'LANGUE · FRANÇAIS',
+    title: 'Français',
+    italic: true,
+  },
+  en: {
+    g1: '#5c1a1a', g2: '#7a2020',
+    label: 'LANGUAGE · ENGLISH',
+    title: 'English',
+    italic: true,
+  },
+  ar: {
+    g1: '#0d3324', g2: '#154a32',
+    label: 'اللغة · العربية',
+    title: 'العربية',
+    italic: false,
+    arabic: true,
+  },
+};
+
+const CourseCoverSVG = ({ course, sec, secCfg }) => {
+  const lang = sec === 'langues' ? detectLang(course) : null;
+  const cfg = lang ? LANG_COVERS[lang] : null;
+  const niveau = course.niveau || course.level || course.Level || '';
+
+  // Couleur de fond pour les sections non-langue
+  const sectionColors = {
+    informatique: { g1: '#1a3a1a', g2: '#1e4d2a' },
+    programmation: { g1: '#1e1040', g2: '#2d1a5e' },
+  };
+
+  const bg = cfg ? cfg : (sectionColors[sec] || { g1: '#00274D', g2: '#003d73' });
+
+  const uid = course.id || Math.random().toString(36).slice(2);
+
+  return (
+    <svg
+      viewBox="0 0 480 270"
+      xmlns="http://www.w3.org/2000/svg"
+      preserveAspectRatio="xMidYMid slice"
+      style={{ width: '100%', height: '100%', display: 'block' }}
+    >
+      <defs>
+        <linearGradient id={`cg-${uid}`} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor={bg.g1} />
+          <stop offset="100%" stopColor={bg.g2} />
+        </linearGradient>
+      </defs>
+
+      {/* Fond */}
+      <rect width="480" height="270" fill={`url(#cg-${uid})`} />
+
+      {/* Cercles déco */}
+      <circle cx="420" cy="-20" r="200" fill="#ffffff" fillOpacity="0.04" />
+      <circle cx="50" cy="300" r="160" fill="#000000" fillOpacity="0.15" />
+
+      {/* Bande accent orange IWS */}
+      <rect x="0" y="240" width="480" height="4" fill="#FF9500" />
+
+      {/* Filet vertical gauche */}
+      <rect x="44" y="44" width="3" height="80" fill="#FF9500" opacity="0.9" rx="2" />
+
+      {/* Label langue */}
+      <text
+        x="60" y="76"
+        fontFamily="'Plus Jakarta Sans', sans-serif"
+        fontSize="11" fontWeight="700"
+        fill="#FF9500" letterSpacing="3"
+      >
+        {cfg ? cfg.label : (secCfg ? secCfg.label.toUpperCase() : 'IWS LEARN')}
+      </text>
+
+      {/* Grand titre */}
+      {cfg?.arabic ? (
+        <text
+          x="44" y="148"
+          fontFamily="'Amiri', serif"
+          fontSize="56" fontWeight="700"
+          fill="white" opacity="0.95"
+        >
+          {cfg.title}
+        </text>
+      ) : (
+        <text
+          x="44" y="138"
+          fontFamily="Georgia, serif"
+          fontStyle={cfg?.italic ? 'italic' : 'normal'}
+          fontSize="62" fontWeight="400"
+          fill="white" opacity="0.95"
+          letterSpacing="-1"
+        >
+          {cfg ? cfg.title : (secCfg ? secCfg.label : 'Cours')}
+        </text>
+      )}
+
+      {/* Badge niveau */}
+      {niveau && (
+        <>
+          <rect x="44" y="166" width="44" height="22" rx="4" fill="#FF9500" />
+          <text
+            x="66" y="181"
+            fontFamily="'Plus Jakarta Sans', sans-serif"
+            fontSize="11" fontWeight="700"
+            fill="#00274D" textAnchor="middle"
+          >
+            {niveau}
+          </text>
+        </>
+      )}
+
+      {/* IWS Learn watermark */}
+      <text
+        x="436" y="262"
+        fontFamily="'Plus Jakarta Sans', sans-serif"
+        fontSize="10" fontWeight="700"
+        fill="rgba(255,255,255,0.35)"
+        textAnchor="end" letterSpacing="1"
+      >
+        IWS LEARN
+      </text>
+    </svg>
+  );
+};
+
 // ── Programme card ───────────────────────────────────────────────
 const ProgrammeCard = ({ section, count, active, onClick }) => {
   const Icon = section.icon;
@@ -139,6 +282,24 @@ const CoursesListPage = () => {
   const filteredCourses = activeSection
     ? courses.filter(c => getCourseSection(c) === activeSection)
     : courses;
+
+  // Groupement par langue pour la section Langues
+  const LANG_GROUP_CONFIG = {
+    fr: { label: 'Français', color: '#00274D', accent: '#003d73', badge: 'bg-blue-100 text-blue-800' },
+    en: { label: 'English',  color: '#5c1a1a', accent: '#7a2020', badge: 'bg-red-100 text-red-800' },
+    ar: { label: 'العربية', color: '#0d3324', accent: '#154a32', badge: 'bg-green-100 text-green-800', rtl: true },
+    other: { label: 'Autres langues', color: '#1e293b', accent: '#334155', badge: 'bg-slate-100 text-slate-700' },
+  };
+
+  const langGroups = React.useMemo(() => {
+    if (activeSection !== 'langues') return null;
+    const groups = { fr: [], en: [], ar: [], other: [] };
+    filteredCourses.forEach(c => {
+      const l = detectLang(c);
+      (groups[l] || groups.other).push(c);
+    });
+    return groups;
+  }, [filteredCourses, activeSection]);
 
   const handleSectionClick = (key) => {
     setActiveSection(prev => prev === key ? null : key);
@@ -271,6 +432,83 @@ const CoursesListPage = () => {
                   Pré-inscription gratuite
                 </Button>
               </div>
+            ) : langGroups ? (
+              /* ── Vue groupée par langue ─────────────────────── */
+              <div className="space-y-12">
+                {Object.entries(langGroups).map(([langKey2, langCourses]) => {
+                  if (!langCourses.length) return null;
+                  const lgCfg = LANG_GROUP_CONFIG[langKey2];
+                  return (
+                    <div key={langKey2}>
+                      {/* En-tête du groupe */}
+                      <div className="flex items-center gap-4 mb-6">
+                        <div
+                          className="w-1 h-10 rounded-full flex-shrink-0"
+                          style={{ background: lgCfg.color }}
+                        />
+                        <div>
+                          <h3
+                            className="text-xl font-bold"
+                            style={{ color: lgCfg.color }}
+                            dir={lgCfg.rtl ? 'rtl' : 'ltr'}
+                          >
+                            {lgCfg.label}
+                          </h3>
+                          <p className="text-sm text-muted-foreground">
+                            {langCourses.length} formation{langCourses.length !== 1 ? 's' : ''}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {langCourses.map((course) => {
+                          const sec = getCourseSection(course);
+                          const secCfg = sec ? SECTIONS[sec] : null;
+                          const displayTitle = course[`title_${langKey}`] || course.titre || course.title;
+                          const displayDesc  = course[`description_${langKey}`] || course.description;
+                          const price = course.prix || course.price || 0;
+                          return (
+                            <Card key={course.id} className="flex flex-col hover:shadow-lg border-border rounded-2xl overflow-hidden transition-shadow duration-200">
+                              <div className="h-1.5" style={{ background: `linear-gradient(to right, ${lgCfg.color}, ${lgCfg.accent})` }} />
+                              <div className="aspect-video relative overflow-hidden">
+                                <CourseCoverSVG course={course} sec={sec} secCfg={secCfg} />
+                              </div>
+                              <CardContent className="p-6 flex flex-col flex-1">
+                                {(course.cours_nom || (course.niveau || course.level)) && (
+                                  <div className="flex gap-1.5 flex-wrap mb-2">
+                                    {course.cours_nom && (
+                                      <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-muted text-muted-foreground">{course.cours_nom}</span>
+                                    )}
+                                    {(course.niveau || course.level) && (
+                                      <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${lgCfg.badge}`}>{course.niveau || course.level}</span>
+                                    )}
+                                  </div>
+                                )}
+                                <h3 className="font-bold text-foreground text-lg mb-2 line-clamp-2" dir={lgCfg.rtl ? 'rtl' : 'ltr'}>{displayTitle}</h3>
+                                {displayDesc && (
+                                  <p className="text-muted-foreground text-sm mb-4 line-clamp-3 flex-1 leading-relaxed">{displayDesc}</p>
+                                )}
+                                <div className="flex items-center justify-between text-sm text-muted-foreground mb-5 bg-muted/40 px-3 py-2 rounded-lg">
+                                  {(course.duree || course.duration) && (
+                                    <div className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5 text-primary" /><span>{course.duree || course.duration} h</span></div>
+                                  )}
+                                  <div className="flex items-center gap-1.5"><User className="w-3.5 h-3.5 text-primary" /><span>{course.instructeur || course.instructor || 'IWS'}</span></div>
+                                </div>
+                                <div className="flex items-center justify-between border-t border-border pt-4">
+                                  <span className="font-bold text-xl text-primary">{price > 0 ? `${price} MAD` : 'Gratuit'}</span>
+                                  <Link to={`/courses/${course.id}`}>
+                                    <Button size="sm" className="bg-accent hover:bg-accent/90 text-primary font-bold rounded-xl">Voir le cours</Button>
+                                  </Link>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredCourses.map((course) => {
@@ -287,20 +525,12 @@ const CoursesListPage = () => {
                         <div className={`h-1.5 bg-gradient-to-r ${secCfg.gradient}`} />
                       )}
 
-                      {/* Course image placeholder */}
-                      <div className="aspect-video bg-primary/5 flex items-center justify-center relative">
-                        {secCfg
-                          ? React.createElement(secCfg.icon, { className: 'w-14 h-14 opacity-20 text-foreground' })
-                          : <BookOpen className="w-12 h-12 text-primary/20" />
-                        }
+                      {/* Course cover */}
+                      <div className="aspect-video relative overflow-hidden">
+                        <CourseCoverSVG course={course} sec={sec} secCfg={secCfg} />
                         {secCfg && (
                           <span className={`absolute top-3 left-3 text-xs font-bold px-2.5 py-1 rounded-full ${secCfg.badge}`}>
                             {secCfg.label}
-                          </span>
-                        )}
-                        {(course.niveau || course.level || course.Level) && (
-                          <span className="absolute top-3 right-3 text-xs font-bold px-2.5 py-1 rounded-full bg-black/50 text-white">
-                            {course.niveau || course.level || course.Level}
                           </span>
                         )}
                       </div>

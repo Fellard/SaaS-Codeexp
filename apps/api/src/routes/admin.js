@@ -320,19 +320,183 @@ router.get('/enrollments', requireAdmin, async (req, res) => {
   }
 });
 
+// ─────────────────────────────────────────────────────────────────────────────
+// LOGIQUE BILINGUE — retourne les instructions selon la langue du cours
+// Français → explications FR + traduction EN
+// Anglais  → explications EN + traduction FR
+// Arabe    → explications AR + traduction EN
+// ─────────────────────────────────────────────────────────────────────────────
+const getBilingualInstructions = (coursNom = '') => {
+  const nom = coursNom.toLowerCase().trim();
+
+  if (nom.includes('fran') || nom === 'francais' || nom === 'français') {
+    return `
+═══════════════════════════════════════════════════════
+LOGIQUE BILINGUE OBLIGATOIRE — COURS DE FRANÇAIS (pour anglophones)
+═══════════════════════════════════════════════════════
+Les apprenants sont anglophones qui apprennent le français.
+CHAQUE explication doit être en français + traduction anglaise immédiatement en dessous.
+
+POUR LES LISTES DE VOCABULAIRE (mots-clés, expressions) — utilise ce format liste :
+<ul class="vocab-list">
+  <li><span class="vocab-term">j'ai hâte que</span><span class="vocab-sep">=</span><span class="vocab-trans">I can't wait for</span></li>
+  <li><span class="vocab-term">rendre visite</span><span class="vocab-sep">=</span><span class="vocab-trans">to visit (a person)</span></li>
+  <li><span class="vocab-term">le mois prochain</span><span class="vocab-sep">=</span><span class="vocab-trans">next month</span></li>
+</ul>
+
+DANS LES RULE-BOX (règles de grammaire) :
+<div class="rule-box">
+  <div class="rule-icon">🔑</div>
+  <div>
+    <strong>[Nom de la règle en français]</strong>
+    <p>[Explication de la règle en français]</p>
+    <p class="translation">🇬🇧 [English translation of the rule explanation]</p>
+  </div>
+</div>
+
+DANS LES EXAMPLE-BLOCK (exemples de phrases) :
+<div class="example-block">
+  <div class="example-number">[N]</div>
+  <div class="example-content">
+    <p class="example-sentence">🇫🇷 <span class="highlight">[Phrase française complète]</span></p>
+    <p class="translation">🇬🇧 [English translation + why this is correct]</p>
+  </div>
+</div>
+
+DANS LES COMPARE-BOX (erreurs courantes) :
+<div class="compare-box">
+  <div class="compare-item bad">❌ <strong>[Phrase incorrecte en français]</strong><br/><small>🇬🇧 [Why it's wrong in English]</small></div>
+  <div class="compare-item good">✅ <strong>[Phrase correcte en français]</strong><br/><small>🇬🇧 [Why it's correct in English]</small></div>
+</div>
+
+DANS LE SUMMARY-TABLE (récapitulatif) :
+<div class="summary-table">
+  <div class="summary-row header"><div>Concept 🇫🇷</div><div>Règle</div><div>Exemple</div><div>🇬🇧 English</div></div>
+  <div class="summary-row"><div>[terme français]</div><div>[règle française]</div><div>[exemple]</div><div>[English meaning]</div></div>
+</div>
+
+EXERCICES QCM : en français uniquement (pas de traduction dans les questions/options).`;
+  }
+
+  if (nom.includes('angl') || nom.includes('engl')) {
+    return `
+═══════════════════════════════════════════════════════
+LOGIQUE BILINGUE OBLIGATOIRE — COURS D'ANGLAIS (pour francophones)
+═══════════════════════════════════════════════════════
+Les apprenants sont francophones qui apprennent l'anglais.
+CHAQUE explication doit être en anglais + traduction française immédiatement en dessous.
+
+POUR LES LISTES DE VOCABULAIRE (mots-clés, expressions) — utilise ce format liste :
+<ul class="vocab-list">
+  <li><span class="vocab-term">I can't wait for</span><span class="vocab-sep">=</span><span class="vocab-trans">j'ai hâte que</span></li>
+  <li><span class="vocab-term">to visit (a person)</span><span class="vocab-sep">=</span><span class="vocab-trans">rendre visite</span></li>
+  <li><span class="vocab-term">next month</span><span class="vocab-sep">=</span><span class="vocab-trans">le mois prochain</span></li>
+</ul>
+
+DANS LES RULE-BOX (rules) :
+<div class="rule-box">
+  <div class="rule-icon">🔑</div>
+  <div>
+    <strong>[Rule name in English]</strong>
+    <p>[Explanation of the rule in English]</p>
+    <p class="translation">🇫🇷 [Traduction française de l'explication]</p>
+  </div>
+</div>
+
+DANS LES EXAMPLE-BLOCK (examples) :
+<div class="example-block">
+  <div class="example-number">[N]</div>
+  <div class="example-content">
+    <p class="example-sentence">🇬🇧 <span class="highlight">[Full English sentence]</span></p>
+    <p class="translation">🇫🇷 [Traduction française + explication pourquoi c'est correct]</p>
+  </div>
+</div>
+
+DANS LES COMPARE-BOX (common mistakes) :
+<div class="compare-box">
+  <div class="compare-item bad">❌ <strong>[Incorrect English sentence]</strong><br/><small>🇫🇷 [Pourquoi c'est faux en français]</small></div>
+  <div class="compare-item good">✅ <strong>[Correct English sentence]</strong><br/><small>🇫🇷 [Pourquoi c'est correct en français]</small></div>
+</div>
+
+DANS LE SUMMARY-TABLE (recap) :
+<div class="summary-table">
+  <div class="summary-row header"><div>Concept 🇬🇧</div><div>Rule</div><div>Example</div><div>🇫🇷 Traduction</div></div>
+  <div class="summary-row"><div>[English term]</div><div>[English rule]</div><div>[example]</div><div>[Traduction française]</div></div>
+</div>
+
+QCM EXERCISES: in English only (no translations in questions/options).`;
+  }
+
+  if (nom.includes('arab')) {
+    return `
+═══════════════════════════════════════════════════════
+LOGIQUE BILINGUE OBLIGATOIRE — COURS D'ARABE (pour anglophones)
+═══════════════════════════════════════════════════════
+Les apprenants sont anglophones qui apprennent l'arabe.
+CHAQUE explication doit être en arabe + translittération latine + traduction anglaise.
+
+POUR LES LISTES DE VOCABULAIRE (mots-clés, expressions) — utilise ce format liste :
+<ul class="vocab-list">
+  <li><span class="vocab-term" dir="rtl">مرحباً</span><span class="vocab-sep">=</span><span class="vocab-trans">marhaban (Hello)</span></li>
+  <li><span class="vocab-term" dir="rtl">شكراً</span><span class="vocab-sep">=</span><span class="vocab-trans">shukran (Thank you)</span></li>
+</ul>
+
+DANS LES RULE-BOX (rules) :
+<div class="rule-box">
+  <div class="rule-icon">🔑</div>
+  <div>
+    <strong>[اسم القاعدة] — [Rule name in English]</strong>
+    <p dir="rtl">[الشرح بالعربية]</p>
+    <p class="transliteration">📝 [Latin transliteration]</p>
+    <p class="translation">🇬🇧 [English explanation of the rule]</p>
+  </div>
+</div>
+
+DANS LES EXAMPLE-BLOCK (examples) :
+<div class="example-block">
+  <div class="example-number">[N]</div>
+  <div class="example-content">
+    <p class="example-sentence" dir="rtl">🌍 <span class="highlight">[الجملة كاملة بالعربية]</span></p>
+    <p class="transliteration">📝 [Latin transliteration of the sentence]</p>
+    <p class="translation">🇬🇧 [English translation + why it is correct]</p>
+  </div>
+</div>
+
+DANS LES COMPARE-BOX (common mistakes) :
+<div class="compare-box">
+  <div class="compare-item bad">❌ <strong dir="rtl">[الجملة الخاطئة]</strong><br/><small>🇬🇧 [Why it's wrong in English]</small></div>
+  <div class="compare-item good">✅ <strong dir="rtl">[الجملة الصحيحة]</strong><br/><small>🇬🇧 [Why it's correct in English]</small></div>
+</div>
+
+DANS LE SUMMARY-TABLE (recap) :
+<div class="summary-table">
+  <div class="summary-row header"><div>🌍 العربية</div><div>Translittération</div><div>🇬🇧 English</div></div>
+  <div class="summary-row"><div dir="rtl">[كلمة/عبارة]</div><div>[translitération]</div><div>[English meaning]</div></div>
+</div>
+
+QCM EXERCISES: mix Arabic and English — Arabic sentences as questions, English options for meaning (or vice versa).`;
+  }
+
+  // Autres matières (informatique, programmation) → français uniquement
+  return '';
+};
+
 // ── POST /admin/courses/parse-pdf ──────────────────────────────────
-// Envoie un PDF à Claude pour extraire le contenu pédagogique (optionnel).
-// Body JSON: { pdf_base64: string, pdf_filename?: string }
+// Envoie un PDF à Claude pour extraire le contenu pédagogique.
+// Body JSON: { pdf_base64, pdf_filename, cours_nom?, section? }
 // Returns: { title, description, pages: [...], exercises: [...] }
 router.post('/courses/parse-pdf', requireAdmin, async (req, res) => {
-  const { pdf_base64, pdf_filename } = req.body;
+  const { pdf_base64, pdf_filename, cours_nom, section } = req.body;
   if (!pdf_base64) return res.status(400).json({ error: 'pdf_base64 est requis' });
 
   const docName = pdf_filename || 'document.pdf';
-  logger.info(`Extraction PDF via Claude : ${docName}`);
+  const bilingualInstructions = getBilingualInstructions(cours_nom || '');
+  logger.info(`Extraction PDF via Claude : ${docName} | cours_nom=${cours_nom || 'non précisé'} | bilingue=${!!bilingualInstructions}`);
 
   const extractionPrompt = `Tu es un ingénieur pédagogique senior. Analyse ce document PDF et génère un cours structuré pour une plateforme e-learning professionnelle (IWS Laayoune).
-
+${bilingualInstructions ? `
+MATIÈRE DÉTECTÉE : ${cours_nom || 'non précisée'}${bilingualInstructions}
+` : ''}
 ⚠️ RÈGLE ABSOLUE : Tu dois produire EXACTEMENT 7 pages dans cet ordre immuable. Aucune déviation n'est autorisée.
 
 ═══════════════════════════════════════════════════════
@@ -368,6 +532,15 @@ HTML imposé :
   </div>
   [Répéter pour chaque règle — minimum 3 règles]
   <div class="info-box">💡 <strong>Astuce :</strong> [Conseil mnémotechnique ou raccourci]</div>
+  [OBLIGATOIRE — Vocabulaire clé de la page, avec traduction dans la langue complémentaire :]
+  <div class="vocab-box">
+    💡 <strong>Vocabulaire clé :</strong>
+    <ul>
+      <li><em>[terme extrait du cours]</em> = [traduction ou définition en langue complémentaire]</li>
+      <li><em>[terme 2]</em> = [traduction 2]</li>
+      [4 à 6 termes clés de la page]
+    </ul>
+  </div>
 </div>
 
 PAGE 3 — EXEMPLES (MINIMUM 5, IDÉALEMENT 8-10)
@@ -385,6 +558,14 @@ HTML imposé :
     </div>
   </div>
   [OBLIGATOIRE : minimum 5 exemples, maximum 10. Varier les contextes : quotidien, professionnel, voyage…]
+  [OBLIGATOIRE — Expressions utiles de la page, avec traduction :]
+  <div class="vocab-box">
+    💡 <strong>Expressions utiles :</strong>
+    <ul>
+      <li><em>[expression tirée des exemples]</em> = [traduction ou explication en langue complémentaire]</li>
+      [4 à 6 expressions des exemples de cette page]
+    </ul>
+  </div>
 </div>
 
 PAGE 4 — ERREURS COURANTES
@@ -574,71 +755,104 @@ IMPORTANT : Produis EXACTEMENT 7 pages dans l'ordre imposé. Jamais moins, jamai
   });
 });
 
-// ── POST /admin/courses/:id/generate-description ─────────────────────
-// Génère automatiquement une description pour un cours existant sans description.
-// Utilise le titre, la matière, le niveau et le contenu des pages existantes.
-router.post('/courses/:id/generate-description', requireAdmin, async (req, res) => {
+// ── POST /admin/courses/:id/add-bilingual — DÉSACTIVÉ (crédits insuffisants) ──
+// Cette route est conservée pour compatibilité mais retourne une erreur explicite.
+router.post('/courses/:id/add-bilingual', requireAdmin, async (req, res) => {
+  return res.status(503).json({ error: 'Cette fonctionnalité a été désactivée. Les cours bilingues sont désormais générés automatiquement lors de l\'import PDF.' });
+});
+// Ancien code désactivé :
+/*
+router.post('/courses/:id/add-bilingual-DISABLED', requireAdmin, async (req, res) => {
   const { id } = req.params;
   try {
-    // 1. Charger le cours depuis PocketBase
     const course = await pb.collection('courses').getOne(id, { $autoCancel: false });
-
-    const titre    = course.titre || course.title || '';
     const coursNom = course.cours_nom || course.current_course || '';
-    const niveau   = course.niveau || course.level || course.Level || '';
-    const section  = course.section || '';
+    const bilingualInstructions = getBilingualInstructions(coursNom);
 
-    // Extraire le texte brut des pages existantes (HTML → texte)
-    let pagesText = '';
-    try {
-      const pages = JSON.parse(course.pages || '[]');
-      pagesText = pages
-        .map(p => `[${p.title}] ${(p.content || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()}`)
-        .join('\n')
-        .slice(0, 3000); // Limiter pour le contexte Claude
-    } catch { pagesText = ''; }
+    if (!bilingualInstructions) {
+      return res.status(400).json({
+        error: `Aucune logique bilingue définie pour la matière "${coursNom}". Seuls Français, Anglais et Arabe sont supportés.`,
+      });
+    }
 
-    const prompt = `Tu es un rédacteur pédagogique. Génère une description professionnelle et engageante pour ce cours en ligne.
+    // Extraire le contenu HTML brut des pages existantes
+    let existingPages = [];
+    try { existingPages = JSON.parse(course.pages || '[]'); } catch { existingPages = []; }
 
-Informations du cours :
-- Titre : ${titre}
-- Matière / Langue : ${coursNom}
-- Niveau : ${niveau}
-- Programme : ${section}
-${pagesText ? `\nContenu des leçons :\n${pagesText}` : ''}
+    if (existingPages.length === 0) {
+      return res.status(400).json({ error: 'Ce cours n\'a pas de pages à convertir. Importez d\'abord un PDF.' });
+    }
+
+    const pagesText = existingPages
+      .map(p => `=== PAGE ${p.id} : ${p.title} ===\n${p.content || ''}`)
+      .join('\n\n');
+
+    const titre  = course.titre || course.title || '';
+    const niveau = course.niveau || course.level || '';
+
+    const prompt = `Tu es un ingénieur pédagogique bilingue. Tu reçois le contenu HTML d'un cours existant et tu dois le TRANSFORMER pour appliquer une logique bilingue.
+
+COURS : "${titre}" — Matière : ${coursNom} — Niveau : ${niveau}
+${bilingualInstructions}
+
+CONTENU EXISTANT DES PAGES (HTML brut) :
+${pagesText.slice(0, 12000)}
 
 INSTRUCTIONS :
-- Rédige exactement 3 phrases
-- Phrase 1 : présenter le sujet principal du cours
-- Phrase 2 : ce que l'apprenant va maîtriser concrètement après le cours
-- Phrase 3 : à qui s'adresse ce cours (niveau, contexte)
-- Ton : professionnel, motivant, clair
-- Langue : français
-- Pas de bullet points, pas de markdown, uniquement du texte
+1. Conserve EXACTEMENT la même structure en 7 pages (mêmes titres, même id)
+2. Transforme le contenu de chaque page pour appliquer la logique bilingue ci-dessus
+3. Chaque règle, explication et exemple doit avoir sa traduction dans la langue secondaire
+4. NE SUPPRIME AUCUN CONTENU — ajoute uniquement les traductions
+5. Garde tous les éléments HTML existants (.rule-box, .example-block, .compare-box, .summary-table, etc.)
+6. Pour les traductions manquantes, génère-les toi-même de manière correcte et naturelle
 
-Réponds UNIQUEMENT avec les 3 phrases de description, rien d'autre.`;
+Réponds UNIQUEMENT avec ce JSON valide :
+{
+  "pages": [
+    { "id": 1, "title": "Introduction", "content": "..." },
+    { "id": 2, "title": "Règles", "content": "..." },
+    { "id": 3, "title": "Exemples", "content": "..." },
+    { "id": 4, "title": "Erreurs courantes", "content": "..." },
+    { "id": 5, "title": "Pratique guidée", "content": "..." },
+    { "id": 6, "title": "Récapitulatif", "content": "..." },
+    { "id": 7, "title": "Exercices", "content": "..." }
+  ]
+}`;
 
     const message = await anthropic.messages.create({
       model: 'claude-sonnet-4-6',
-      max_tokens: 300,
+      max_tokens: 12000,
       messages: [{ role: 'user', content: prompt }],
     });
 
-    const description = message.content[0]?.text?.trim() || '';
-    if (!description || description.length < 20) {
-      return res.status(500).json({ error: 'Description générée invalide' });
-    }
+    const text = message.content[0]?.text || '';
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('Réponse invalide — aucun JSON trouvé');
 
-    // 2. Mettre à jour le cours dans PocketBase
-    await pb.collection('courses').update(id, { description }, { $autoCancel: false });
+    const data = JSON.parse(jsonMatch[0]);
+    const pages = (data.pages || []).map((p, i) => ({
+      id: p.id ?? i + 1,
+      title: p.title || existingPages[i]?.title || `Page ${i + 1}`,
+      content: p.content || '',
+    }));
 
-    logger.info(`[generate-description] Cours ${id} — description générée (${description.length} chars)`);
-    return res.json({ success: true, description });
+    if (pages.length === 0) throw new Error('Aucune page générée');
+
+    // Mettre à jour le cours dans PocketBase
+    await pb.collection('courses').update(id, { pages: JSON.stringify(pages) }, { $autoCancel: false });
+
+    logger.info(`[add-bilingual] Cours ${id} (${coursNom}) — ${pages.length} pages converties en bilingue`);
+    return res.json({ success: true, pagesCount: pages.length, coursNom });
 
   } catch (err) {
-    logger.error(`[generate-description] Erreur cours ${id} :`, err);
+    logger.error(`[add-bilingual] Erreur cours ${id} :`, err);
     return res.status(500).json({ error: err.message || 'Erreur interne' });
   }
+}); // fin du bloc désactivé */
+
+// ── POST /admin/courses/:id/generate-description — DÉSACTIVÉ ────────
+router.post('/courses/:id/generate-description', requireAdmin, async (req, res) => {
+  return res.status(503).json({ error: 'Cette fonctionnalité a été désactivée. Les descriptions sont générées automatiquement lors de l\'import PDF.' });
 });
 
 // ── GET /admin/all-students ─────────────────────────────────────────

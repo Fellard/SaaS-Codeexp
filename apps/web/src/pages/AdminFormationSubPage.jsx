@@ -244,7 +244,13 @@ const AdminFormationSubPage = () => {
       const res = await fetch(`${API_URL}/admin/courses/parse-pdf`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pdf_base64: base64, pdf_filename: pdfFile.name }),
+        // Envoyer cours_nom et section pour appliquer la logique bilingue correcte
+        body: JSON.stringify({
+          pdf_base64:  base64,
+          pdf_filename: pdfFile.name,
+          cours_nom:   formData.cours_nom,
+          section,
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || `Erreur ${res.status}`);
@@ -403,28 +409,7 @@ const AdminFormationSubPage = () => {
   const enrollCount = (id) => enrollments.filter(e => e.course_id === id).length;
   const sectionName = t(`admin.formation.section.${section}`);
 
-  // ── Génération automatique de description ────────────────────────
-  const [generatingDesc, setGeneratingDesc] = useState(null); // id du cours en cours
-
-  const handleGenerateDescription = async (course) => {
-    setGeneratingDesc(course.id);
-    try {
-      const token = pb.authStore.token;
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
-      const res = await fetch(`${API_URL}/admin/courses/${course.id}/generate-description`, {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || `Erreur ${res.status}`);
-      toast.success('✅ Description générée avec succès !');
-      fetchData(); // Recharger la liste
-    } catch (err) {
-      toast.error('Erreur : ' + err.message);
-    } finally {
-      setGeneratingDesc(null);
-    }
-  };
+  // (Les fonctions bilingue/description ont été supprimées — désormais générées statiquement lors de l'import PDF)
 
   // ── Render ───────────────────────────────────────────────────────
   return (
@@ -555,20 +540,8 @@ const AdminFormationSubPage = () => {
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex-1 min-w-0 pr-2">
                             <h3 className="font-semibold text-foreground truncate text-sm">{course.titre}</h3>
-                            {course.description ? (
+                            {course.description && (
                               <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5">{course.description}</p>
-                            ) : (
-                              <button
-                                onClick={() => handleGenerateDescription(course)}
-                                disabled={generatingDesc === course.id}
-                                className="mt-1 flex items-center gap-1 text-xs text-amber-600 hover:text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-2 py-0.5 rounded-md transition-colors disabled:opacity-60"
-                              >
-                                {generatingDesc === course.id ? (
-                                  <><span className="w-3 h-3 border border-amber-500 border-t-transparent rounded-full animate-spin inline-block" /> Génération…</>
-                                ) : (
-                                  <>✨ Générer la description</>
-                                )}
-                              </button>
                             )}
                           </div>
                           <Badge className={`${LEVEL_COLORS[course.niveau] || 'bg-gray-100 text-gray-700'} text-xs shrink-0`}>
@@ -601,6 +574,7 @@ const AdminFormationSubPage = () => {
                             <Trash2 className="w-3.5 h-3.5" />
                           </Button>
                         </div>
+
                       </CardContent>
                     </Card>
                   ))}
