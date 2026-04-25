@@ -7,7 +7,7 @@ import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Clock, BookOpen, User, Languages, Monitor, Code2, ChevronRight, GraduationCap, ArrowRight, Users } from 'lucide-react';
+import { Clock, BookOpen, User, Languages, Monitor, Code2, ChevronRight, GraduationCap, ArrowRight, Users, Headphones, LayoutGrid } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTranslation } from '@/i18n/useTranslation.js';
 import { useLanguage } from '@/hooks/useLanguage.jsx';
@@ -64,6 +64,13 @@ const getCourseSection = (course) => {
 
 // ── Détection langue depuis les données du cours ─────────────────
 const detectLang = (course) => {
+  // Priorité 1 : champ langue explicite (ex: 'fr', 'en', 'ar', 'Français'…)
+  const langField = (course.langue || '').toLowerCase();
+  if (langField === 'fr' || langField === 'français' || langField === 'french') return 'fr';
+  if (langField === 'en' || langField === 'anglais' || langField === 'english') return 'en';
+  if (langField === 'ar' || langField === 'arabe'   || langField === 'arabic')  return 'ar';
+
+  // Priorité 2 : détection par mots-clés dans les autres champs
   const hay = [
     course.cours_nom,
     course.categorie,
@@ -230,10 +237,14 @@ const CourseCardItem = ({ course, langKey, sec, secCfg, lgCfg }) => {
   const price = course.prix || course.price || 0;
   const rtl = lgCfg?.rtl;
   const badgeClass = lgCfg ? lgCfg.badge : 'bg-indigo-100 text-indigo-700';
+  const isAudio = course.course_type === 'audio';
 
   return (
-    <Card className="flex flex-col hover:shadow-lg border-border rounded-2xl overflow-hidden transition-shadow duration-200">
-      {lgCfg ? (
+    <Card className={`flex flex-col hover:shadow-lg border-border rounded-2xl overflow-hidden transition-shadow duration-200 ${isAudio ? 'ring-1 ring-amber-200' : ''}`}>
+      {/* Bandeau couleur en haut */}
+      {isAudio ? (
+        <div className="h-1.5 bg-gradient-to-r from-amber-500 to-orange-400" />
+      ) : lgCfg ? (
         <div
           className="h-1.5"
           style={{ background: `linear-gradient(to right, ${lgCfg.color}, ${lgCfg.accent})` }}
@@ -252,20 +263,25 @@ const CourseCardItem = ({ course, langKey, sec, secCfg, lgCfg }) => {
       </div>
 
       <CardContent className="p-6 flex flex-col flex-1">
-        {(course.cours_nom || course.niveau || course.level) && (
-          <div className="flex gap-1.5 flex-wrap mb-2">
-            {course.cours_nom && (
-              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
-                {course.cours_nom}
-              </span>
-            )}
-            {(course.niveau || course.level) && (
-              <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${badgeClass}`}>
-                {course.niveau || course.level}
-              </span>
-            )}
-          </div>
-        )}
+        <div className="flex gap-1.5 flex-wrap mb-2">
+          {/* Badge Audio */}
+          {isAudio && (
+            <span className="inline-flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 border border-amber-200">
+              <Headphones className="w-3 h-3" />
+              Audio
+            </span>
+          )}
+          {course.cours_nom && (
+            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
+              {course.cours_nom}
+            </span>
+          )}
+          {(course.niveau || course.level) && (
+            <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${badgeClass}`}>
+              {course.niveau || course.level}
+            </span>
+          )}
+        </div>
 
         <h3 className="font-bold text-foreground text-lg mb-2 line-clamp-2" dir={rtl ? 'rtl' : 'ltr'}>
           {displayTitle}
@@ -308,23 +324,18 @@ const CourseCardItem = ({ course, langKey, sec, secCfg, lgCfg }) => {
   );
 };
 
-// ── Bloc d'un groupe de langue (titre + grille) ──────────────────
-const LangGroupBlock = ({ langKey2, courses, lgCfg, langKey, sec, secCfg }) => (
+// ── Sous-section dans un groupe de langue ────────────────────────
+const CourseSubSection = ({ title, icon: Icon, accent, courses, langKey, sec, secCfg, lgCfg }) => (
   <div>
-    <div className="flex items-center gap-4 mb-5">
-      <div className="w-1 h-8 rounded-full flex-shrink-0" style={{ background: lgCfg.color }} />
-      <div>
-        <h4
-          className="text-base font-bold"
-          style={{ color: lgCfg.color }}
-          dir={lgCfg.rtl ? 'rtl' : 'ltr'}
-        >
-          {lgCfg.label}
-        </h4>
-        <p className="text-xs text-muted-foreground">
-          {courses.length} formation{courses.length !== 1 ? 's' : ''}
-        </p>
+    <div className="flex items-center gap-2 mb-4">
+      <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0"
+        style={{ background: accent + '22', border: `1.5px solid ${accent}55` }}>
+        <Icon className="w-3.5 h-3.5" style={{ color: accent }} />
       </div>
+      <span className="text-sm font-bold" style={{ color: accent }}>{title}</span>
+      <span className="text-xs text-muted-foreground ml-1">
+        — {courses.length} formation{courses.length !== 1 ? 's' : ''}
+      </span>
     </div>
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {courses.map(course => (
@@ -340,6 +351,80 @@ const LangGroupBlock = ({ langKey2, courses, lgCfg, langKey, sec, secCfg }) => (
     </div>
   </div>
 );
+
+// ── Bloc d'un groupe de langue (titre + grille) ──────────────────
+const LangGroupBlock = ({ langKey2, courses, lgCfg, langKey, sec, secCfg }) => {
+  const standard = courses.filter(c => c.course_type !== 'audio');
+  const audio    = courses.filter(c => c.course_type === 'audio');
+  const hasBoth  = standard.length > 0 && audio.length > 0;
+
+  return (
+    <div>
+      {/* En-tête langue */}
+      <div className="flex items-center gap-4 mb-5">
+        <div className="w-1 h-8 rounded-full flex-shrink-0" style={{ background: lgCfg.color }} />
+        <div>
+          <h4
+            className="text-base font-bold"
+            style={{ color: lgCfg.color }}
+            dir={lgCfg.rtl ? 'rtl' : 'ltr'}
+          >
+            {lgCfg.label}
+          </h4>
+          <p className="text-xs text-muted-foreground">
+            {courses.length} formation{courses.length !== 1 ? 's' : ''}
+            {hasBoth && ` · ${standard.length} standard · ${audio.length} audio`}
+          </p>
+        </div>
+      </div>
+
+      {/* Contenu : séparé ou groupé */}
+      {hasBoth ? (
+        <div className="space-y-8">
+          {standard.length > 0 && (
+            <CourseSubSection
+              title="Cours standard"
+              icon={LayoutGrid}
+              accent={lgCfg.color}
+              courses={standard}
+              langKey={langKey}
+              sec={sec}
+              secCfg={secCfg}
+              lgCfg={lgCfg}
+            />
+          )}
+          {audio.length > 0 && (
+            <div className="bg-amber-50/60 border border-amber-100 rounded-2xl p-5">
+              <CourseSubSection
+                title="Auto-apprentissage audio"
+                icon={Headphones}
+                accent="#b45309"
+                courses={audio}
+                langKey={langKey}
+                sec={sec}
+                secCfg={secCfg}
+                lgCfg={lgCfg}
+              />
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {courses.map(course => (
+            <CourseCardItem
+              key={course.id}
+              course={course}
+              langKey={langKey}
+              sec={sec}
+              secCfg={secCfg}
+              lgCfg={lgCfg}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 // ── Programme card ───────────────────────────────────────────────
 const ProgrammeCard = ({ section, count, active, onClick }) => {
@@ -388,6 +473,7 @@ const CoursesListPage = () => {
   const [loading, setLoading] = useState(true);
   const [activeSection, setActiveSection] = useState(searchParams.get('section') || null);
   const [selectedLevel, setSelectedLevel] = useState(null);
+  const [selectedType, setSelectedType] = useState(null); // null | 'standard' | 'audio'
 
   const langKey = language?.startsWith('ar') ? 'ar' : language?.startsWith('en') ? 'en' : 'fr';
   const isRtl = langKey === 'ar';
@@ -425,7 +511,7 @@ const CoursesListPage = () => {
     return Array.from(set).sort();
   }, [courses]);
 
-  // Cours filtrés par programme ET niveau
+  // Cours filtrés par programme, niveau ET type
   const filteredCourses = React.useMemo(() => {
     return courses.filter(c => {
       if (activeSection && getCourseSection(c) !== activeSection) return false;
@@ -433,9 +519,13 @@ const CoursesListPage = () => {
         const lv = c.niveau || c.level;
         if (lv !== selectedLevel) return false;
       }
+      if (selectedType) {
+        const ct = c.course_type || 'standard';
+        if (ct !== selectedType) return false;
+      }
       return true;
     });
-  }, [courses, activeSection, selectedLevel]);
+  }, [courses, activeSection, selectedLevel, selectedType]);
 
   // Programmes à afficher dans la liste
   // - Si un filtre est actif → ce programme seulement
@@ -454,6 +544,7 @@ const CoursesListPage = () => {
   const resetFilters = () => {
     setActiveSection(null);
     setSelectedLevel(null);
+    setSelectedType(null);
   };
 
   const handleInscription = (section = null) => {
@@ -536,6 +627,33 @@ const CoursesListPage = () => {
           {/* ── Course list ──────────────────────────────────────── */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
+            {/* Barre de filtre — Type (Standard / Audio) */}
+            {!loading && (
+              <div className="mb-4 flex items-center gap-2 flex-wrap">
+                <span className="text-sm font-medium text-muted-foreground mr-1">Type :</span>
+                {[
+                  { value: null,       label: 'Tous',              icon: null },
+                  { value: 'standard', label: 'Cours standard',    icon: <LayoutGrid className="w-3 h-3" /> },
+                  { value: 'audio',    label: 'Auto-apprentissage audio', icon: <Headphones className="w-3 h-3" /> },
+                ].map(({ value, label, icon }) => (
+                  <button
+                    key={String(value)}
+                    type="button"
+                    onClick={() => setSelectedType(prev => prev === value ? null : value)}
+                    className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full transition-colors border ${
+                      selectedType === value
+                        ? value === 'audio'
+                          ? 'bg-amber-500 text-white border-amber-500'
+                          : 'bg-primary text-primary-foreground border-primary'
+                        : 'bg-card text-foreground border-border hover:bg-muted'
+                    }`}
+                  >
+                    {icon}{label}
+                  </button>
+                ))}
+              </div>
+            )}
+
             {/* Barre de filtre — Niveau */}
             {!loading && availableLevels.length > 0 && (
               <div className="mb-6 flex items-center gap-2 flex-wrap">
@@ -583,7 +701,7 @@ const CoursesListPage = () => {
                   </p>
                 )}
               </div>
-              {(activeSection || selectedLevel) && (
+              {(activeSection || selectedLevel || selectedType) && (
                 <Button variant="ghost" size="sm" onClick={resetFilters} className="text-muted-foreground">
                   Réinitialiser les filtres
                 </Button>

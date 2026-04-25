@@ -1,0 +1,487 @@
+{
+  "61": {
+    "text": "guide de classe teste unité 1, activité 1 écoute l'heure et note le bon numéro sous les horloges 1. Il est 11h moins le quart 2. Il est 8h15 3. Il est 13h10 4. Il est 9h30",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 2.0,
+        "text": "guide de classe"
+      },
+      {
+        "start": 2.0,
+        "end": 5.5,
+        "text": "teste unité 1, activité 1"
+      },
+      {
+        "start": 5.5,
+        "end": 10.0,
+        "text": "écoute l'heure et note le bon numéro sous les horloges"
+      },
+      {
+        "start": 10.0,
+        "end": 15.0,
+        "text": "1. Il est 11h moins le quart"
+      },
+      {
+        "start": 15.0,
+        "end": 19.5,
+        "text": "2. Il est 8h15"
+      },
+      {
+        "start": 19.5,
+        "end": 24.0,
+        "text": "3. Il est 13h10"
+      },
+      {
+        "start": 24.0,
+        "end": 29.0,
+        "text": "4. Il est 9h30"
+      }
+    ]
+  },
+  "62": {
+    "text": "guide de classe test unité 2 activité 1 écoute et coche la bonne case aujourd'hui je vais 9 rues de la République j'ai une lettre pour ma grand-mère tu vas à la mairie ? non je vais à la poste à pied ? non à vélo",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 2.0,
+        "text": "guide de classe"
+      },
+      {
+        "start": 2.0,
+        "end": 4.0,
+        "text": "test unité 2"
+      },
+      {
+        "start": 4.0,
+        "end": 6.0,
+        "text": "activité 1"
+      },
+      {
+        "start": 6.0,
+        "end": 8.0,
+        "text": "écoute et coche la bonne case"
+      },
+      {
+        "start": 9.0,
+        "end": 12.0,
+        "text": "aujourd'hui je vais 9 rues de la République"
+      },
+      {
+        "start": 12.0,
+        "end": 14.0,
+        "text": "j'ai une lettre pour ma grand-mère"
+      },
+      {
+        "start": 14.0,
+        "end": 15.0,
+        "text": "tu vas à la mairie ?"
+      },
+      {
+        "start": 15.0,
+        "end": 17.0,
+        "text": "non je vais à la poste"
+      },
+      {
+        "start": 17.0,
+        "end": 18.0,
+        "text": "à pied ?"
+      },
+      {
+        "start": 18.0,
+        "end": 20.0,
+        "text": "non à vélo"
+      }
+    ]
+  },
+  "63": {
+    "text": "guide de classe teste une ététroie activité 1 écoute et coche la bonne case Marie tu viens chez moi après l'école ? non je ne peux pas je fais du sport je vais faire du volet au parc avec cadère",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 2.0,
+        "text": "guide de classe"
+      },
+      {
+        "start": 2.0,
+        "end": 3.8,
+        "text": "teste une ététroie"
+      },
+      {
+        "start": 3.8,
+        "end": 5.7,
+        "text": "activité 1"
+      },
+      {
+        "start": 5.7,
+        "end": 8.7,
+        "text": "écoute et coche la bonne case"
+      },
+      {
+        "start": 8.7,
+        "end": 11.4,
+        "text": "Marie tu viens chez moi après l'école ?"
+      },
+      {
+        "start": 11.4,
+        "end": 13.2,
+        "text": "non je ne peux pas"
+      },
+      {
+        "start": 13.2,
+        "end": 14.9,
+        "text": "je fais du sport"
+      },
+      {
+        "start": 14.9,
+        "end": 17.9,
+        "text": "je vais faire du volet au parc avec cadère"
+      }
+    ]
+  },
+  "64": {
+    "text": "guide de classe test unité 4 activité 1 écoute et coche la bonne case ou tu as mal j'ai mal au pied tu fais du sport ? oui, je fais du rugby tu as le pied cassé demain tu ne vas pas aller à l'école chouette",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 2.0,
+        "text": "guide de classe"
+      },
+      {
+        "start": 2.0,
+        "end": 4.0,
+        "text": "test unité 4"
+      },
+      {
+        "start": 4.0,
+        "end": 6.0,
+        "text": "activité 1"
+      },
+      {
+        "start": 6.0,
+        "end": 8.0,
+        "text": "écoute et coche la bonne case"
+      },
+      {
+        "start": 8.0,
+        "end": 10.0,
+        "text": "ou tu as mal"
+      },
+      {
+        "start": 10.0,
+        "end": 12.0,
+        "text": "j'ai mal au pied"
+      },
+      {
+        "start": 12.0,
+        "end": 13.0,
+        "text": "tu fais du sport ?"
+      },
+      {
+        "start": 13.0,
+        "end": 15.0,
+        "text": "oui, je fais du rugby"
+      },
+      {
+        "start": 15.0,
+        "end": 17.0,
+        "text": "tu as le pied cassé"
+      },
+      {
+        "start": 17.0,
+        "end": 19.0,
+        "text": "demain tu ne vas pas aller à l'école"
+      },
+      {
+        "start": 19.0,
+        "end": 21.0,
+        "text": "chouette"
+      }
+    ]
+  },
+  "65": {
+    "text": "guide de classe test unité 5, activité 1 écoute et coche la bonne case aujourd'hui il fait beau à Marseille il y a du soleil à Strasbourg il n'y a pas de pluie à Paris il fait 20 degrés à Rennes",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 2.0,
+        "text": "guide de classe"
+      },
+      {
+        "start": 2.9,
+        "end": 5.9,
+        "text": "test unité 5, activité 1"
+      },
+      {
+        "start": 6.3,
+        "end": 9.3,
+        "text": "écoute et coche la bonne case"
+      },
+      {
+        "start": 9.6,
+        "end": 12.6,
+        "text": "aujourd'hui il fait beau à Marseille"
+      },
+      {
+        "start": 12.6,
+        "end": 15.1,
+        "text": "il y a du soleil à Strasbourg"
+      },
+      {
+        "start": 15.1,
+        "end": 17.1,
+        "text": "il n'y a pas de pluie à Paris"
+      },
+      {
+        "start": 17.1,
+        "end": 20.1,
+        "text": "il fait 20 degrés à Rennes"
+      }
+    ]
+  },
+  "66": {
+    "text": "guide de classe test unité 6 activité 1 écoute et coche la bonne case dans mon armoire j'ai mes vêtements préférés trois robes un jean des chaussures deux pules et des chaussettes",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 2.0,
+        "text": "guide de classe"
+      },
+      {
+        "start": 2.0,
+        "end": 3.6,
+        "text": "test unité 6"
+      },
+      {
+        "start": 3.6,
+        "end": 5.2,
+        "text": "activité 1"
+      },
+      {
+        "start": 5.2,
+        "end": 8.4,
+        "text": "écoute et coche la bonne case"
+      },
+      {
+        "start": 8.4,
+        "end": 9.8,
+        "text": "dans mon armoire"
+      },
+      {
+        "start": 9.8,
+        "end": 11.8,
+        "text": "j'ai mes vêtements préférés"
+      },
+      {
+        "start": 11.8,
+        "end": 13.0,
+        "text": "trois robes"
+      },
+      {
+        "start": 13.0,
+        "end": 14.1,
+        "text": "un jean"
+      },
+      {
+        "start": 14.1,
+        "end": 15.5,
+        "text": "des chaussures"
+      },
+      {
+        "start": 15.5,
+        "end": 17.5,
+        "text": "deux pules et des chaussettes"
+      }
+    ]
+  },
+  "67": {
+    "text": "guide de classe Delph prime compréhension de l'oral exercice 1 écoute les messages et entoure le bon dessin 1. Moi je déteste les mathématiques, c'est difficile 2. Les poules, les faches, les moutons, les lapins, j'adore les animaux 3. Moi à la cantine j'aime le jeudi Le jeudi il y a des frites et du poulet, j'aime beaucoup les frites 4. Oh c'est l'automne, il y a toujours du vent, je n'aime pas la pluie 5. Oh là là le bus, je préfère aller à l'école en vélo, je n'aime pas le bus",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 2.0,
+        "text": "guide de classe"
+      },
+      {
+        "start": 2.0,
+        "end": 4.0,
+        "text": "Delph prime"
+      },
+      {
+        "start": 4.0,
+        "end": 6.0,
+        "text": "compréhension de l'oral"
+      },
+      {
+        "start": 6.0,
+        "end": 8.0,
+        "text": "exercice 1"
+      },
+      {
+        "start": 8.0,
+        "end": 12.0,
+        "text": "écoute les messages et entoure le bon dessin"
+      },
+      {
+        "start": 12.0,
+        "end": 18.0,
+        "text": "1. Moi je déteste les mathématiques, c'est difficile"
+      },
+      {
+        "start": 20.0,
+        "end": 27.0,
+        "text": "2. Les poules, les faches, les moutons, les lapins, j'adore les animaux"
+      },
+      {
+        "start": 28.0,
+        "end": 32.0,
+        "text": "3. Moi à la cantine j'aime le jeudi"
+      },
+      {
+        "start": 32.0,
+        "end": 37.0,
+        "text": "Le jeudi il y a des frites et du poulet, j'aime beaucoup les frites"
+      },
+      {
+        "start": 38.0,
+        "end": 46.0,
+        "text": "4. Oh c'est l'automne, il y a toujours du vent, je n'aime pas la pluie"
+      },
+      {
+        "start": 47.0,
+        "end": 55.0,
+        "text": "5. Oh là là le bus, je préfère aller à l'école en vélo, je n'aime pas le bus"
+      }
+    ]
+  },
+  "68": {
+    "text": "Exercice 2 Regarde les dessins, écoute les petits dialogues et note le numéro du dialogue sous l'image correspondante. 1. Tu veux jouer au foot avec moi ? Non, je n'aime pas le foot. Je joue au billet avec Samir. 2. Ay, ay, ay ! Où tu as mal ? J'ai très mal à la tête ! 3. Prends une tartine ? Non, je n'ai pas faim. Je ne veux pas goûter. 4. Regarde le mouton ! Où il est ? Il est derrière l'époule ! Oh, il est drôle !",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 1.4,
+        "text": "Exercice 2"
+      },
+      {
+        "start": 2.3,
+        "end": 5.8,
+        "text": "Regarde les dessins, écoute les petits dialogues"
+      },
+      {
+        "start": 5.9,
+        "end": 9.3,
+        "text": "et note le numéro du dialogue sous l'image correspondante."
+      },
+      {
+        "start": 10.1,
+        "end": 12.7,
+        "text": "1. Tu veux jouer au foot avec moi ?"
+      },
+      {
+        "start": 12.8,
+        "end": 16.5,
+        "text": "Non, je n'aime pas le foot. Je joue au billet avec Samir."
+      },
+      {
+        "start": 18.3,
+        "end": 20.5,
+        "text": "2. Ay, ay, ay !"
+      },
+      {
+        "start": 20.6,
+        "end": 21.5,
+        "text": "Où tu as mal ?"
+      },
+      {
+        "start": 21.6,
+        "end": 23.4,
+        "text": "J'ai très mal à la tête !"
+      },
+      {
+        "start": 25.3,
+        "end": 28.2,
+        "text": "3. Prends une tartine ?"
+      },
+      {
+        "start": 28.2,
+        "end": 31.4,
+        "text": "Non, je n'ai pas faim. Je ne veux pas goûter."
+      },
+      {
+        "start": 33.4,
+        "end": 36.1,
+        "text": "4. Regarde le mouton !"
+      },
+      {
+        "start": 36.2,
+        "end": 37.0,
+        "text": "Où il est ?"
+      },
+      {
+        "start": 37.1,
+        "end": 38.5,
+        "text": "Il est derrière l'époule !"
+      },
+      {
+        "start": 38.6,
+        "end": 40.2,
+        "text": "Oh, il est drôle !"
+      }
+    ]
+  },
+  "69": {
+    "text": "exercice 3 L'il est trois questions regarde les dessins écoute le message et répond aux questions coche la bonne réponse non Sylvain, je ne peux pas venir au stade je suis à la maison il est 6h30 je fais mes devoirs et après maman regarde mon cahier",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 2.0,
+        "text": "exercice 3"
+      },
+      {
+        "start": 2.0,
+        "end": 4.0,
+        "text": "L'il est trois questions"
+      },
+      {
+        "start": 4.0,
+        "end": 6.0,
+        "text": "regarde les dessins"
+      },
+      {
+        "start": 6.0,
+        "end": 8.0,
+        "text": "écoute le message et répond aux questions"
+      },
+      {
+        "start": 8.0,
+        "end": 10.0,
+        "text": "coche la bonne réponse"
+      },
+      {
+        "start": 12.0,
+        "end": 14.0,
+        "text": "non Sylvain, je ne peux pas venir au stade"
+      },
+      {
+        "start": 14.0,
+        "end": 16.0,
+        "text": "je suis à la maison"
+      },
+      {
+        "start": 16.0,
+        "end": 18.0,
+        "text": "il est 6h30"
+      },
+      {
+        "start": 18.0,
+        "end": 20.0,
+        "text": "je fais mes devoirs et après"
+      },
+      {
+        "start": 20.0,
+        "end": 22.0,
+        "text": "maman regarde mon cahier"
+      }
+    ]
+  }
+}
