@@ -68,8 +68,7 @@ const getCourseSection = (course) => {
 
 // ── Détection langue depuis les données du cours ─────────────────
 const detectLang = (course) => {
-  // Priorité 0 : cours traduit — utilise le champ langue directement
-  // (les cours créés par create-multilingual-courses.mjs ont langue='en' ou 'ar')
+  // Priorité 0 : cours avec source_course_id — langue explicite
   if (course.source_course_id) {
     const l = (course.langue || '').toLowerCase();
     if (l === 'en' || l === 'english' || l === 'anglais') return 'en';
@@ -77,16 +76,17 @@ const detectLang = (course) => {
     return 'fr';
   }
 
-  // Les cours audio Tip Top originaux sont en français
+  // Priorité 1 : champ langue explicite (valable pour TOUS les cours y compris audio)
+  // ⚠️ Le fallback audio→fr vient APRÈS pour ne pas écraser les cours audio EN/AR
+  const langField = (course.langue || '').toLowerCase();
+  if (langField === 'fr' || langField === 'français' || langField === 'french' || langField === 'francais') return 'fr';
+  if (langField === 'en' || langField === 'anglais'  || langField === 'english') return 'en';
+  if (langField === 'ar' || langField === 'arabe'    || langField === 'arabic')  return 'ar';
+
+  // Priorité 2 : cours audio sans champ langue = Tip Top français (fallback sûr)
   if (course.course_type === 'audio') return 'fr';
 
-  // Priorité 1 : champ langue explicite (ex: 'fr', 'en', 'ar', 'Français'…)
-  const langField = (course.langue || '').toLowerCase();
-  if (langField === 'fr' || langField === 'français' || langField === 'french') return 'fr';
-  if (langField === 'en' || langField === 'anglais' || langField === 'english') return 'en';
-  if (langField === 'ar' || langField === 'arabe'   || langField === 'arabic')  return 'ar';
-
-  // Priorité 2 : détection par mots-clés dans les autres champs
+  // Priorité 3 : détection par mots-clés dans les autres champs
   const hay = [
     course.cours_nom,
     course.categorie,

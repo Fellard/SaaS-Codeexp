@@ -1,0 +1,288 @@
+[
+  {
+    "id": "b6nrz95uw5fh3yt",
+    "titre": "Arabe A1 — Module 1 · L'alphabet arabe (الحروف العربية)",
+    "pages": [
+      {
+        "id": "ar-m1-p1",
+        "type": "intro",
+        "title": "Introduction",
+        "content": "<h2>Module 1 — L'alphabet arabe</h2>\n<p>Bienvenue dans le cours d'arabe A1 ! Dans ce premier module, vous allez :</p>\n<ul>\n  <li>Découvrir les 28 lettres de l'alphabet arabe</li>\n  <li>Apprendre la direction d'écriture : <strong>de droite à gauche (←)</strong></li>\n  <li>Comprendre les formes initiale, médiane, finale et isolée de chaque lettre</li>\n  <li>Découvrir les voyelles courtes (harakat) : fatha, kasra, damma</li>\n</ul>\n<p>⚠️ L'arabe s'écrit et se lit de droite à gauche. Prenez le temps de vous y habituer !</p>"
+      },
+      {
+        "id": "ar-m1-p2",
+        "type": "audio",
+        "title": "Écoute — L'alphabet (الأبجدية)"
+      },
+      {
+        "id": "ar-m1-p3",
+        "type": "vocabulary",
+        "title": "Les voyelles — الحركات",
+        "content": "<h3>📚 Les voyelles courtes (الحركات)</h3>\n<p>En arabe, les voyelles courtes sont des signes diacritiques placés au-dessus ou en dessous des lettres :</p>\n<table><thead><tr><th>Signe</th><th>Nom</th><th>Son</th><th>Exemple</th></tr></thead>\n<tbody>\n<tr><td style=\"font-size:1.5em;direction:rtl\">َ</td><td>Fatha</td><td>/a/</td><td dir=\"rtl\">كَتَبَ</td></tr>\n<tr><td style=\"font-size:1.5em;direction:rtl\">ِ</td><td>Kasra</td><td>/i/</td><td dir=\"rtl\">كِتَاب</td></tr>\n<tr><td style=\"font-size:1.5em;direction:rtl\">ُ</td><td>Damma</td><td>/u/</td><td dir=\"rtl\">كُتُب</td></tr>\n<tr><td style=\"font-size:1.5em;direction:rtl\">ْ</td><td>Sukun</td><td>(pas de voyelle)</td><td dir=\"rtl\">كَلْب</td></tr>\n</tbody></table>\n<p>💡 Dans les textes courants, les voyelles ne sont souvent pas écrites. On les apprend avec la pratique.</p>"
+      },
+      {
+        "id": "ar-m1-p4",
+        "type": "grammar",
+        "title": "Grammaire — Les formes des lettres",
+        "content": "<h3>📖 Les 4 formes de chaque lettre</h3>\n<p>En arabe, chaque lettre peut prendre 4 formes selon sa position dans le mot :</p>\n<table><thead><tr><th>Lettre</th><th>Isolée</th><th>Initiale</th><th>Médiane</th><th>Finale</th></tr></thead>\n<tbody>\n<tr><td>Baa (ب)</td><td dir=\"rtl\" style=\"font-size:1.3em\">ب</td><td dir=\"rtl\" style=\"font-size:1.3em\">بـ</td><td dir=\"rtl\" style=\"font-size:1.3em\">ـبـ</td><td dir=\"rtl\" style=\"font-size:1.3em\">ـب</td></tr>\n<tr><td>Miim (م)</td><td dir=\"rtl\" style=\"font-size:1.3em\">م</td><td dir=\"rtl\" style=\"font-size:1.3em\">مـ</td><td dir=\"rtl\" style=\"font-size:1.3em\">ـمـ</td><td dir=\"rtl\" style=\"font-size:1.3em\">ـم</td></tr>\n<tr><td>Nuun (ن)</td><td dir=\"rtl\" style=\"font-size:1.3em\">ن</td><td dir=\"rtl\" style=\"font-size:1.3em\">نـ</td><td dir=\"rtl\" style=\"font-size:1.3em\">ـنـ</td><td dir=\"rtl\" style=\"font-size:1.3em\">ـن</td></tr>\n</tbody></table>\n<p>⚠️ Certaines lettres (comme dal د et ra ر) ne se lient qu'à gauche — elles n'ont pas de forme initiale/médiane liée.</p>"
+      },
+      {
+        "id": "ar-m1-p5",
+        "type": "exercises",
+        "title": "Exercices — Module 1",
+        "content": "<h3>✏️ Exercices</h3>\n<h4>Exercice 1 — Identifiez les lettres</h4>\n<p>Écrivez le nom de chaque lettre :</p>\n<p dir=\"rtl\" style=\"font-size:1.5em\">ب &nbsp; س &nbsp; م &nbsp; ن &nbsp; ر &nbsp; ع</p>\n<h4>Exercice 2 — Lisez ces mots</h4>\n<p dir=\"rtl\" style=\"font-size:1.3em\">بَاب &nbsp;·&nbsp; سَمَك &nbsp;·&nbsp; نَار &nbsp;·&nbsp; مَاء</p>\n<p>(Aide : بَاب = porte, سَمَك = poisson, نَار = feu, مَاء = eau)</p>\n<h4>Exercice 3 — Écrivez</h4>\n<p>Essayez d'écrire votre prénom en lettres arabes !</p>"
+      },
+      {
+        "id": "ar-m1-p6",
+        "type": "bilan",
+        "title": "Bilan — Module 1",
+        "content": "<h3>✅ Bilan du Module 1</h3>\n<ul>\n  <li>✅ Les 28 lettres de l'alphabet arabe</li>\n  <li>✅ Direction d'écriture : droite à gauche</li>\n  <li>✅ Les 3 voyelles courtes : fatha (a), kasra (i), damma (u)</li>\n  <li>✅ Les 4 formes des lettres selon leur position</li>\n</ul>\n<p><strong>Prochain module :</strong> Se saluer et se présenter en arabe 👋</p>"
+      }
+    ]
+  },
+  {
+    "id": "jbcsyuo1286gwbh",
+    "titre": "Arabe A1 — Module 2 · Les salutations (التحيات والتعارف)",
+    "pages": [
+      {
+        "id": "ar-m2-p1",
+        "type": "intro",
+        "title": "Introduction",
+        "content": "<h2>Module 2 — Les salutations en arabe</h2>\n<ul>\n  <li>Dire bonjour, bonsoir, au revoir en arabe</li>\n  <li>Se présenter : nom, prénom, nationalité, âge</li>\n  <li>Les formules de politesse islamiques</li>\n  <li>Les pronoms personnels : أَنَا / أَنْتَ / هُوَ / هِيَ</li>\n</ul>"
+      },
+      {
+        "id": "ar-m2-p2",
+        "type": "audio",
+        "title": "Dialogue — مرحباً !"
+      },
+      {
+        "id": "ar-m2-p3",
+        "type": "vocabulary",
+        "title": "Vocabulaire — Les salutations",
+        "content": "<h3>📚 Les salutations et formules de politesse</h3>\n<table><thead><tr><th>Arabe</th><th>Translittération</th><th>Français</th></tr></thead>\n<tbody>\n<tr><td dir=\"rtl\">صَبَاحُ الخَيْر</td><td>Sabah al-khayr</td><td>Bonjour (matin)</td></tr>\n<tr><td dir=\"rtl\">صَبَاحُ النُّور</td><td>Sabah an-nur</td><td>Bonjour (réponse)</td></tr>\n<tr><td dir=\"rtl\">مَسَاءُ الخَيْر</td><td>Masa' al-khayr</td><td>Bonsoir</td></tr>\n<tr><td dir=\"rtl\">مَعَ السَّلَامَة</td><td>Ma'a s-salama</td><td>Au revoir</td></tr>\n<tr><td dir=\"rtl\">شُكْراً</td><td>Shukran</td><td>Merci</td></tr>\n<tr><td dir=\"rtl\">عَفْواً</td><td>Afwan</td><td>De rien / Pardon</td></tr>\n<tr><td dir=\"rtl\">مِنْ فَضْلِكَ</td><td>Min fadlak</td><td>S'il te plaît (masc.)</td></tr>\n<tr><td dir=\"rtl\">نَعَم / لَا</td><td>Na'am / Laa</td><td>Oui / Non</td></tr>\n</tbody></table>"
+      },
+      {
+        "id": "ar-m2-p4",
+        "type": "grammar",
+        "title": "Grammaire — Pronoms et phrases nominales",
+        "content": "<h3>📖 Les pronoms personnels</h3>\n<table><thead><tr><th>Arabe</th><th>Translittération</th><th>Français</th></tr></thead>\n<tbody>\n<tr><td dir=\"rtl\">أَنَا</td><td>Ana</td><td>Je / Moi</td></tr>\n<tr><td dir=\"rtl\">أَنْتَ</td><td>Anta</td><td>Tu / Toi (masc.)</td></tr>\n<tr><td dir=\"rtl\">أَنْتِ</td><td>Anti</td><td>Tu / Toi (fém.)</td></tr>\n<tr><td dir=\"rtl\">هُوَ</td><td>Huwa</td><td>Il / Lui</td></tr>\n<tr><td dir=\"rtl\">هِيَ</td><td>Hiya</td><td>Elle</td></tr>\n<tr><td dir=\"rtl\">نَحْنُ</td><td>Nahnu</td><td>Nous</td></tr>\n</tbody></table>\n<h4>La phrase nominale (pas de verbe \"être\")</h4>\n<p>En arabe, on n'utilise pas le verbe \"être\" au présent !</p>\n<p dir=\"rtl\">أَنَا طَالِب = Je suis étudiant (litt. \"Moi étudiant\")</p>\n<p dir=\"rtl\">هِيَ مُدَرِّسَة = Elle est professeur</p>"
+      },
+      {
+        "id": "ar-m2-p5",
+        "type": "exercises",
+        "title": "Exercices — Module 2",
+        "content": "<h3>✏️ Exercices</h3>\n<h4>Exercice 1 — Complétez le dialogue</h4>\n<p>Complétez avec les mots appropriés :</p>\n<p dir=\"rtl\">أ: السَّلَامُ عَلَيْكُمْ!<br/>ب: _______ السَّلَام!<br/>أ: كَيْفَ _______؟<br/>ب: _______, شُكْراً.</p>\n<h4>Exercice 2 — Traduisez en arabe</h4>\n<ol>\n  <li>Je m'appelle Yasmine.</li>\n  <li>Bonjour ! Comment vas-tu ?</li>\n  <li>Merci, au revoir.</li>\n</ol>\n<h4>Exercice 3 — Présentez-vous</h4>\n<p>Écrivez 3 phrases pour vous présenter en arabe (nom + nationalité + situation).</p>"
+      },
+      {
+        "id": "ar-m2-p6",
+        "type": "bilan",
+        "title": "Bilan — Module 2",
+        "content": "<h3>✅ Bilan du Module 2</h3>\n<ul>\n  <li>✅ Salutations : السلام عليكم, صباح الخير, مساء الخير…</li>\n  <li>✅ Se présenter : اسمي… / أنا من…</li>\n  <li>✅ Pronoms personnels : أنا / أنتَ / أنتِ / هو / هي</li>\n  <li>✅ La phrase nominale en arabe (sans verbe être)</li>\n</ul>\n<p><strong>Prochain module :</strong> La famille 👨‍👩‍👧</p>"
+      }
+    ]
+  },
+  {
+    "id": "62sizeupdh8h4uk",
+    "titre": "Arabe A1 — Module 3 · La famille (الأسرة)",
+    "pages": [
+      {
+        "id": "ar-m3-p1",
+        "type": "intro",
+        "title": "Introduction",
+        "content": "<h2>Module 3 — La famille en arabe</h2><ul><li>Nommer les membres de la famille</li><li>Parler de votre famille</li><li>Le genre (masculin/féminin) en arabe</li><li>Les suffixes possessifs : -ي / -كَ / -هُ / -هَا</li></ul>"
+      },
+      {
+        "id": "ar-m3-p2",
+        "type": "audio",
+        "title": "Dialogue — عَائِلَتِي"
+      },
+      {
+        "id": "ar-m3-p3",
+        "type": "vocabulary",
+        "title": "Vocabulaire — La famille",
+        "content": "<h3>📚 أفراد الأسرة (Les membres de la famille)</h3>\n<table><thead><tr><th>Arabe</th><th>Translittération</th><th>Français</th></tr></thead>\n<tbody>\n<tr><td dir=\"rtl\">أَب / أَبُو</td><td>Ab / Abu</td><td>père / papa</td></tr>\n<tr><td dir=\"rtl\">أُم / مَامَا</td><td>Umm / Mama</td><td>mère / maman</td></tr>\n<tr><td dir=\"rtl\">أَخ</td><td>Akh</td><td>frère</td></tr>\n<tr><td dir=\"rtl\">أُخْت</td><td>Ukht</td><td>sœur</td></tr>\n<tr><td dir=\"rtl\">جَدّ</td><td>Jadd</td><td>grand-père</td></tr>\n<tr><td dir=\"rtl\">جَدَّة</td><td>Jadda</td><td>grand-mère</td></tr>\n<tr><td dir=\"rtl\">عَم</td><td>Amm</td><td>oncle paternel</td></tr>\n<tr><td dir=\"rtl\">عَمَّة</td><td>Amma</td><td>tante paternelle</td></tr>\n<tr><td dir=\"rtl\">خَال</td><td>Khal</td><td>oncle maternel</td></tr>\n<tr><td dir=\"rtl\">ابْن</td><td>Ibn</td><td>fils</td></tr>\n<tr><td dir=\"rtl\">بِنْت</td><td>Bint</td><td>fille</td></tr>\n</tbody></table>"
+      },
+      {
+        "id": "ar-m3-p4",
+        "type": "grammar",
+        "title": "Grammaire — Genre en arabe",
+        "content": "<h3>📖 Le genre en arabe (المذكر والمؤنث)</h3>\n<p>En arabe, tous les noms sont soit <strong>masculins (مذكر)</strong>, soit <strong>féminins (مؤنث)</strong>.</p>\n<p>Le féminin se forme souvent en ajoutant <strong>ة (ta marbuta)</strong> à la fin :</p>\n<table><thead><tr><th>Masculin</th><th>Féminin</th><th>Sens</th></tr></thead>\n<tbody>\n<tr><td dir=\"rtl\">طَالِب</td><td dir=\"rtl\">طَالِبَة</td><td>étudiant / étudiante</td></tr>\n<tr><td dir=\"rtl\">مُدَرِّس</td><td dir=\"rtl\">مُدَرِّسَة</td><td>professeur (m/f)</td></tr>\n<tr><td dir=\"rtl\">مَرِيض</td><td dir=\"rtl\">مَرِيضَة</td><td>malade (m/f)</td></tr>\n</tbody></table>\n<h4>Les suffixes possessifs</h4>\n<table><thead><tr><th>Personne</th><th>Suffixe</th><th>Exemple</th><th>Traduction</th></tr></thead>\n<tbody>\n<tr><td>Mon / Ma</td><td dir=\"rtl\">-ي</td><td dir=\"rtl\">أَبِي</td><td>mon père</td></tr>\n<tr><td>Ton / Ta (m)</td><td dir=\"rtl\">-كَ</td><td dir=\"rtl\">أَبُوكَ</td><td>ton père</td></tr>\n<tr><td>Son / Sa (m→)</td><td dir=\"rtl\">-هُ</td><td dir=\"rtl\">أَبُوهُ</td><td>son père (à lui)</td></tr>\n<tr><td>Son / Sa (f→)</td><td dir=\"rtl\">-هَا</td><td dir=\"rtl\">أَبُوهَا</td><td>son père (à elle)</td></tr>\n</tbody></table>"
+      },
+      {
+        "id": "ar-m3-p5",
+        "type": "exercises",
+        "title": "Exercices — Module 3",
+        "content": "<h3>✏️ Exercices</h3>\n<h4>Exercice 1 — Masculin ou féminin ?</h4>\n<p>Donnez la forme féminine :</p>\n<p dir=\"rtl\">طَالِب ← _______ &nbsp;|&nbsp; مُدَرِّس ← _______ &nbsp;|&nbsp; مَرِيض ← _______</p>\n<h4>Exercice 2 — Complétez avec le bon suffixe</h4>\n<ol>\n<li dir=\"rtl\">هَذَا أَب___ . (mon père)</li>\n<li dir=\"rtl\">هَذِهِ أُم___ . (ta mère, masc.)</li>\n<li dir=\"rtl\">اسم___ كَرِيم. (son nom, à lui)</li>\n</ol>\n<h4>Exercice 3 — Présentez votre famille</h4>\n<p>Écrivez 4 phrases pour présenter votre famille en arabe.</p>"
+      },
+      {
+        "id": "ar-m3-p6",
+        "type": "bilan",
+        "title": "Bilan — Module 3",
+        "content": "<h3>✅ Bilan du Module 3</h3><ul><li>✅ Vocabulaire de la famille en arabe</li><li>✅ Distinction masculin/féminin (-ة ta marbuta)</li><li>✅ Suffixes possessifs : -ي / -كَ / -هُ / -هَا</li></ul><p><strong>Prochain module :</strong> Les chiffres et les couleurs 🔢</p>"
+      }
+    ]
+  },
+  {
+    "id": "xe5x8qkqybxoac1",
+    "titre": "Arabe A1 — Module 4 · Les chiffres et les couleurs (الأرقام والألوان)",
+    "pages": [
+      {
+        "id": "ar-m4-p1",
+        "type": "intro",
+        "title": "Introduction",
+        "content": "<h2>Module 4 — Les chiffres et les couleurs</h2><ul><li>Compter de 1 à 100 en arabe</li><li>Dire son âge</li><li>Les couleurs en arabe et leur accord</li><li>Décrire des objets : couleur, taille</li></ul>"
+      },
+      {
+        "id": "ar-m4-p2",
+        "type": "audio",
+        "title": "Écoute — Les chiffres"
+      },
+      {
+        "id": "ar-m4-p3",
+        "type": "vocabulary",
+        "title": "Vocabulaire — Les couleurs",
+        "content": "<h3>📚 الألوان (Les couleurs)</h3>\n<table><thead><tr><th>Masculin</th><th>Féminin</th><th>Translittération</th><th>Français</th></tr></thead>\n<tbody>\n<tr><td dir=\"rtl\">أَحْمَر</td><td dir=\"rtl\">حَمْرَاء</td><td>ahmar / hamra</td><td>rouge</td></tr>\n<tr><td dir=\"rtl\">أَزْرَق</td><td dir=\"rtl\">زَرْقَاء</td><td>azraq / zarqa</td><td>bleu</td></tr>\n<tr><td dir=\"rtl\">أَخْضَر</td><td dir=\"rtl\">خَضْرَاء</td><td>akhdar / khadra</td><td>vert</td></tr>\n<tr><td dir=\"rtl\">أَصْفَر</td><td dir=\"rtl\">صَفْرَاء</td><td>asfar / safra</td><td>jaune</td></tr>\n<tr><td dir=\"rtl\">أَبْيَض</td><td dir=\"rtl\">بَيْضَاء</td><td>abyad / bayda</td><td>blanc</td></tr>\n<tr><td dir=\"rtl\">أَسْوَد</td><td dir=\"rtl\">سَوْدَاء</td><td>aswad / sawda</td><td>noir</td></tr>\n<tr><td dir=\"rtl\">بُرْتُقَالِي</td><td dir=\"rtl\">بُرْتُقَالِيَّة</td><td>burtuqali</td><td>orange</td></tr>\n</tbody></table>"
+      },
+      {
+        "id": "ar-m4-p4",
+        "type": "grammar",
+        "title": "Grammaire — L'accord des adjectifs",
+        "content": "<h3>📖 L'accord des adjectifs de couleur</h3>\n<p>En arabe, l'adjectif suit le nom et s'accorde en genre :</p>\n<p dir=\"rtl\">كِتَاب أَحْمَر = un livre rouge (masc.)</p>\n<p dir=\"rtl\">سَيَّارَة حَمْرَاء = une voiture rouge (fém.)</p>\n<h4>Dire son âge :</h4>\n<p dir=\"rtl\">عُمْرِي خَمْسَ عَشَرَة سَنَة = J'ai quinze ans (litt. \"Mon âge est quinze ans\")</p>\n<p dir=\"rtl\">كَمْ عُمْرُكَ؟ = Quel âge as-tu ? (masc.)</p>\n<p dir=\"rtl\">كَمْ عُمْرُكِ؟ = Quel âge as-tu ? (fém.)</p>"
+      },
+      {
+        "id": "ar-m4-p5",
+        "type": "exercises",
+        "title": "Exercices — Module 4",
+        "content": "<h3>✏️ Exercices</h3>\n<h4>Exercice 1 — Écrivez en chiffres arabes</h4>\n<p>7 · 14 · 25 · 50 · 100</p>\n<h4>Exercice 2 — Accordez la couleur</h4>\n<ol>\n<li dir=\"rtl\">قَلَم ___ (rouge — masc.)</li>\n<li dir=\"rtl\">سَيَّارَة ___ (bleue — fém.)</li>\n<li dir=\"rtl\">كِتَاب ___ (vert — masc.)</li>\n</ol>\n<h4>Exercice 3 — Dites votre âge en arabe</h4>\n<p>Écrivez la phrase complète en arabe.</p>"
+      },
+      {
+        "id": "ar-m4-p6",
+        "type": "bilan",
+        "title": "Bilan — Module 4",
+        "content": "<h3>✅ Bilan du Module 4</h3><ul><li>✅ Chiffres de 1 à 100</li><li>✅ Les couleurs et leur accord masculin/féminin</li><li>✅ Exprimer l'âge : عُمْرِي… سَنَة</li></ul><p><strong>Prochain module :</strong> La nourriture et les repas 🍽️</p>"
+      }
+    ]
+  },
+  {
+    "id": "u6f3lywovesf8tw",
+    "titre": "Arabe A1 — Module 5 · La nourriture et les repas (الطعام والوجبات)",
+    "pages": [
+      {
+        "id": "ar-m5-p1",
+        "type": "intro",
+        "title": "Introduction",
+        "content": "<h2>Module 5 — La nourriture et les repas</h2><ul><li>Nommer les aliments courants en arabe</li><li>Commander au restaurant</li><li>Exprimer ses goûts : أُحِب / لا أُحِب</li><li>Le verbe أَرَادَ (vouloir) au présent</li></ul>"
+      },
+      {
+        "id": "ar-m5-p2",
+        "type": "audio",
+        "title": "Dialogue — في المطعم"
+      },
+      {
+        "id": "ar-m5-p3",
+        "type": "vocabulary",
+        "title": "Vocabulaire — La nourriture",
+        "content": "<h3>📚 الطعام والشراب</h3>\n<table><thead><tr><th>Arabe</th><th>Translittération</th><th>Français</th></tr></thead>\n<tbody>\n<tr><td dir=\"rtl\">خُبْز</td><td>khubz</td><td>pain</td></tr>\n<tr><td dir=\"rtl\">أَرُز</td><td>aruzz</td><td>riz</td></tr>\n<tr><td dir=\"rtl\">لَحْم</td><td>lahm</td><td>viande</td></tr>\n<tr><td dir=\"rtl\">دَجَاج</td><td>dajaj</td><td>poulet</td></tr>\n<tr><td dir=\"rtl\">سَمَك</td><td>samak</td><td>poisson</td></tr>\n<tr><td dir=\"rtl\">خُضَار</td><td>khudar</td><td>légumes</td></tr>\n<tr><td dir=\"rtl\">فَاكِهَة</td><td>fakiha</td><td>fruit(s)</td></tr>\n<tr><td dir=\"rtl\">مَاء</td><td>ma'</td><td>eau</td></tr>\n<tr><td dir=\"rtl\">عَصِير</td><td>asir</td><td>jus</td></tr>\n<tr><td dir=\"rtl\">شَاي</td><td>shay</td><td>thé</td></tr>\n<tr><td dir=\"rtl\">قَهْوَة</td><td>qahwa</td><td>café</td></tr>\n</tbody></table>"
+      },
+      {
+        "id": "ar-m5-p4",
+        "type": "grammar",
+        "title": "Grammaire — Le verbe أَرَادَ (vouloir)",
+        "content": "<h3>📖 Le verbe يُرِيد (vouloir) au présent</h3>\n<table><thead><tr><th>Pronom</th><th>Forme</th><th>Traduction</th></tr></thead>\n<tbody>\n<tr><td dir=\"rtl\">أَنَا</td><td dir=\"rtl\">أُرِيد</td><td>Je veux</td></tr>\n<tr><td dir=\"rtl\">أَنْتَ</td><td dir=\"rtl\">تُرِيد</td><td>Tu veux (masc.)</td></tr>\n<tr><td dir=\"rtl\">أَنْتِ</td><td dir=\"rtl\">تُرِيدِين</td><td>Tu veux (fém.)</td></tr>\n<tr><td dir=\"rtl\">هُوَ</td><td dir=\"rtl\">يُرِيد</td><td>Il veut</td></tr>\n<tr><td dir=\"rtl\">هِيَ</td><td dir=\"rtl\">تُرِيد</td><td>Elle veut</td></tr>\n</tbody></table>\n<h4>Exprimer ses goûts</h4>\n<p dir=\"rtl\">أُحِبُّ الشَّاي = J'aime le thé</p>\n<p dir=\"rtl\">لَا أُحِبُّ اللَّحْم = Je n'aime pas la viande</p>"
+      },
+      {
+        "id": "ar-m5-p5",
+        "type": "exercises",
+        "title": "Exercices — Module 5",
+        "content": "<h3>✏️ Exercices</h3>\n<h4>Conjuguez يُرِيد</h4>\n<ol>\n<li>Nous voulons du pain.</li>\n<li>Elle veut du jus d'orange.</li>\n<li>Ils veulent du poisson.</li>\n</ol>\n<h4>Traduisez</h4>\n<ol>\n<li>Je veux un thé, s'il vous plaît.</li>\n<li>J'aime le couscous.</li>\n<li>L'addition, s'il vous plaît.</li>\n</ol>"
+      },
+      {
+        "id": "ar-m5-p6",
+        "type": "bilan",
+        "title": "Bilan — Module 5",
+        "content": "<h3>✅ Bilan du Module 5</h3><ul><li>✅ Vocabulaire alimentaire en arabe</li><li>✅ Commander au restaurant</li><li>✅ Le verbe يُرِيد (vouloir)</li><li>✅ Exprimer ses goûts : أُحِب / لا أُحِب</li></ul><p><strong>Prochain module :</strong> La ville et les transports 🏙️</p>"
+      }
+    ]
+  },
+  {
+    "id": "8jvy5lx96ctd6o1",
+    "titre": "Arabe A1 — Module 6 · La ville et les transports (المدينة والنقل)",
+    "pages": [
+      {
+        "id": "ar-m6-p1",
+        "type": "intro",
+        "title": "Introduction",
+        "content": "<h2>Module 6 — La ville et les transports</h2><ul><li>Nommer les lieux en ville en arabe</li><li>Demander et indiquer un chemin</li><li>Les moyens de transport</li><li>Les prépositions de lieu : في / على / أَمَام / خَلْف / بِجَانِب</li></ul>"
+      },
+      {
+        "id": "ar-m6-p2",
+        "type": "audio",
+        "title": "Dialogue — أَيْنَ المَحَطَّة؟"
+      },
+      {
+        "id": "ar-m6-p3",
+        "type": "vocabulary",
+        "title": "Vocabulaire — La ville",
+        "content": "<h3>📚 المدينة (La ville)</h3>\n<table><thead><tr><th>Arabe</th><th>Translittération</th><th>Français</th></tr></thead>\n<tbody>\n<tr><td dir=\"rtl\">مَحَطَّة الحَافِلَة</td><td>mahattat al-hafila</td><td>arrêt de bus</td></tr>\n<tr><td dir=\"rtl\">مَحَطَّة القِطَار</td><td>mahattat al-qitar</td><td>gare</td></tr>\n<tr><td dir=\"rtl\">مَسْجِد</td><td>masjid</td><td>mosquée</td></tr>\n<tr><td dir=\"rtl\">مَدْرَسَة</td><td>madrasa</td><td>école</td></tr>\n<tr><td dir=\"rtl\">مَسْتَشْفَى</td><td>mustashfa</td><td>hôpital</td></tr>\n<tr><td dir=\"rtl\">صَيْدَلِيَّة</td><td>saydaliyya</td><td>pharmacie</td></tr>\n<tr><td dir=\"rtl\">سُوق</td><td>suq</td><td>marché / souk</td></tr>\n<tr><td dir=\"rtl\">بَنْك</td><td>bank</td><td>banque</td></tr>\n<tr><td dir=\"rtl\">حَدِيقَة</td><td>hadiqa</td><td>jardin / parc</td></tr>\n</tbody></table>"
+      },
+      {
+        "id": "ar-m6-p4",
+        "type": "grammar",
+        "title": "Grammaire — Prépositions de lieu",
+        "content": "<h3>📖 حُرُوف الجَرّ المَكَانِيَّة</h3>\n<table><thead><tr><th>Arabe</th><th>Translittération</th><th>Français</th></tr></thead>\n<tbody>\n<tr><td dir=\"rtl\">فِي</td><td>fi</td><td>dans / en</td></tr>\n<tr><td dir=\"rtl\">عَلَى</td><td>'ala</td><td>sur</td></tr>\n<tr><td dir=\"rtl\">أَمَامَ</td><td>amama</td><td>devant</td></tr>\n<tr><td dir=\"rtl\">خَلْفَ</td><td>khalfa</td><td>derrière</td></tr>\n<tr><td dir=\"rtl\">بِجَانِبِ</td><td>bijanibi</td><td>à côté de</td></tr>\n<tr><td dir=\"rtl\">بَيْنَ</td><td>bayna</td><td>entre</td></tr>\n<tr><td dir=\"rtl\">قُرْبَ</td><td>qurba</td><td>près de</td></tr>\n<tr><td dir=\"rtl\">بَعِيداً عَن</td><td>ba'idan 'an</td><td>loin de</td></tr>\n</tbody></table>"
+      },
+      {
+        "id": "ar-m6-p5",
+        "type": "exercises",
+        "title": "Exercices — Module 6",
+        "content": "<h3>✏️ Exercices</h3>\n<h4>Complétez avec la bonne préposition</h4>\n<ol>\n<li dir=\"rtl\">الصَّيْدَلِيَّة ___ المَدْرَسَة. (devant)</li>\n<li dir=\"rtl\">البَنْك ___ السُّوق. (à côté de)</li>\n<li dir=\"rtl\">الكِتَاب ___ الطَّاوِلَة. (sur)</li>\n</ol>\n<h4>Traduisez</h4>\n<ol><li>Où est la mosquée ?</li><li>L'hôpital est derrière l'école.</li><li>Allez tout droit, puis à gauche.</li></ol>"
+      },
+      {
+        "id": "ar-m6-p6",
+        "type": "bilan",
+        "title": "Bilan — Module 6",
+        "content": "<h3>✅ Bilan du Module 6</h3><ul><li>✅ Lieux en ville : مدرسة، مسجد، مستشفى، بنك…</li><li>✅ Prépositions : في، أمام، خلف، بجانب، بين…</li><li>✅ Demander et donner des directions en arabe</li></ul><p><strong>Prochain module :</strong> Bilan final ✅</p>"
+      }
+    ]
+  },
+  {
+    "id": "an8jxf1naa2u3j1",
+    "titre": "Arabe A1 — Bilan et évaluation finale (المراجعة والتقييم)",
+    "pages": [
+      {
+        "id": "ar-m7-p1",
+        "type": "intro",
+        "title": "Introduction — Bilan A1 Arabe",
+        "content": "<h2>Module 7 — Bilan et évaluation</h2>\n<p>Félicitations pour avoir suivi les 6 modules ! Ce module final vous permet de :</p>\n<ul>\n  <li>Réviser l'alphabet et la phonétique arabes</li>\n  <li>Revoir l'ensemble du vocabulaire A1</li>\n  <li>Tester votre compréhension orale</li>\n  <li>Auto-évaluer votre niveau A1 en arabe</li>\n</ul>"
+      },
+      {
+        "id": "ar-m7-p2",
+        "type": "audio",
+        "title": "Test de compréhension 1"
+      },
+      {
+        "id": "ar-m7-p3",
+        "type": "audio",
+        "title": "Test de compréhension 2"
+      },
+      {
+        "id": "ar-m7-p4",
+        "type": "exercises",
+        "title": "Révision générale",
+        "content": "<h3>✏️ Révision complète</h3>\n<h4>1. Alphabet</h4>\n<p dir=\"rtl\" style=\"font-size:1.3em\">اكتب هذه الكلمات : بَاب &nbsp;·&nbsp; كِتَاب &nbsp;·&nbsp; مَاء &nbsp;·&nbsp; سَمَك</p>\n<h4>2. Salutations</h4>\n<p>Écrivez en arabe : Bonjour (matin) — Merci — Au revoir</p>\n<h4>3. La famille</h4>\n<p>Nommez 5 membres de la famille en arabe avec leur translittération.</p>\n<h4>4. Chiffres</h4>\n<p dir=\"rtl\">اكتب بالأرقام العربية : 15 · 27 · 43 · 60 · 100</p>\n<h4>5. Prépositions</h4>\n<p>Complétez : La banque est ___ (à côté de) l'école.</p>"
+      },
+      {
+        "id": "ar-m7-p5",
+        "type": "exercises",
+        "title": "Production — Présentation en arabe",
+        "content": "<h3>✏️ Production écrite finale</h3>\n<h4>Rédigez une courte présentation en arabe (6-8 phrases) :</h4>\n<ul>\n<li>Votre nom et votre origine</li>\n<li>Votre âge</li>\n<li>Votre famille</li>\n<li>Vos goûts alimentaires</li>\n<li>Un lieu que vous aimez dans votre ville</li>\n</ul>"
+      },
+      {
+        "id": "ar-m7-p6",
+        "type": "bilan",
+        "title": "Auto-évaluation finale — A1 Arabe",
+        "content": "<h3>🎓 Auto-évaluation A1 — Arabe</h3>\n<p>Je peux :</p>\n<ul>\n<li>☐ Lire et écrire les 28 lettres de l'alphabet arabe</li>\n<li>☐ Me saluer et me présenter en arabe</li>\n<li>☐ Parler de ma famille</li>\n<li>☐ Compter de 1 à 100 et dire mon âge</li>\n<li>☐ Nommer les aliments et commander au restaurant</li>\n<li>☐ Me repérer en ville et demander mon chemin</li>\n<li>☐ Utiliser les prépositions de lieu en arabe</li>\n</ul>\n<p><strong>🎉 Félicitations ! Vous avez terminé le niveau A1 d'arabe !</strong></p>\n<p>Continuez avec le niveau A2 pour approfondir vos connaissances.</p>"
+      }
+    ]
+  }
+]

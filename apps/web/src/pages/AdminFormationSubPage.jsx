@@ -114,6 +114,7 @@ const AdminFormationSubPage = () => {
   const [loading,       setLoading]       = useState(true);
   const [search,        setSearch]        = useState('');
   const [levelFilter,   setLevelFilter]   = useState('all');
+  const [typeFilter,    setTypeFilter]    = useState('all');
   const [modalOpen,     setModalOpen]     = useState(false);
   const [deleteConfirm,     setDeleteConfirm]     = useState(null); // { id, titre }
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
@@ -176,8 +177,9 @@ const AdminFormationSubPage = () => {
       );
     }
     if (levelFilter !== 'all') list = list.filter(c => c.niveau === levelFilter);
+    if (typeFilter  !== 'all') list = list.filter(c => (c.course_type || 'standard') === typeFilter);
     return list;
-  }, [courses, search, levelFilter]);
+  }, [courses, search, levelFilter, typeFilter]);
 
   const stats = useMemo(() => {
     const ids = new Set(courses.map(c => c.id));
@@ -481,6 +483,17 @@ const AdminFormationSubPage = () => {
             {secCfg.niveaux.map(n => <SelectItem key={n} value={n}>{n}</SelectItem>)}
           </SelectContent>
         </Select>
+        <Select value={typeFilter} onValueChange={setTypeFilter}>
+          <SelectTrigger className="w-full sm:w-44">
+            <BookOpen className="w-3.5 h-3.5 mr-2 text-muted-foreground" />
+            <SelectValue placeholder="Tous les types" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tous les types</SelectItem>
+            <SelectItem value="standard">📄 Standard</SelectItem>
+            <SelectItem value="audio">🎧 Audio</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Cours groupés par matière */}
@@ -531,9 +544,11 @@ const AdminFormationSubPage = () => {
                   </Button>
                 </div>
 
-                {/* Grille des cours */}
-                <div className={`p-4 ${mcfg.lightBg} grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4`}>
-                  {matieresCourses.map(course => (
+                {/* Grille des cours — sous-groupée par type (standard puis audio) */}
+                {(() => {
+                  const standardCourses = matieresCourses.filter(c => (c.course_type || 'standard') === 'standard');
+                  const audioCourses    = matieresCourses.filter(c => c.course_type === 'audio');
+                  const renderCard = (course) => (
                     <Card key={course.id} className="border bg-card hover:shadow-lg transition-all duration-300 overflow-hidden">
                       <div className={`h-1.5 bg-gradient-to-r ${mcfg.gradient}`} />
                       <CardContent className="pt-4 pb-3">
@@ -544,9 +559,16 @@ const AdminFormationSubPage = () => {
                               <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5">{course.description}</p>
                             )}
                           </div>
-                          <Badge className={`${LEVEL_COLORS[course.niveau] || 'bg-gray-100 text-gray-700'} text-xs shrink-0`}>
-                            {course.niveau}
-                          </Badge>
+                          <div className="flex flex-col items-end gap-1 shrink-0">
+                            <Badge className={`${LEVEL_COLORS[course.niveau] || 'bg-gray-100 text-gray-700'} text-xs`}>
+                              {course.niveau}
+                            </Badge>
+                            {course.course_type === 'audio' ? (
+                              <span className="text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full font-medium">🎧 Audio</span>
+                            ) : (
+                              <span className="text-[10px] bg-sky-100 text-sky-700 px-1.5 py-0.5 rounded-full font-medium">📄 Standard</span>
+                            )}
+                          </div>
                         </div>
                         <div className="flex items-center gap-3 text-xs text-muted-foreground mb-2.5">
                           <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {course.duree || 0}min</span>
@@ -574,11 +596,46 @@ const AdminFormationSubPage = () => {
                             <Trash2 className="w-3.5 h-3.5" />
                           </Button>
                         </div>
-
                       </CardContent>
                     </Card>
-                  ))}
-                </div>
+                  );
+                  return (
+                    <div className={`p-4 ${mcfg.lightBg} space-y-4`}>
+                      {standardCourses.length > 0 && (
+                        <div>
+                          <div className="flex items-center gap-2 mb-3">
+                            <span className="text-[11px] font-bold uppercase tracking-widest text-sky-600 flex items-center gap-1">
+                              📄 Standard
+                              <span className="bg-sky-100 text-sky-700 px-1.5 py-0.5 rounded-full text-[10px] font-bold normal-case ml-1">
+                                {standardCourses.length}
+                              </span>
+                            </span>
+                            <div className="flex-1 h-px bg-sky-200" />
+                          </div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {standardCourses.map(renderCard)}
+                          </div>
+                        </div>
+                      )}
+                      {audioCourses.length > 0 && (
+                        <div>
+                          <div className="flex items-center gap-2 mb-3">
+                            <span className="text-[11px] font-bold uppercase tracking-widest text-amber-600 flex items-center gap-1">
+                              🎧 Audio
+                              <span className="bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full text-[10px] font-bold normal-case ml-1">
+                                {audioCourses.length}
+                              </span>
+                            </span>
+                            <div className="flex-1 h-px bg-amber-200" />
+                          </div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {audioCourses.map(renderCard)}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
               </div>
             );
           })}
