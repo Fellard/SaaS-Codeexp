@@ -229,15 +229,15 @@ function App() {
               {/* Sous-routes étudiants uniquement — bloquées aux autres rôles par ProtectedRoute */}
               <Route
                 path="/dashboard/courses"
-                element={<RoleRoute allowedRoles={['etudiant']}><CoursesPage /></RoleRoute>}
+                element={<RoleRoute allowedRoles={['etudiant', 'client']}><CoursesPage /></RoleRoute>}
               />
               <Route
                 path="/dashboard/courses/:courseId/view"
-                element={<RoleRoute allowedRoles={['etudiant']}><SecureCourseViewer /></RoleRoute>}
+                element={<RoleRoute allowedRoles={['etudiant', 'client']}><SecureCourseViewer /></RoleRoute>}
               />
               <Route
                 path="/dashboard/courses/view"
-                element={<RoleRoute allowedRoles={['etudiant']}><SecureCourseViewer /></RoleRoute>}
+                element={<RoleRoute allowedRoles={['etudiant', 'client']}><SecureCourseViewer /></RoleRoute>}
               />
               <Route
                 path="/dashboard/settings"

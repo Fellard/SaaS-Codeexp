@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Helmet } from 'react-helmet';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext.jsx';
 import { useLanguage } from '@/hooks/useLanguage.jsx';
 import DashboardLayout from '@/components/DashboardLayout.jsx';
@@ -111,22 +111,44 @@ function getLessonPages(course, langKey) {
   }
 
   // ── 2. Si le cours a un fichier PDF → laisser le viewer PDF gérer ──
-  // Ne pas afficher du contenu codé en dur qui ne correspond pas au PDF
   if (course?.pdf) {
     return [];
   }
 
-  // ── 3. Fallback : leçons codées en dur (uniquement pour anciens cours sans PDF) ──
+  // ── 3. Cours traduit (source_course_id présent) → forcer la langue du cours ──
+  // Les versions EN/AR créées par create-multilingual-courses.mjs ont langue='en'/'ar'
+  // On ignore langKey (langue UI) et on force la langue du cours lui-même
+  let effectiveLang = langKey;
+  if (course?.source_course_id && course?.langue) {
+    const l = (course.langue || '').toLowerCase();
+    if (l === 'en' || l === 'english' || l === 'anglais') effectiveLang = 'en';
+    else if (l === 'ar' || l === 'arabic' || l === 'arabe') effectiveLang = 'ar';
+    else effectiveLang = 'fr';
+  }
+
+  // ── 4. Fallback : leçons codées en dur (uniquement pour anciens cours sans PDF) ──
   const titre  = (course?.titre || course?.title || '').toLowerCase();
   const cNom   = (course?.cours_nom || '').toLowerCase();
   const langue = (course?.langue || '').toLowerCase();
 
-  let courseLang = 'fr';
-  if (cNom.includes('anglais') || cNom.includes('english') || langue === 'anglais') {
-    courseLang = 'en';
-  } else if (cNom.includes('arabe') || cNom.includes('arabic') || langue === 'arabe') {
-    courseLang = 'ar';
+  // effectiveLang est déjà défini plus haut (force EN/AR pour cours traduits)
+  // Pour les cours originaux, on affine selon cours_nom
+  let courseLang = effectiveLang;
+  if (courseLang === langKey) {
+    // Pas de forçage → détecter selon cours_nom (comportement original)
+    courseLang = 'fr';
+    if (cNom.includes('anglais') || cNom.includes('english') || langue === 'anglais') {
+      courseLang = 'en';
+    } else if (cNom.includes('arabe') || cNom.includes('arabic') || langue === 'arabe') {
+      courseLang = 'ar';
+    } else {
+      // Utiliser la langue UI (effectiveLang / langKey) comme dernier recours
+      courseLang = effectiveLang;
+    }
   }
+
+  // Normaliser 'ar-MA' → 'ar' pour les clés de LESSON_PAGES_*
+  if (courseLang === 'ar-MA') courseLang = 'ar';
 
   const isLieu = titre.includes('lieu') || titre.includes('place') || titre.includes('مكان');
 
@@ -262,11 +284,18 @@ const SECURE_CSS = `
 const SecureCourseViewer = () => {
   const { courseId } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { currentUser } = useAuth();
   const { language } = useLanguage();
 
+  // Lire le paramètre ?page= pour reprendre là où l'étudiant s'était arrêté
+  const initialPage = (() => {
+    const p = parseInt(searchParams.get('page'), 10);
+    return isNaN(p) || p < 0 ? 0 : p;
+  })();
+
   const [activeTab,    setActiveTab]    = useState('lecture');
-  const [currentPage,  setCurrentPage]  = useState(0);
+  const [currentPage,  setCurrentPage]  = useState(initialPage);
   const [answers,      setAnswers]      = useState({});
   const [submitted,    setSubmitted]    = useState(false);
   const [correction,   setCorrection]   = useState(null);
@@ -510,9 +539,14 @@ const SecureCourseViewer = () => {
     buildUrl();
   }, [course]);
 
-  // ── Sauvegarder la progression de lecture ──
+  // ── Sauvegarder la progression de lecture + dernière page ──
   useEffect(() => {
-    if (!enrollment || !currentUser || !courseId || pages.length === 0) return;
+    if (!courseId) return;
+    // Toujours sauvegarder la dernière page visitée dans localStorage
+    // (utilisé par CourseDetailPage pour le bouton "Continuer")
+    try { localStorage.setItem(`lastPage_${courseId}`, String(currentPage)); } catch {}
+
+    if (!enrollment || !currentUser || pages.length === 0) return;
     const readingPct = Math.round(((currentPage + 1) / pages.length) * 70);
     const newProg    = Math.max(enrollment.progression || 0, readingPct);
     if (newProg <= (enrollment.progression || 0)) return;
@@ -526,7 +560,7 @@ const SecureCourseViewer = () => {
       } catch {}
     }, 1500);
     return () => clearTimeout(saveTimer.current);
-  }, [currentPage, enrollment?.id, pages.length]);
+  }, [currentPage, enrollment?.id, pages.length, courseId]);
 
   // ── Sélection réponse ──
   const selectAnswer = useCallback((qId, key) => {
@@ -646,6 +680,8 @@ const SecureCourseViewer = () => {
     setScoreDecision(null);
     setCurrentPage(0);
     setActiveTab('lecture');
+    // Réinitialiser la dernière page sauvegardée
+    try { localStorage.setItem(`lastPage_${courseId}`, '0'); } catch {}
   };
 
   // ── Envoyer un message au tuteur IA ──

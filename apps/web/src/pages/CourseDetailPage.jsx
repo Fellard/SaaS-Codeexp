@@ -13,7 +13,8 @@ import { toast } from 'sonner';
 import {
   BookOpen, Clock, Tag, CheckCircle, PlayCircle,
   ChevronLeft, Lock, Unlock, AlertCircle, Star,
-  ArrowRight, RotateCcw,
+  ArrowRight, RotateCcw, Headphones, GraduationCap,
+  Users, Zap, ChevronRight,
 } from 'lucide-react';
 
 const LEVEL_COLORS = {
@@ -222,6 +223,8 @@ export default function CourseDetailPage() {
       }, { requestKey: null });
       setEnrollment(rec);
       toast.success('Inscription réussie ! Bonne formation 🎓');
+      // Redirection immédiate vers le viewer pour commencer à apprendre
+      navigate(`/dashboard/courses/${id}/view`);
     } catch (err) {
       toast.error('Erreur lors de l\'inscription : ' + err.message);
     } finally {
@@ -273,63 +276,143 @@ export default function CourseDetailPage() {
   const hasAccess     = isEnrolled || isFree;
   const exCount       = exercises.length;
 
+  const isAudio = course.course_type === 'audio';
+  const hasPages = (() => { try { return JSON.parse(course.pages || '[]').length > 0; } catch { return false; } })();
+
+  // Dernière page sauvegardée dans localStorage par SecureCourseViewer
+  const storedPage = (() => { try { return parseInt(localStorage.getItem(`lastPage_${id}`), 10) || 0; } catch { return 0; } })();
+
+  // Helpers navigation
+  const goToCourse = (fromStart = false) => {
+    const page = fromStart ? 0 : storedPage;
+    navigate(`/dashboard/courses/${id}/view${page > 0 ? `?page=${page}` : ''}`);
+  };
+
+  // Dériver l'état du bouton
+  const prog = enrollment?.progression || 0;
+  const isCompleted = prog >= 100;
+
   return (
     <>
       <Helmet><title>{course.title} — IWS</title></Helmet>
       <div className="min-h-screen flex flex-col bg-slate-50" dir={isRtl ? 'rtl' : 'ltr'}>
         <Header />
-        <main className="flex-1 py-8">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 
+        {/* ── Hero Banner ─────────────────────────────────────────── */}
+        <div className={`${isAudio ? 'bg-gradient-to-br from-[#00274D] via-[#003a70] to-[#004d96]' : 'bg-gradient-to-br from-slate-800 to-slate-900'} text-white pt-20 pb-10`}>
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* Breadcrumb */}
-            <div className="flex items-center gap-2 text-sm text-slate-500 mb-6">
-              <Link to="/formation" className="hover:text-indigo-600 flex items-center gap-1">
+            <div className="flex items-center gap-2 text-sm text-white/60 mb-5">
+              <Link to="/formation" className="hover:text-white flex items-center gap-1 transition-colors">
                 <ChevronLeft className="w-4 h-4" /> Catalogue
               </Link>
               <span>/</span>
-              <span className="text-slate-700 font-medium truncate">{course.title}</span>
+              <span className="text-white/80 truncate">{course.title}</span>
             </div>
 
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+              <div className="lg:col-span-2">
+                {/* Badges */}
+                <div className="flex gap-2 flex-wrap mb-4">
+                  {isAudio && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                      <Headphones className="w-3.5 h-3.5" /> Auto-apprentissage audio
+                    </span>
+                  )}
+                  {course.level && (
+                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-white/10 text-white border border-white/20">
+                      Niveau {course.level}
+                    </span>
+                  )}
+                  {(course.duration || course.duree) > 0 && (
+                    <span className="px-3 py-1 rounded-full text-xs bg-white/10 text-white/80 border border-white/20 flex items-center gap-1">
+                      <Clock className="w-3 h-3" /> {course.duration || course.duree} min
+                    </span>
+                  )}
+                  {isFree ? (
+                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                      ✓ Gratuit
+                    </span>
+                  ) : (
+                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                      {course.price} MAD
+                    </span>
+                  )}
+                </div>
+
+                <h1 className="text-2xl sm:text-3xl font-bold text-white mb-3 leading-tight">{course.title}</h1>
+                {course.description && (
+                  <p className="text-white/70 leading-relaxed text-sm sm:text-base max-w-xl">{course.description}</p>
+                )}
+
+                {/* Progression si inscrit */}
+                {isEnrolled && (
+                  <div className="mt-5 bg-white/10 rounded-xl px-4 py-3 max-w-sm">
+                    <div className="flex items-center justify-between text-sm mb-2">
+                      <span className="text-white/80">Ma progression</span>
+                      <span className="font-bold text-white">{enrollment.progression || 0}%</span>
+                    </div>
+                    <div className="h-2 bg-white/20 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-amber-400 rounded-full transition-all duration-500"
+                        style={{ width: `${enrollment.progression || 0}%` }}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* CTA mobile (lg: masqué — la sidebar s'en charge) */}
+              <div className="lg:hidden space-y-2">
+                {isEnrolled ? (
+                  <>
+                    {isCompleted ? (
+                      <div className="flex items-center justify-center gap-2 bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 font-bold py-3 px-6 rounded-xl text-sm">
+                        <CheckCircle className="w-5 h-5" /> Cours terminé ✓
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => goToCourse(false)}
+                        className="w-full flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-400 text-white font-bold py-3 px-6 rounded-xl transition-colors shadow-lg"
+                      >
+                        <PlayCircle className="w-5 h-5" />
+                        {prog > 0 ? 'Continuer le cours' : 'Commencer le cours'}
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    )}
+                    {(prog > 0) && (
+                      <button
+                        onClick={() => goToCourse(true)}
+                        className="w-full flex items-center justify-center gap-2 border border-white/30 text-white/80 hover:bg-white/10 font-medium py-2.5 px-6 rounded-xl transition-colors text-sm"
+                      >
+                        <RotateCcw className="w-4 h-4" /> Recommencer depuis le début
+                      </button>
+                    )}
+                  </>
+                ) : (
+                  <button
+                    onClick={handleEnroll}
+                    disabled={enrolling}
+                    className="w-full flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-400 text-white font-bold py-3 px-6 rounded-xl transition-colors shadow-lg disabled:opacity-70"
+                  >
+                    {enrolling
+                      ? <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />Inscription...</>
+                      : <><Zap className="w-5 h-5" />{isFree ? 'Commencer gratuitement' : `Payer — ${course.price} MAD`}</>
+                    }
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+          {/* Bande orange IWS */}
+          <div className="h-1 bg-amber-500 mt-8" />
+        </div>
+
+        <main className="flex-1 py-8">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Contenu principal */}
               <div className="lg:col-span-2 space-y-6">
-
-                {/* Header cours */}
-                <div>
-                  <div className="flex gap-2 flex-wrap mb-3">
-                    <span className={`px-3 py-1 rounded-full text-sm font-bold ${LEVEL_COLORS[course.level] || 'bg-gray-100'}`}>{course.level}</span>
-                    <span className="px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-700 capitalize">{course.category}</span>
-                    <span className="px-3 py-1 rounded-full text-sm bg-slate-100 text-slate-600 flex items-center gap-1">
-                      <Clock className="w-3 h-3" />{course.duration || course.duree || 0} min
-                    </span>
-                    {/* Badge prix visible dès le header */}
-                    {isFree ? (
-                      <span className="px-3 py-1 rounded-full text-sm font-bold bg-emerald-100 text-emerald-700 flex items-center gap-1">
-                        ✓ Gratuit
-                      </span>
-                    ) : (
-                      <span className="px-3 py-1 rounded-full text-sm font-bold bg-amber-100 text-amber-700">
-                        {course.price} MAD
-                      </span>
-                    )}
-                    {exCount > 0 && (
-                      <span className="px-3 py-1 rounded-full text-sm bg-indigo-100 text-indigo-700 flex items-center gap-1">
-                        <Star className="w-3 h-3" />{exCount} exercice(s)
-                      </span>
-                    )}
-                  </div>
-                  <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-3 leading-tight">{course.title}</h1>
-                  {course.description && <p className="text-slate-600 leading-relaxed">{course.description}</p>}
-                  {isEnrolled && (
-                    <div className="mt-4">
-                      <div className="flex items-center justify-between text-sm mb-1">
-                        <span className="text-slate-600">Progression</span>
-                        <span className="font-bold text-indigo-600">{enrollment.progression || 0}%</span>
-                      </div>
-                      <Progress value={enrollment.progression || 0} className="h-2 bg-slate-100" />
-                    </div>
-                  )}
-                </div>
 
                 {/* Onglets (seulement si accès) */}
                 {hasAccess ? (
@@ -388,6 +471,27 @@ export default function CourseDetailPage() {
                                 {course.content}
                               </pre>
                             </div>
+                          ) : hasPages ? (
+                            /* Cours multi-pages (audio Tip Top) : bouton vers le viewer */
+                            <div className="text-center py-10">
+                              <div className="w-16 h-16 rounded-2xl bg-amber-50 border-2 border-amber-200 flex items-center justify-center mx-auto mb-4">
+                                <Headphones className="w-8 h-8 text-amber-500" />
+                              </div>
+                              <h3 className="font-bold text-slate-800 text-lg mb-2">
+                                Ce cours contient plusieurs modules audio
+                              </h3>
+                              <p className="text-slate-500 text-sm mb-6 max-w-xs mx-auto">
+                                Naviguez entre les leçons, les dialogues et les exercices depuis le lecteur de cours.
+                              </p>
+                              <button
+                                onClick={() => goToCourse(false)}
+                                className="inline-flex items-center gap-2 bg-[#00274D] hover:bg-[#003a70] text-white font-bold py-3 px-8 rounded-xl transition-colors shadow-md"
+                              >
+                                <PlayCircle className="w-5 h-5" />
+                                {prog > 0 ? 'Continuer le cours' : 'Ouvrir le cours'}
+                                <ChevronRight className="w-4 h-4" />
+                              </button>
+                            </div>
                           ) : (
                             <div className="text-center py-10 text-slate-400">
                               <BookOpen className="w-10 h-10 mx-auto mb-3 opacity-30" />
@@ -432,71 +536,89 @@ export default function CourseDetailPage() {
               </div>
 
               {/* Sidebar — Carte inscription */}
-              <div className="lg:col-span-1">
-                <div className="sticky top-6">
-                  <Card className="bg-white border border-slate-100 rounded-2xl shadow-sm overflow-hidden">
-                    <div className={`h-2 w-full ${
+              <div className="lg:col-span-1 hidden lg:block">
+                <div className="sticky top-6 space-y-4">
+
+                  {/* Card principale */}
+                  <Card className="bg-white border border-slate-100 rounded-2xl shadow-md overflow-hidden">
+                    {/* Bande couleur niveau */}
+                    <div className={`h-1.5 w-full ${
                       course.level === 'A1' ? 'bg-green-400' : course.level === 'A2' ? 'bg-lime-400' :
                       course.level === 'B1' ? 'bg-yellow-400' : course.level === 'B2' ? 'bg-orange-400' :
-                      course.level === 'C1' ? 'bg-red-400' : 'bg-purple-400'
+                      course.level === 'C1' ? 'bg-red-400' : 'bg-[#FF9500]'
                     }`} />
+
                     <CardContent className="p-6 space-y-5">
                       {/* Prix */}
-                      <div className="text-center">
+                      <div className="text-center py-2">
                         {isFree ? (
                           <>
-                            <div className="text-3xl font-bold text-emerald-600">Gratuit</div>
+                            <div className="text-4xl font-extrabold text-emerald-600">Gratuit</div>
                             {isFreeByTier && course.price > 0 && (
-                              <p className="text-xs text-slate-400 mt-1 line-through">{course.price} MAD</p>
+                              <p className="text-sm text-slate-400 mt-1 line-through">{course.price} MAD</p>
                             )}
                             {isFreeByTier && (
-                              <p className="text-xs text-emerald-600 mt-1 font-medium">
+                              <p className="text-xs text-emerald-600 mt-1 font-semibold bg-emerald-50 px-3 py-1 rounded-full inline-block">
                                 {5 - totalEnrollments} cours gratuit{5 - totalEnrollments > 1 ? 's' : ''} restant{5 - totalEnrollments > 1 ? 's' : ''}
                               </p>
                             )}
                           </>
                         ) : (
                           <>
-                            <div className="text-3xl font-bold text-slate-900">{course.price} MAD</div>
-                            <p className="text-sm text-slate-500 mt-1">accès complet</p>
+                            <div className="text-4xl font-extrabold text-slate-900">{course.price} <span className="text-2xl">MAD</span></div>
+                            <p className="text-sm text-slate-500 mt-1">accès complet illimité</p>
                           </>
                         )}
                       </div>
 
-                      {/* Status */}
+                      {/* CTA principal */}
                       {isEnrolled ? (
-                        <div className="flex items-center gap-2 px-4 py-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-700 text-sm font-medium">
-                          <CheckCircle className="w-4 h-4 flex-shrink-0" />
-                          Vous êtes inscrit à cette formation
+                        <div className="space-y-2.5">
+                          {/* Bouton principal */}
+                          {isCompleted ? (
+                            <div className="flex items-center justify-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold py-3.5 px-6 rounded-xl text-base">
+                              <CheckCircle className="w-5 h-5" /> Cours terminé ✓
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => goToCourse(false)}
+                              className="w-full flex items-center justify-center gap-2 bg-[#00274D] hover:bg-[#003a70] text-white font-bold py-3.5 px-6 rounded-xl transition-colors shadow-md text-base"
+                            >
+                              <PlayCircle className="w-5 h-5" />
+                              {prog > 0 ? 'Continuer le cours' : 'Commencer le cours'}
+                              <ChevronRight className="w-4 h-4" />
+                            </button>
+                          )}
+                          {/* Bouton secondaire "Recommencer" — visible dès qu'il y a eu de la progression */}
+                          {prog > 0 && (
+                            <button
+                              onClick={() => goToCourse(true)}
+                              className="w-full flex items-center justify-center gap-2 border border-slate-200 text-slate-600 hover:bg-slate-50 font-medium py-2.5 px-6 rounded-xl transition-colors text-sm"
+                            >
+                              <RotateCcw className="w-4 h-4" /> Recommencer depuis le début
+                            </button>
+                          )}
+                          {/* Badge inscription */}
+                          <div className="flex items-center gap-2 px-4 py-2.5 bg-emerald-50 border border-emerald-100 rounded-xl text-emerald-700 text-xs font-medium justify-center">
+                            <CheckCircle className="w-3.5 h-3.5 flex-shrink-0" />
+                            Inscrit · {prog}% accompli
+                          </div>
                         </div>
                       ) : (
-                        <Button className="w-full bg-indigo-600 hover:bg-indigo-700 h-12 text-base font-semibold gap-2"
-                          onClick={handleEnroll} disabled={enrolling}>
+                        <button
+                          className="w-full flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-400 text-white font-bold py-3.5 px-6 rounded-xl transition-colors shadow-md text-base disabled:opacity-70"
+                          onClick={handleEnroll}
+                          disabled={enrolling}
+                        >
                           {enrolling ? (
-                            <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />Inscription...</>
+                            <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> Inscription...</>
                           ) : isFree ? (
-                            <><PlayCircle className="w-4 h-4" />Commencer gratuitement</>
+                            <><Zap className="w-5 h-5" /> Commencer gratuitement</>
                           ) : (
-                            <><Unlock className="w-4 h-4" />Payer — {course.price} MAD</>
+                            <><Unlock className="w-5 h-5" /> Payer — {course.price} MAD</>
                           )}
-                        </Button>
+                        </button>
                       )}
-
-                      {/* Ce que comprend le cours */}
-                      <div className="space-y-2.5 border-t border-slate-100 pt-5">
-                        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Ce cours comprend</p>
-                        {[
-                          { icon: BookOpen, text: 'Leçon complète avec exemples' },
-                          { icon: Clock, text: `${course.duration || course.duree || 0} minutes de contenu` },
-                          ...(exCount > 0 ? [{ icon: Star, text: `${exCount} exercice(s) QCM corrigés` }] : []),
-                          { icon: CheckCircle, text: 'Accès illimité une fois inscrit' },
-                        ].map((item, i) => (
-                          <div key={i} className="flex items-center gap-2.5 text-sm text-slate-600">
-                            <item.icon className="w-4 h-4 text-indigo-500 flex-shrink-0" />
-                            {item.text}
-                          </div>
-                        ))}
-                      </div>
 
                       {!currentUser && (
                         <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex gap-2 text-amber-700 text-xs">
@@ -504,8 +626,39 @@ export default function CourseDetailPage() {
                           <span>Connectez-vous pour vous inscrire à cette formation.</span>
                         </div>
                       )}
+
+                      {/* Ce cours comprend */}
+                      <div className="space-y-3 border-t border-slate-100 pt-5">
+                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Ce cours comprend</p>
+                        {[
+                          { icon: isAudio ? Headphones : BookOpen,
+                            text: isAudio ? 'Modules audio interactifs' : 'Leçon complète avec exemples' },
+                          { icon: Clock,
+                            text: `${course.duration || course.duree || 0} minutes de contenu` },
+                          ...(exCount > 0 ? [{ icon: Star, text: `${exCount} exercice(s) QCM corrigés` }] : []),
+                          { icon: GraduationCap, text: 'Accès illimité une fois inscrit' },
+                        ].map((item, i) => (
+                          <div key={i} className="flex items-center gap-3 text-sm text-slate-700">
+                            <div className="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center flex-shrink-0">
+                              <item.icon className="w-4 h-4 text-[#00274D]" />
+                            </div>
+                            {item.text}
+                          </div>
+                        ))}
+                      </div>
                     </CardContent>
                   </Card>
+
+                  {/* Mini carte — aide */}
+                  <div className="bg-[#00274D] rounded-2xl p-4 text-white text-center">
+                    <GraduationCap className="w-8 h-8 mx-auto mb-2 text-amber-400" />
+                    <p className="text-sm font-semibold mb-1">Besoin d'aide ?</p>
+                    <p className="text-xs text-white/60 mb-3">Nos conseillers pédagogiques répondent en moins d'1h</p>
+                    <Link to="/contact" className="text-xs font-bold text-amber-400 hover:text-amber-300 underline underline-offset-2">
+                      Nous contacter →
+                    </Link>
+                  </div>
+
                 </div>
               </div>
             </div>

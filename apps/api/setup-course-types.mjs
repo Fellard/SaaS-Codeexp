@@ -89,10 +89,8 @@ async function main() {
       type:        'select',
       required:    false,
       presentable: false,
-      options: {
-        maxSelect: 1,
-        values:    ['standard', 'audio'],
-      },
+      maxSelect:   1,
+      values:      ['standard', 'audio'],
     };
 
     const updated = await apiPatch(
@@ -132,7 +130,10 @@ async function main() {
     }
 
     try {
-      await pb.collection('courses').update(course.id, { course_type: newType });
+      const patch = { course_type: newType };
+      // Les cours audio sont en français → on s'assure que getCourseSection les classe correctement
+      if (isAudio) patch.categorie = 'français';
+      await pb.collection('courses').update(course.id, patch);
       console.log(`  ✅ [${icon}] ${label} → "${newType}"`);
       isAudio ? countAudio++ : countStandard++;
     } catch (e) {
