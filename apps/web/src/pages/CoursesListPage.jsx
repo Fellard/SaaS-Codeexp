@@ -62,6 +62,37 @@ const getCourseSection = (course) => {
   return null;
 };
 
+// ── Détection robuste des cours audio ─────────────────────────────
+// Les 7 cours Tip Top! A1.2 (auto-apprentissage audio) — fallback si
+// le champ "course_type" n'est pas (encore) renseigné côté PocketBase.
+// Source : apps/api/setup-course-types.mjs
+const AUDIO_COURSE_IDS = new Set([
+  '1yeiteynlt34xrt', // Module 1 — Unité 1 (pistes 4-14)
+  'w33cg61a0pho8f6', // Module 2 — Unité 2 (pistes 15-23)
+  'bkkzo0bslkalmqa', // Module 3 — Unité 3 (pistes 24-34)
+  'slnu1e8dqpidq8y', // Module 4 — Unité 4 (pistes 35-43)
+  'tko1h1ocellzf48', // Module 5 — Unité 5 (pistes 44-52)
+  'prq3piwkn1fflso', // Module 6 — Unité 6 (pistes 53-60)
+  'utg4lp6nyphwoin', // Évaluations & DELF Prim (pistes 61-69)
+]);
+
+const isAudioCourse = (course) => {
+  if (!course) return false;
+  // 1. Champ explicite (canonique, peuplé par setup-course-types.mjs)
+  if (course.course_type === 'audio') return true;
+  // 2. Fallback : ID connu
+  if (course.id && AUDIO_COURSE_IDS.has(course.id)) return true;
+  // 3. Fallback : nom contenant "Tip Top" (avec ou sans tiret/espace)
+  const hay = [
+    course.cours_nom,
+    course.titre,
+    course.title,
+    course.title_fr,
+  ].filter(Boolean).join(' ').toLowerCase();
+  if (/tip[\s\-]?top/.test(hay)) return true;
+  return false;
+};
+
 // ── Détection langue depuis les données du cours ─────────────────
 const detectLang = (course) => {
   // Priorité 1 : champ langue explicite (ex: 'fr', 'en', 'ar', 'Français'…)
@@ -237,7 +268,7 @@ const CourseCardItem = ({ course, langKey, sec, secCfg, lgCfg }) => {
   const price = course.prix || course.price || 0;
   const rtl = lgCfg?.rtl;
   const badgeClass = lgCfg ? lgCfg.badge : 'bg-indigo-100 text-indigo-700';
-  const isAudio = course.course_type === 'audio';
+  const isAudio = isAudioCourse(course);
 
   return (
     <Card className={`flex flex-col hover:shadow-lg border-border rounded-2xl overflow-hidden transition-shadow duration-200 ${isAudio ? 'ring-1 ring-amber-200' : ''}`}>
@@ -354,8 +385,8 @@ const CourseSubSection = ({ title, icon: Icon, accent, courses, langKey, sec, se
 
 // ── Bloc d'un groupe de langue (titre + grille) ──────────────────
 const LangGroupBlock = ({ langKey2, courses, lgCfg, langKey, sec, secCfg }) => {
-  const standard = courses.filter(c => c.course_type !== 'audio');
-  const audio    = courses.filter(c => c.course_type === 'audio');
+  const standard = courses.filter(c => !isAudioCourse(c));
+  const audio    = courses.filter(c => isAudioCourse(c));
   const hasBoth  = standard.length > 0 && audio.length > 0;
 
   return (
@@ -520,7 +551,7 @@ const CoursesListPage = () => {
         if (lv !== selectedLevel) return false;
       }
       if (selectedType) {
-        const ct = c.course_type || 'standard';
+        const ct = isAudioCourse(c) ? 'audio' : 'standard';
         if (ct !== selectedType) return false;
       }
       return true;
