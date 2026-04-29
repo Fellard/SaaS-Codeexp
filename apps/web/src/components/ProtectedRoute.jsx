@@ -47,9 +47,9 @@ export const ProtectedRoute = ({ children }) => {
     return <Navigate to={getDashboardPath(currentRole)} replace />;
   }
 
-  // Blocage cross-rôle : routes réservées aux étudiants
+  // Blocage cross-rôle : routes réservées aux étudiants et aux clients inscrits
   const isStudentPath = STUDENT_ONLY_PATHS.some(p => path.startsWith(p));
-  if (isStudentPath && currentRole !== 'etudiant' && currentRole !== 'admin' && currentRole !== 'manager') {
+  if (isStudentPath && currentRole !== 'etudiant' && currentRole !== 'client' && currentRole !== 'admin' && currentRole !== 'manager') {
     console.warn(`[RBAC] Rôle "${currentRole}" bloqué sur ${path} → redirection vers son espace`);
     return <Navigate to={getDashboardPath(currentRole)} replace />;
   }

@@ -24,6 +24,7 @@ const NAV_BY_ROLE = {
   ],
   client: [
     { path: '/client/dashboard',          icon: LayoutDashboard, label: 'Tableau de bord' },
+    { path: '/dashboard/courses',         icon: BookOpen,        label: 'Mes formations'  },
     { path: '/client/dashboard/orders',   icon: ShoppingBag,     label: 'Mes commandes'   },
     { path: '/client/dashboard/profile',  icon: User,            label: 'Mon profil'       },
     { path: '/client/dashboard/settings', icon: Settings,        label: 'Paramètres'       },

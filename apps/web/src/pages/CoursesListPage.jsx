@@ -3,11 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import pb from '@/lib/pocketbaseClient';
+import { useAuth } from '@/contexts/AuthContext.jsx';
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Clock, BookOpen, User, Languages, Monitor, Code2, ChevronRight, GraduationCap, ArrowRight, Users, Headphones, LayoutGrid } from 'lucide-react';
+import { Clock, BookOpen, User, Languages, Monitor, Code2, ChevronRight, GraduationCap, ArrowRight, Users, Headphones, LayoutGrid, PlayCircle, CheckCircle, RotateCcw } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTranslation } from '@/i18n/useTranslation.js';
 import { useLanguage } from '@/hooks/useLanguage.jsx';
@@ -53,8 +54,11 @@ const SECTIONS = {
 };
 
 const getCourseSection = (course) => {
-  // Check direct section field first
+  // Les cours audio Tip Top sont toujours dans "Langues"
+  if (course.course_type === 'audio') return 'langues';
+  // Champ section direct
   if (course.section && SECTIONS[course.section]) return course.section;
+  // Détection par categorie
   const cat = (course.categorie || course.category || '').toLowerCase();
   for (const [key, sec] of Object.entries(SECTIONS)) {
     if (sec.categories.some(c => cat.includes(c))) return key;
@@ -95,13 +99,25 @@ const isAudioCourse = (course) => {
 
 // ── Détection langue depuis les données du cours ─────────────────
 const detectLang = (course) => {
-  // Priorité 1 : champ langue explicite (ex: 'fr', 'en', 'ar', 'Français'…)
-  const langField = (course.langue || '').toLowerCase();
-  if (langField === 'fr' || langField === 'français' || langField === 'french') return 'fr';
-  if (langField === 'en' || langField === 'anglais' || langField === 'english') return 'en';
-  if (langField === 'ar' || langField === 'arabe'   || langField === 'arabic')  return 'ar';
+  // Priorité 0 : cours avec source_course_id — langue explicite
+  if (course.source_course_id) {
+    const l = (course.langue || '').toLowerCase();
+    if (l === 'en' || l === 'english' || l === 'anglais') return 'en';
+    if (l === 'ar' || l === 'arabic'  || l === 'arabe')   return 'ar';
+    return 'fr';
+  }
 
-  // Priorité 2 : détection par mots-clés dans les autres champs
+  // Priorité 1 : champ langue explicite (valable pour TOUS les cours y compris audio)
+  // ⚠️ Le fallback audio→fr vient APRÈS pour ne pas écraser les cours audio EN/AR
+  const langField = (course.langue || '').toLowerCase();
+  if (langField === 'fr' || langField === 'français' || langField === 'french' || langField === 'francais') return 'fr';
+  if (langField === 'en' || langField === 'anglais'  || langField === 'english') return 'en';
+  if (langField === 'ar' || langField === 'arabe'    || langField === 'arabic')  return 'ar';
+
+  // Priorité 2 : cours audio sans champ langue = Tip Top français (fallback sûr)
+  if (course.course_type === 'audio') return 'fr';
+
+  // Priorité 3 : détection par mots-clés dans les autres champs
   const hay = [
     course.cours_nom,
     course.categorie,
@@ -262,13 +278,58 @@ const groupCoursesByLang = (list) => {
 };
 
 // ── Carte de cours réutilisable ──────────────────────────────────
-const CourseCardItem = ({ course, langKey, sec, secCfg, lgCfg }) => {
+const CourseCardItem = ({ course, langKey, sec, secCfg, lgCfg, enrollment }) => {
   const displayTitle = course[`title_${langKey}`] || course.titre || course.title;
   const displayDesc  = course[`description_${langKey}`] || course.description;
   const price = course.prix || course.price || 0;
   const rtl = lgCfg?.rtl;
   const badgeClass = lgCfg ? lgCfg.badge : 'bg-indigo-100 text-indigo-700';
   const isAudio = isAudioCourse(course);
+
+  // ── Logique bouton selon l'état d'inscription ─────────────────
+  const prog = enrollment?.progression ?? null;
+  const isEnrolled  = enrollment != null;
+  const isCompleted = prog != null && prog >= 100;
+  const hasStarted  = prog != null && prog > 0;
+
+  // Dernière page sauvegardée localement (pour reprendre au bon endroit)
+  const lastPage = (() => {
+    try { const p = parseInt(localStorage.getItem(`lastPage_${course.id}`), 10); return isNaN(p) ? 0 : p; }
+    catch { return 0; }
+  })();
+
+  const viewerHref  = `/dashboard/courses/${course.id}/view${hasStarted && lastPage > 0 ? `?page=${lastPage}` : ''}`;
+  const detailHref  = `/courses/${course.id}`;
+
+  // CTA : rendu selon état
+  let ctaNode;
+  if (!isEnrolled) {
+    ctaNode = (
+      <Link to={detailHref}>
+        <Button size="sm" className="bg-accent hover:bg-accent/90 text-primary font-bold rounded-xl">
+          Voir le cours
+        </Button>
+      </Link>
+    );
+  } else if (isCompleted) {
+    ctaNode = (
+      <Link to={viewerHref}>
+        <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl gap-1.5">
+          <CheckCircle className="w-3.5 h-3.5" />
+          Réviser
+        </Button>
+      </Link>
+    );
+  } else {
+    ctaNode = (
+      <Link to={viewerHref}>
+        <Button size="sm" className="bg-[#00274D] hover:bg-[#003a70] text-white font-bold rounded-xl gap-1.5">
+          <PlayCircle className="w-3.5 h-3.5" />
+          {hasStarted ? 'Continuer →' : 'Commencer →'}
+        </Button>
+      </Link>
+    );
+  }
 
   return (
     <Card className={`flex flex-col hover:shadow-lg border-border rounded-2xl overflow-hidden transition-shadow duration-200 ${isAudio ? 'ring-1 ring-amber-200' : ''}`}>
@@ -340,15 +401,27 @@ const CourseCardItem = ({ course, langKey, sec, secCfg, lgCfg }) => {
           )}
         </div>
 
+        {/* Barre de progression (visible uniquement si inscrit) */}
+        {isEnrolled && prog != null && (
+          <div className="mb-3 space-y-1">
+            <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <span>{isCompleted ? '✓ Terminé' : `En cours · ${prog}%`}</span>
+              <span className={`font-semibold ${isCompleted ? 'text-emerald-600' : 'text-[#00274D]'}`}>{prog}%</span>
+            </div>
+            <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+              <div
+                className={`h-full rounded-full transition-all duration-500 ${isCompleted ? 'bg-emerald-500' : 'bg-[#00274D]'}`}
+                style={{ width: `${prog}%` }}
+              />
+            </div>
+          </div>
+        )}
+
         <div className="flex items-center justify-between border-t border-border pt-4">
           <span className="font-bold text-xl text-primary">
             {price > 0 ? `${price} MAD` : 'Gratuit'}
           </span>
-          <Link to={`/courses/${course.id}`}>
-            <Button size="sm" className="bg-accent hover:bg-accent/90 text-primary font-bold rounded-xl">
-              Voir le cours
-            </Button>
-          </Link>
+          {ctaNode}
         </div>
       </CardContent>
     </Card>
@@ -356,7 +429,7 @@ const CourseCardItem = ({ course, langKey, sec, secCfg, lgCfg }) => {
 };
 
 // ── Sous-section dans un groupe de langue ────────────────────────
-const CourseSubSection = ({ title, icon: Icon, accent, courses, langKey, sec, secCfg, lgCfg }) => (
+const CourseSubSection = ({ title, icon: Icon, accent, courses, langKey, sec, secCfg, lgCfg, enrollmentMap }) => (
   <div>
     <div className="flex items-center gap-2 mb-4">
       <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0"
@@ -377,6 +450,7 @@ const CourseSubSection = ({ title, icon: Icon, accent, courses, langKey, sec, se
           sec={sec}
           secCfg={secCfg}
           lgCfg={lgCfg}
+          enrollment={enrollmentMap?.[course.id]}
         />
       ))}
     </div>
@@ -384,7 +458,7 @@ const CourseSubSection = ({ title, icon: Icon, accent, courses, langKey, sec, se
 );
 
 // ── Bloc d'un groupe de langue (titre + grille) ──────────────────
-const LangGroupBlock = ({ langKey2, courses, lgCfg, langKey, sec, secCfg }) => {
+const LangGroupBlock = ({ langKey2, courses, lgCfg, langKey, sec, secCfg, enrollmentMap }) => {
   const standard = courses.filter(c => !isAudioCourse(c));
   const audio    = courses.filter(c => isAudioCourse(c));
   const hasBoth  = standard.length > 0 && audio.length > 0;
@@ -422,6 +496,7 @@ const LangGroupBlock = ({ langKey2, courses, lgCfg, langKey, sec, secCfg }) => {
               sec={sec}
               secCfg={secCfg}
               lgCfg={lgCfg}
+              enrollmentMap={enrollmentMap}
             />
           )}
           {audio.length > 0 && (
@@ -435,6 +510,7 @@ const LangGroupBlock = ({ langKey2, courses, lgCfg, langKey, sec, secCfg }) => {
                 sec={sec}
                 secCfg={secCfg}
                 lgCfg={lgCfg}
+                enrollmentMap={enrollmentMap}
               />
             </div>
           )}
@@ -449,6 +525,7 @@ const LangGroupBlock = ({ langKey2, courses, lgCfg, langKey, sec, secCfg }) => {
               sec={sec}
               secCfg={secCfg}
               lgCfg={lgCfg}
+              enrollment={enrollmentMap?.[course.id]}
             />
           ))}
         </div>
@@ -497,6 +574,7 @@ const ProgrammeCard = ({ section, count, active, onClick }) => {
 const CoursesListPage = () => {
   const { t } = useTranslation();
   const { language } = useLanguage();
+  const { currentUser } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
@@ -505,6 +583,8 @@ const CoursesListPage = () => {
   const [activeSection, setActiveSection] = useState(searchParams.get('section') || null);
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [selectedType, setSelectedType] = useState(null); // null | 'standard' | 'audio'
+  // enrollmentMap : { [course_id]: enrollment } — null = non chargé encore
+  const [enrollmentMap, setEnrollmentMap] = useState({});
 
   const langKey = language?.startsWith('ar') ? 'ar' : language?.startsWith('en') ? 'en' : 'fr';
   const isRtl = langKey === 'ar';
@@ -525,6 +605,24 @@ const CoursesListPage = () => {
     };
     fetchCourses();
   }, []);
+
+  // Charger les inscriptions du user connecté (en arrière-plan, sans bloquer l'affichage)
+  useEffect(() => {
+    if (!currentUser) return;
+    const fetchEnrollments = async () => {
+      try {
+        const list = await pb.collection('course_enrollments').getFullList({
+          filter: `user_id = "${currentUser.id}"`,
+          fields: 'id,course_id,progression,complete',
+          requestKey: null,
+        });
+        const map = {};
+        list.forEach(e => { map[e.course_id] = e; });
+        setEnrollmentMap(map);
+      } catch { /* non-bloquant */ }
+    };
+    fetchEnrollments();
+  }, [currentUser]);
 
   // Count courses per section
   const sectionCounts = Object.keys(SECTIONS).reduce((acc, key) => {
@@ -827,6 +925,7 @@ const CoursesListPage = () => {
                                 langKey={langKey}
                                 sec={progKey}
                                 secCfg={progSection}
+                                enrollmentMap={enrollmentMap}
                               />
                             );
                           })}
@@ -841,6 +940,7 @@ const CoursesListPage = () => {
                               sec={progKey}
                               secCfg={progSection}
                               lgCfg={null}
+                              enrollment={enrollmentMap?.[course.id]}
                             />
                           ))}
                         </div>
@@ -872,6 +972,7 @@ const CoursesListPage = () => {
                           sec={null}
                           secCfg={null}
                           lgCfg={null}
+                          enrollment={enrollmentMap?.[course.id]}
                         />
                       ))}
                     </div>
