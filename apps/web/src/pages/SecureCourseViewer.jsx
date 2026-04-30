@@ -126,10 +126,12 @@ function getLessonPages(course, langKey) {
     else effectiveLang = 'fr';
   }
 
-  // ── 4. Fallback : leçons codées en dur (uniquement pour anciens cours sans PDF) ──
+  // ── 4. Fallback : leçons codées en dur (uniquement pour cours sans PDF ni pages DB) ──
   const titre  = (course?.titre || course?.title || '').toLowerCase();
+  const desc   = (course?.description || '').toLowerCase();
   const cNom   = (course?.cours_nom || '').toLowerCase();
   const langue = (course?.langue || '').toLowerCase();
+  const haystack = `${titre} ${desc}`;
 
   // effectiveLang est déjà défini plus haut (force EN/AR pour cours traduits)
   // Pour les cours originaux, on affine selon cours_nom
@@ -150,12 +152,16 @@ function getLessonPages(course, langKey) {
   // Normaliser 'ar-MA' → 'ar' pour les clés de LESSON_PAGES_*
   if (courseLang === 'ar-MA') courseLang = 'ar';
 
-  const isLieu = titre.includes('lieu') || titre.includes('place') || titre.includes('مكان');
+  // ── Détection précise du topic pour choisir le bon fallback ──────
+  const isLieu  = haystack.match(/\blieu\b|place express|prépositions? de lieu|exprimer (un|le) lieu|مكان/);
+  const isTemps = haystack.match(/\btemps\b|time express|prépositions? de temps|exprimer le temps/);
 
-  if (isLieu) {
-    return LESSON_PAGES_LIEU[courseLang] || LESSON_PAGES_LIEU.fr;
-  }
-  return LESSON_PAGES_TEMPS[courseLang] || LESSON_PAGES_TEMPS.fr;
+  if (isLieu)  return LESSON_PAGES_LIEU[courseLang]  || LESSON_PAGES_LIEU.fr;
+  if (isTemps) return LESSON_PAGES_TEMPS[courseLang] || LESSON_PAGES_TEMPS.fr;
+
+  // Cours sans topic reconnu et sans pages DB → retourner tableau vide
+  // (le viewer affichera directement les exercices, sans fausse leçon)
+  return [];
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -174,22 +180,38 @@ function parseExercises(raw) {
     return arr.map((q, idx) => {
       // Format PocketBase (options array + answer index)
       if (Array.isArray(q.options) && typeof q.answer === 'number') {
+        const optTrans = q.opt_translations || [];
         return {
           id: q.id || `q${idx + 1}`,
           q: q.question || '',
-          opts: q.options.map((v, i) => ({ k: LETTERS[i] || String(i), v })),
+          translation: q.translation || '',
+          opts: q.options.map((v, i) => ({ k: LETTERS[i] || String(i), v, t: optTrans[i] || '' })),
           correct: LETTERS[q.answer] || 'a',
         };
       }
       // Format legacy (opts + correct lettre)
       if (Array.isArray(q.opts) && q.correct) {
-        return { id: q.id || `q${idx + 1}`, q: q.q || q.question || '', opts: q.opts, correct: q.correct };
+        return {
+          id: q.id || `q${idx + 1}`,
+          q: q.q || q.question || '',
+          translation: q.translation || '',
+          opts: q.opts.map(o => typeof o === 'string' ? { k: o, v: o, t: '' } : { ...o, t: o.t || '' }),
+          correct: q.correct,
+        };
       }
       return null;
     }).filter(Boolean);
   } catch {
     return [];
   }
+}
+
+// Langue de traduction à afficher selon la langue du cours
+function getTranslationHintLang(course) {
+  const l = (course?.langue || '').toLowerCase();
+  if (l.includes('arabe') || l.includes('arabic') || l.includes('ar')) return 'en';
+  if (l.includes('anglais') || l.includes('english') || l.includes('en')) return 'fr';
+  return 'en'; // cours français → traduction anglaise
 }
 
 // ─────────────────────────────────────────────────────────────────
