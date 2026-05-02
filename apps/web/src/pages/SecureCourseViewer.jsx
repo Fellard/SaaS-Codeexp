@@ -301,6 +301,399 @@ const SECURE_CSS = `
 
 
 // ─────────────────────────────────────────────────────────────────
+// COMPOSANT — Drill de prononciation "Écoute et répète"
+// ─────────────────────────────────────────────────────────────────
+const AudioDrillPanel = ({ page }) => {
+  const drillData = page.drillData || {};
+  const letters   = drillData.letters || [];
+  const lang      = drillData.lang    || 'fr-FR';
+  const pauseSec  = drillData.pauseSeconds || 3;
+
+  const [isRunning,   setIsRunning]   = useState(false);
+  const [currentIdx,  setCurrentIdx]  = useState(0);
+  const [phase,       setPhase]       = useState('idle'); // idle | speaking | waiting | done
+  const [countdown,   setCountdown]   = useState(pauseSec);
+  const [voiceStatus, setVoiceStatus] = useState('checking'); // checking | ok | missing
+  const [foundVoice,  setFoundVoice]  = useState(null);
+  const [dismissed,   setDismissed]   = useState(false);
+  const timerRef = useRef(null);
+
+  // ── Détection asynchrone de la voix (voiceschanged est async dans Chrome) ──
+  useEffect(() => {
+    if (!window.speechSynthesis) { setVoiceStatus('missing'); return; }
+    const detect = () => {
+      const voices = window.speechSynthesis.getVoices();
+      if (!voices.length) return false;
+      const prefix = lang.split('-')[0];
+      const v = voices.find(v => v.lang === lang) || voices.find(v => v.lang.startsWith(prefix));
+      setFoundVoice(v || null);
+      setVoiceStatus(v ? 'ok' : 'missing');
+      return true;
+    };
+    if (!detect()) {
+      const handler = () => detect();
+      window.speechSynthesis.addEventListener('voiceschanged', handler);
+      const t = setTimeout(() => { if (!detect()) setVoiceStatus('missing'); }, 2500);
+      return () => { window.speechSynthesis.removeEventListener('voiceschanged', handler); clearTimeout(t); };
+    }
+  }, [lang]);
+
+  // ── TTS ───────────────────────────────────────────────────────────
+  const speakLetter = useCallback((text, onEnd) => {
+    if (!window.speechSynthesis) { onEnd?.(); return; }
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang  = lang;
+    utter.rate  = 0.75;
+    utter.pitch = 1;
+    if (foundVoice) utter.voice = foundVoice;
+    utter.onend   = () => onEnd?.();
+    utter.onerror = (e) => { console.warn('TTS:', e.error); onEnd?.(); };
+    window.speechSynthesis.speak(utter);
+  }, [lang, foundVoice]);
+
+  const runLetter = useCallback((idx) => {
+    if (idx >= letters.length) { setPhase('done'); setIsRunning(false); return; }
+    setCurrentIdx(idx);
+    setPhase('speaking');
+    speakLetter(letters[idx].speak || letters[idx].char, () => {
+      setPhase('waiting');
+      let c = pauseSec;
+      setCountdown(c);
+      timerRef.current = setInterval(() => {
+        c -= 1; setCountdown(c);
+        if (c <= 0) { clearInterval(timerRef.current); runLetter(idx + 1); }
+      }, 1000);
+    });
+  }, [letters, pauseSec, speakLetter]);
+
+  const handleStart = () => { setIsRunning(true); runLetter(currentIdx); };
+  const handlePause = () => {
+    setIsRunning(false); setPhase('idle');
+    clearInterval(timerRef.current); window.speechSynthesis?.cancel();
+  };
+  const handleReset = () => { handlePause(); setCurrentIdx(0); setCountdown(pauseSec); };
+  const jumpTo = (i) => { handlePause(); setCurrentIdx(i); };
+
+  useEffect(() => () => { clearInterval(timerRef.current); window.speechSynthesis?.cancel(); }, []);
+
+  const letter = letters[currentIdx];
+  const pct    = letters.length ? Math.round((currentIdx / letters.length) * 100) : 0;
+
+  // ── Nom lisible de la langue ──────────────────────────────────────
+  const langLabel = (
+    { 'fr-FR':'français','fr':'français','en-US':'anglais','en':'anglais','ar-SA':'arabe','ar':'arabe' }[lang] || lang
+  );
+
+  // ── Textes de l'interface selon la langue du cours ────────────────
+  const UI_STRINGS = {
+    'fr-FR': {
+      idleStart:   'Appuie sur ▶ pour commencer',
+      idleResume:  (n) => `Reprise depuis la lettre ${n}`,
+      speaking:    'Écoute…',
+      repeat:      '→ Répète !',
+      done:        'Bravo ! Toutes les lettres passées 🎉',
+      start:       'Commencer',
+      resume:      'Continuer',
+      pause:       'Pause',
+      reset:       'Reset',
+      letterOf:    (cur, tot) => `Lettre ${cur} / ${tot}`,
+      gridHint:    'Clique sur une lettre pour commencer depuis là',
+      retryBtn:    '🔄 Réessayer la détection',
+      skipBtn:     'Continuer sans son',
+      howToTitle:  'Comment installer la voix :',
+      restartNote: '⚠️ Après installation, redémarre Windows puis relance le navigateur.',
+      noVoice:     (lbl) => `Aucune voix « ${lbl} » détectée par le navigateur. Si tu viens d'installer la langue, redémarre Windows complètement, puis relance le navigateur.`,
+      voiceFound:  (names) => `✅ Voix détectée : ${names} — Clique sur « Réessayer » pour activer.`,
+    },
+    'en-US': {
+      idleStart:   'Press ▶ to start',
+      idleResume:  (n) => `Resume from letter ${n}`,
+      speaking:    'Listen…',
+      repeat:      '→ Repeat!',
+      done:        'Well done! All letters completed 🎉',
+      start:       'Start',
+      resume:      'Continue',
+      pause:       'Pause',
+      reset:       'Reset',
+      letterOf:    (cur, tot) => `Letter ${cur} / ${tot}`,
+      gridHint:    'Click a letter to start from there',
+      retryBtn:    '🔄 Retry detection',
+      skipBtn:     'Continue without audio',
+      howToTitle:  'How to install the voice:',
+      restartNote: '⚠️ After installation, restart Windows then relaunch the browser.',
+      noVoice:     (lbl) => `No "${lbl}" voice detected by the browser. If you just installed the language, restart Windows completely, then relaunch the browser.`,
+      voiceFound:  (names) => `✅ Voice detected: ${names} — Click "Retry" to activate.`,
+    },
+    'ar-SA': {
+      idleStart:   'اضغط ▶ للبدء',
+      idleResume:  (n) => `استئناف من الحرف ${n}`,
+      speaking:    '🔊 استمع…',
+      repeat:      'كرر ! ←',
+      done:        'أحسنت ! اكتملت جميع الحروف 🎉',
+      start:       'ابدأ',
+      resume:      'متابعة',
+      pause:       'إيقاف',
+      reset:       'إعادة',
+      letterOf:    (cur, tot) => `الحرف ${cur} / ${tot}`,
+      gridHint:    'انقر على حرف للبدء منه',
+      retryBtn:    '🔄 إعادة الكشف',
+      skipBtn:     'متابعة بدون صوت',
+      howToTitle:  'كيفية تثبيت الصوت:',
+      restartNote: '⚠️ بعد التثبيت، أعد تشغيل Windows ثم أعد تشغيل المتصفح.',
+      noVoice:     (lbl) => `لم يتم اكتشاف صوت "${lbl}" في المتصفح. إذا قمت للتو بتثبيت اللغة، أعد تشغيل Windows بالكامل ثم أعد تشغيل المتصفح.`,
+      voiceFound:  (names) => `✅ تم اكتشاف الصوت: ${names} — انقر على "إعادة الكشف" للتفعيل.`,
+    },
+  };
+  const t = UI_STRINGS[lang] || UI_STRINGS['fr-FR'];
+
+  // ── Instructions d'installation selon la plateforme ──────────────
+  const getInstallSteps = () => {
+    const ua = navigator.userAgent || '';
+    const pf = navigator.platform  || '';
+    const isIOS     = /iPad|iPhone|iPod/.test(ua);
+    const isAndroid = /Android/.test(ua);
+    const isMac     = /Mac/.test(pf) && !isIOS;
+    const isWindows = /Win/.test(pf) || /Windows/.test(ua);
+    if (isWindows) return {
+      icon: '🖥️',
+      steps: [
+        'Appuie sur ⊞ Win + I pour ouvrir les Paramètres',
+        'Va dans Heure et langue → Parole',
+        'Clique sur « Ajouter des voix »',
+        `Recherche « ${langLabel} » et clique sur Installer`,
+        'Relance le navigateur, puis recharge cette page',
+      ],
+    };
+    if (isAndroid) return {
+      icon: '📱',
+      steps: [
+        'Ouvre les Paramètres de ton téléphone',
+        'Gestion générale → Langue et saisie',
+        'Synthèse vocale → icône ⚙ à côté du moteur TTS',
+        `Installe les données vocales pour « ${langLabel} »`,
+        'Reviens ici et recharge la page',
+      ],
+    };
+    if (isIOS) return {
+      icon: '📱',
+      steps: [
+        'Ouvre les Réglages de ton iPhone/iPad',
+        'Accessibilité → Contenu énoncé → Voix',
+        `Sélectionne « ${langLabel} »`,
+        'Télécharge une voix (connexion Wi-Fi recommandée)',
+        'Reviens ici et recharge la page',
+      ],
+    };
+    if (isMac) return {
+      icon: '🖥️',
+      steps: [
+        'Ouvre Préférences Système → Accessibilité',
+        'Contenu parlé → Voix du système',
+        `Choisir « ${langLabel} » dans le menu`,
+        'Clique sur Télécharger à côté de la voix',
+        'Relance le navigateur',
+      ],
+    };
+    return {
+      icon: '🔊',
+      steps: [
+        `Installe une voix « ${langLabel} » dans les paramètres de synthèse vocale de ton appareil`,
+        'Relance le navigateur',
+      ],
+    };
+  };
+
+  // ── Re-détection manuelle (après installation de la voix) ─────────
+  const handleRetry = useCallback(() => {
+    setVoiceStatus('checking');
+    setFoundVoice(null);
+    // Forcer Chrome à rafraîchir la liste des voix SAPI
+    window.speechSynthesis.getVoices();
+    setTimeout(() => {
+      const voices = window.speechSynthesis.getVoices();
+      const prefix = lang.split('-')[0];
+      const v = voices.find(v => v.lang === lang) || voices.find(v => v.lang.startsWith(prefix));
+      setFoundVoice(v || null);
+      setVoiceStatus(v ? 'ok' : 'missing');
+    }, 800);
+  }, [lang]);
+
+  // ── Écran "voix manquante" ────────────────────────────────────────
+  if (voiceStatus === 'missing' && !dismissed) {
+    const { icon, steps } = getInstallSteps();
+    // Voix disponibles avec le même préfixe de langue (debug visible)
+    const allVoices   = window.speechSynthesis?.getVoices() || [];
+    const prefix      = lang.split('-')[0];
+    const nearVoices  = allVoices.filter(v => v.lang.startsWith(prefix));
+    return (
+      <div className="flex flex-col items-center gap-4 py-4">
+        <div className="w-full max-w-md rounded-2xl border-2 border-amber-300 bg-amber-50 p-6 shadow-lg dark:border-amber-600 dark:bg-amber-900/20">
+          {/* En-tête */}
+          <div className="mb-4 flex items-start gap-3">
+            <span className="text-4xl">{icon}</span>
+            <div>
+              <p className="text-lg font-bold text-amber-800 dark:text-amber-200">
+                Voix « {langLabel} » introuvable
+              </p>
+              <p className="mt-0.5 text-sm text-amber-700 dark:text-amber-400">
+                Ton appareil n'a pas de voix <strong>{langLabel}</strong> installée.
+                Sans elle, les lettres ne seront pas prononcées.
+              </p>
+            </div>
+          </div>
+
+          {/* Voix détectées (si aucune correspondance) */}
+          {nearVoices.length === 0 && (
+            <div className="mb-3 rounded-lg bg-white/60 px-3 py-2 text-xs text-muted-foreground dark:bg-black/20">
+              ℹ️ {t.noVoice(langLabel)}
+            </div>
+          )}
+          {nearVoices.length > 0 && (
+            <div className="mb-3 rounded-lg bg-green-50 px-3 py-2 text-xs text-green-800 dark:bg-green-900/20 dark:text-green-300">
+              {t.voiceFound(nearVoices.map(v => `${v.name} (${v.lang})`).join(', '))}
+            </div>
+          )}
+
+          {/* Étapes */}
+          <div className="mb-4 rounded-xl bg-white/70 p-4 dark:bg-black/20">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              {t.howToTitle}
+            </p>
+            <ol className="list-decimal list-inside space-y-1.5 text-sm text-foreground">
+              {steps.map((s, i) => <li key={i}>{s}</li>)}
+            </ol>
+            <p className="mt-3 text-xs text-muted-foreground">{t.restartNote}</p>
+          </div>
+
+          {/* Boutons */}
+          <div className="flex gap-3">
+            <button
+              onClick={handleRetry}
+              className="flex-1 rounded-xl bg-amber-500 py-2.5 text-sm font-bold text-white shadow transition-colors hover:bg-amber-600">
+              {t.retryBtn}
+            </button>
+            <button
+              onClick={() => setDismissed(true)}
+              className="rounded-xl border bg-muted px-4 py-2.5 text-sm text-muted-foreground transition-opacity hover:opacity-80">
+              {t.skipBtn}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Chargement ────────────────────────────────────────────────────
+  if (voiceStatus === 'checking') {
+    return (
+      <div className="flex items-center justify-center gap-2 py-16 text-sm text-muted-foreground">
+        <span className="animate-spin">⏳</span>
+        <span>Chargement de la voix…</span>
+      </div>
+    );
+  }
+
+  // ── Drill normal ──────────────────────────────────────────────────
+  return (
+    <div className="flex flex-col items-center gap-5 py-2 select-none">
+      {/* Sous-titre */}
+      <p className="text-sm text-muted-foreground text-center" dir={lang.startsWith('ar') ? 'rtl' : 'ltr'}>
+        {drillData.subtitle || t.idleStart}
+      </p>
+
+      {/* Lettre principale */}
+      <div className={`w-44 h-44 rounded-3xl flex flex-col items-center justify-center shadow-lg border-2 transition-all duration-300 ${
+        phase === 'speaking' ? 'bg-primary/10 border-primary scale-105' :
+        phase === 'waiting'  ? 'bg-green-50 border-green-400 dark:bg-green-900/20' :
+        phase === 'done'     ? 'bg-yellow-50 border-yellow-300 dark:bg-yellow-900/20' :
+                               'bg-muted/40 border-border'
+      }`}>
+        {phase === 'done' ? (
+          <span className="text-5xl">🎉</span>
+        ) : letter ? (
+          <>
+            <span className="text-7xl font-black text-foreground leading-none">{letter.char}</span>
+            {letter.name && <span className="text-xs text-muted-foreground mt-1 font-medium">/{letter.name}/</span>}
+          </>
+        ) : null}
+      </div>
+
+      {/* Statut */}
+      <div className="min-h-[3.5rem] flex flex-col items-center justify-center text-center">
+        {phase === 'speaking' && (
+          <div className="flex items-center gap-2 text-primary font-semibold animate-pulse">
+            <span>{t.speaking}</span>
+          </div>
+        )}
+        {phase === 'waiting' && (
+          <div className="flex flex-col items-center gap-1">
+            <span className="text-green-600 dark:text-green-400 font-bold text-base">{t.repeat}</span>
+            <span className="text-5xl font-black text-green-500 leading-none">{countdown}</span>
+          </div>
+        )}
+        {phase === 'done' && (
+          <p className="text-amber-600 dark:text-amber-400 font-bold text-lg">{t.done}</p>
+        )}
+        {phase === 'idle' && (
+          <p className="text-muted-foreground text-sm">
+            {currentIdx === 0 ? t.idleStart : t.idleResume(currentIdx + 1)}
+          </p>
+        )}
+      </div>
+
+      {/* Barre de progression */}
+      <div className="w-full max-w-xs">
+        <div className="flex justify-between text-xs text-muted-foreground mb-1">
+          <span>{t.letterOf(Math.min(currentIdx + 1, letters.length), letters.length)}</span>
+          <span>{pct}%</span>
+        </div>
+        <div className="h-2 bg-muted rounded-full overflow-hidden">
+          <div className="h-full bg-primary rounded-full transition-all duration-500" style={{ width: `${pct}%` }} />
+        </div>
+      </div>
+
+      {/* Boutons */}
+      <div className="flex gap-3">
+        {!isRunning ? (
+          <button onClick={handleStart}
+            className="px-7 py-2.5 bg-primary text-primary-foreground rounded-xl font-bold hover:opacity-90 transition-opacity shadow">
+            ▶ {currentIdx > 0 && phase !== 'done' ? t.resume : t.start}
+          </button>
+        ) : (
+          <button onClick={handlePause}
+            className="px-7 py-2.5 bg-muted text-foreground rounded-xl font-bold border hover:opacity-90 transition-opacity">
+            ⏸ {t.pause}
+          </button>
+        )}
+        <button onClick={handleReset}
+          className="px-4 py-2.5 bg-muted text-muted-foreground rounded-xl font-medium border hover:opacity-90 transition-opacity">
+          ↺ {t.reset}
+        </button>
+      </div>
+
+      {/* Grille de lettres cliquables */}
+      <div className="w-full mt-1">
+        <p className="text-xs text-muted-foreground text-center mb-2">{t.gridHint}</p>
+        <div className="flex flex-wrap gap-1.5 justify-center">
+          {letters.map((l, i) => (
+            <button key={i} onClick={() => jumpTo(i)}
+              title={l.name}
+              className={`w-9 h-9 rounded-lg text-sm font-bold transition-all hover:scale-110 ${
+                i < currentIdx   ? 'bg-primary/20 text-primary' :
+                i === currentIdx ? 'bg-primary text-primary-foreground scale-110 shadow' :
+                                   'bg-muted text-muted-foreground'
+              }`}>
+              {l.char}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────────
 // COMPOSANT PRINCIPAL
 // ─────────────────────────────────────────────────────────────────
 const SecureCourseViewer = () => {
@@ -1232,8 +1625,11 @@ const SecureCourseViewer = () => {
                 <span className="text-xs font-bold text-primary uppercase tracking-wider">Cours</span>
                 <h2 className="text-xl font-black text-foreground mt-0.5">{pages[currentPage]?.title}</h2>
               </div>
-              <div className="lesson-content" dir={isRtl ? 'rtl' : 'ltr'}
-                dangerouslySetInnerHTML={{ __html: pages[currentPage]?.content || '' }} />
+              {pages[currentPage]?.type === 'audio-drill'
+                ? <AudioDrillPanel page={pages[currentPage]} />
+                : <div className="lesson-content" dir={isRtl ? 'rtl' : 'ltr'}
+                    dangerouslySetInnerHTML={{ __html: pages[currentPage]?.content || '' }} />
+              }
             </div>
 
             <div className="flex items-center justify-between px-6 py-4 border-t border-border bg-muted/30">
