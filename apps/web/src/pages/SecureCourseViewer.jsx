@@ -586,10 +586,11 @@ const AudioDrillPanel = ({ page }) => {
 
   // ── Chargement ────────────────────────────────────────────────────
   if (voiceStatus === 'checking') {
+    const loadingMsg = { 'fr-FR': 'Chargement de la voix…', 'en-US': 'Loading voice…', 'ar-SA': 'جارٍ تحميل الصوت…' };
     return (
       <div className="flex items-center justify-center gap-2 py-16 text-sm text-muted-foreground">
         <span className="animate-spin">⏳</span>
-        <span>Chargement de la voix…</span>
+        <span>{loadingMsg[lang] || loadingMsg['fr-FR']}</span>
       </div>
     );
   }
@@ -761,7 +762,32 @@ const SecureCourseViewer = () => {
     (course?.cours_nom || '').toLowerCase().includes(w) ||
     (course?.langue || '').toLowerCase().includes(w)
   );
+  const isCourseEnglish = ['anglais','english'].some(w =>
+    (course?.cours_nom || '').toLowerCase().includes(w) ||
+    (course?.langue || '').toLowerCase().includes(w)
+  );
   const isRtl = language?.startsWith('ar') || isCourseArabic;
+
+  // ── Libellés de navigation selon la langue du cours ───────────────
+  const nav = isCourseArabic ? {
+    prev:        'السابق',
+    next:        'التالي',
+    exercises:   'ابدأ التمارين',
+    label:       'درس',
+    page:        (cur, tot) => `صفحة ${cur} من ${tot}`,
+  } : isCourseEnglish ? {
+    prev:        'Previous',
+    next:        'Next',
+    exercises:   'Do the exercises',
+    label:       'Lesson',
+    page:        (cur, tot) => `Page ${cur} of ${tot}`,
+  } : {
+    prev:        'Précédent',
+    next:        'Suivant',
+    exercises:   'Faire les exercices',
+    label:       'Cours',
+    page:        (cur, tot) => `Page ${cur} sur ${tot}`,
+  };
 
   const displayName = currentUser
     ? (`${currentUser.prenom || ''} ${currentUser.nom || currentUser.name || ''}`.trim() || 'Étudiant')
@@ -1581,7 +1607,7 @@ const SecureCourseViewer = () => {
             </div>
             <div className="px-5 py-3 border-t border-border bg-muted/30 flex justify-end">
               <Button onClick={() => setActiveTab('exercices')} className="gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white">
-                Faire les exercices <ClipboardList className="w-4 h-4" />
+                {nav.exercises} <ClipboardList className="w-4 h-4" />
               </Button>
             </div>
           </div>
@@ -1607,7 +1633,7 @@ const SecureCourseViewer = () => {
           <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
             <div className="px-5 pt-4 pb-2 border-b border-border">
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-xs font-semibold text-muted-foreground">Page {currentPage + 1} sur {pages.length}</span>
+                <span className="text-xs font-semibold text-muted-foreground">{nav.page(currentPage + 1, pages.length)}</span>
                 <span className="text-xs font-bold text-primary">{Math.round(((currentPage + 1) / pages.length) * 100)}%</span>
               </div>
               <Progress value={((currentPage + 1) / pages.length) * 100} className="h-1.5" />
@@ -1622,7 +1648,7 @@ const SecureCourseViewer = () => {
                 ))}
               </div>
               <div className="mb-5">
-                <span className="text-xs font-bold text-primary uppercase tracking-wider">Cours</span>
+                <span className="text-xs font-bold text-primary uppercase tracking-wider">{nav.label}</span>
                 <h2 className="text-xl font-black text-foreground mt-0.5">{pages[currentPage]?.title}</h2>
               </div>
               {pages[currentPage]?.type === 'audio-drill'
@@ -1634,7 +1660,7 @@ const SecureCourseViewer = () => {
 
             <div className="flex items-center justify-between px-6 py-4 border-t border-border bg-muted/30">
               <Button variant="outline" onClick={() => setCurrentPage(p => Math.max(0, p - 1))} disabled={currentPage === 0} className="gap-2 rounded-xl">
-                <ChevronLeft className="w-4 h-4" /> Précédent
+                <ChevronLeft className="w-4 h-4" /> {nav.prev}
               </Button>
               <div className="flex gap-1.5">
                 {pages.map((_, i) => (
@@ -1644,11 +1670,11 @@ const SecureCourseViewer = () => {
               </div>
               {currentPage < pages.length - 1 ? (
                 <Button onClick={() => setCurrentPage(p => p + 1)} className="gap-2 rounded-xl bg-primary text-primary-foreground">
-                  Suivant <ChevronRight className="w-4 h-4" />
+                  {nav.next} <ChevronRight className="w-4 h-4" />
                 </Button>
               ) : (
                 <Button onClick={() => setActiveTab('exercices')} className="gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white">
-                  Faire les exercices <ClipboardList className="w-4 h-4" />
+                  {nav.exercises} <ClipboardList className="w-4 h-4" />
                 </Button>
               )}
             </div>
@@ -1774,7 +1800,7 @@ const SecureCourseViewer = () => {
             <div className="flex gap-3 justify-center pt-2">
               {!submitted ? (
                 <Button onClick={() => setActiveTab('exercices')} className="gap-2 rounded-xl bg-primary text-primary-foreground">
-                  <ClipboardList className="w-4 h-4" /> Faire les exercices
+                  <ClipboardList className="w-4 h-4" /> {nav.exercises}
                 </Button>
               ) : (
                 <>

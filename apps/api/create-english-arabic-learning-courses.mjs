@@ -487,7 +487,7 @@ const ENGLISH_COURSES = [
 // ═══════════════════════════════════════════════════════════════════
 const ARABIC_COURSES = [
   {
-    titre:       'Arabe A1 — Module 1 · L\'alphabet arabe (الحروف العربية)',
+    titre:       'الحروف العربية — The Arabic Alphabet · Module 1 (A1)',
     cours_nom:   'Arabe A1',
     description: 'Premier module du cours d\'arabe A1. Découvrez l\'alphabet arabe, les 28 lettres et leur prononciation. Initiation à l\'écriture de droite à gauche et aux signes diacritiques.',
     langue:      'ar',
@@ -573,7 +573,7 @@ const ARABIC_COURSES = [
   },
 
   {
-    titre:       'Arabe A1 — Module 2 · Les salutations (التحيات والتعارف)',
+    titre:       'التحيات والتعارف — Greetings & Introductions · Module 2 (A1)',
     cours_nom:   'Arabe A1',
     description: 'Deuxième module. Apprenez à saluer, vous présenter et échanger des politesses en arabe standard. Les pronoms personnels et le verbe être en arabe.',
     langue:      'ar',
@@ -668,7 +668,7 @@ const ARABIC_COURSES = [
   },
 
   {
-    titre:       'Arabe A1 — Module 3 · La famille (الأسرة)',
+    titre:       'الأسرة — The Family · Module 3 (A1)',
     cours_nom:   'Arabe A1',
     description: 'Troisième module. Apprenez le vocabulaire de la famille en arabe, les adjectifs possessifs et la distinction masculin/féminin (genre grammatical en arabe).',
     langue:      'ar',
@@ -743,7 +743,7 @@ const ARABIC_COURSES = [
   },
 
   {
-    titre:       'Arabe A1 — Module 4 · Les chiffres et les couleurs (الأرقام والألوان)',
+    titre:       'الأرقام والألوان — Numbers and Colours · Module 4 (A1)',
     cours_nom:   'Arabe A1',
     description: 'Quatrième module. Les chiffres arabes de 1 à 100, les couleurs et les accords adjectivaux. Parler de l\'âge, des quantités et des descriptions.',
     langue:      'ar',
@@ -811,7 +811,7 @@ const ARABIC_COURSES = [
   },
 
   {
-    titre:       'Arabe A1 — Module 5 · La nourriture et les repas (الطعام والوجبات)',
+    titre:       'الطعام والوجبات — Food and Meals · Module 5 (A1)',
     cours_nom:   'Arabe A1',
     description: 'Cinquième module. Parlez de nourriture, commandez un repas et décrivez vos goûts alimentaires en arabe. Le verbe vouloir et les formules au restaurant.',
     langue:      'ar',
@@ -883,7 +883,7 @@ const ARABIC_COURSES = [
   },
 
   {
-    titre:       'Arabe A1 — Module 6 · La ville et les transports (المدينة والنقل)',
+    titre:       'المدينة والنقل — The City and Transport · Module 6 (A1)',
     cours_nom:   'Arabe A1',
     description: 'Sixième module. Demandez votre chemin, utilisez les transports et décrivez les lieux en arabe. Les prépositions de lieu et les questions directionnelles.',
     langue:      'ar',
@@ -948,7 +948,7 @@ const ARABIC_COURSES = [
   },
 
   {
-    titre:       'Arabe A1 — Bilan et évaluation finale (المراجعة والتقييم)',
+    titre:       'المراجعة والتقييم — Final Review and Assessment (A1)',
     cours_nom:   'Arabe A1',
     description: 'Module de bilan et d\'évaluation finale du cours d\'arabe A1. Révision de l\'alphabet, vocabulaire, grammaire et auto-évaluation complète du niveau A1.',
     langue:      'ar',

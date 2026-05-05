@@ -39,11 +39,11 @@ const FORCE    = process.argv.includes('--force');
 // ════════════════════════════════════════════════════════════════
 const COURS_ALPHABET_FRANCAIS = {
   titre:         "L'alphabet français — Niveau A0/A1",
-  cours_nom:     'Grammaire',
+  cours_nom:     'Français',
   description:   "Maîtrisez les 26 lettres de l'alphabet français, leur prononciation, les voyelles et consonnes, les accents (é è ê à â ù î ô ç) et les sons spéciaux. Indispensable pour tout débutant.",
   langue:        'Francais',
   categorie_age: 'Adultes',
-  categorie:     'grammaire',
+  categorie:     'français',
   section:       'langues',
   niveau:        'A0',
   course_type:   'standard',
@@ -544,9 +544,9 @@ const COURS_ALPHABET_ANGLAIS = {
 // ③  ALPHABET ARABE  (traductions françaises en gris)
 // ════════════════════════════════════════════════════════════════
 const COURS_ALPHABET_ARABE = {
-  titre:         'الحروف العربية — المستوى A0/A1',
+  titre:         'الحروف العربية — Arabic Alphabet (A0/A1)',
   cours_nom:     'Arabe',
-  description:   "Apprenez les 28 lettres de l'alphabet arabe, leurs formes, les voyelles courtes (harakat), les voyelles longues et la prononciation de base. Essentiel pour tout débutant en arabe.",
+  description:   "Master the 28 letters of the Arabic alphabet: their shapes, short vowels (harakat), long vowels and basic pronunciation. Essential for any beginner in Arabic.",
   langue:        'Arabe',
   categorie_age: 'Adultes',
   categorie:     'arabe',
@@ -597,7 +597,7 @@ const COURS_ALPHABET_ARABE = {
 <ul>
   <li>أَب<span class="inline-trans">= father</span> · أُم<span class="inline-trans">= mother</span> · بَيْت<span class="inline-trans">= house</span> · بَاب<span class="inline-trans">= door</span></li>
   <li>جَمَل<span class="inline-trans">= camel</span> · جَبَل<span class="inline-trans">= mountain</span> · حُب<span class="inline-trans">= love</span></li>
-  <li>Le <strong>ا</strong> (alef) ne se connecte jamais à la lettre suivante.<span class="inline-trans">= Alef never connects to the next letter.</span></li>
+  <li>The <strong>ا</strong> (alef) never connects to the next letter.</li>
 </ul>`,
     },
 
@@ -622,7 +622,7 @@ const COURS_ALPHABET_ARABE = {
 </table>
 </div>
 <h4>📌 The 6 non-connecting letters</h4>
-<p>Ces lettres ne se connectent JAMAIS à la lettre suivante :<span class="inline-trans">= These letters NEVER connect to the following letter:</span></p>
+<p>These letters NEVER connect to the following letter:</p>
 <ul>
   <li dir="rtl"><strong>ا · د · ذ · ر · ز · و</strong></li>
   <li>زَيْت<span class="inline-trans">= oil</span> · شَمْس<span class="inline-trans">= sun</span> · رَجُل<span class="inline-trans">= man</span> · سَمَاء<span class="inline-trans">= sky</span></li>
@@ -664,9 +664,9 @@ const COURS_ALPHABET_ARABE = {
     {
       id: 'ar-alpha-p5',
       type: 'lesson',
-      title: 'الحركات والتشكيل — Les voyelles',
+      title: 'الحركات والتشكيل — Vowels & Diacritics',
       content: `<h3>📖 الحَرَكَات (Voyelles courtes)</h3>
-<p>Les voyelles courtes en arabe sont des signes placés sur ou sous les lettres.<span class="inline-trans">= Short vowels in Arabic are signs placed above or below letters.</span></p>
+<p>Short vowels in Arabic are signs placed above or below letters.</p>
 <div class="summary-table">
 <table>
   <thead><tr><th>Sign</th><th>Name</th><th>Sound</th><th>Example</th><th>Meaning</th></tr></thead>
@@ -721,7 +721,7 @@ const COURS_ALPHABET_ARABE = {
 </div>
 <h4>✅ الحروف غير المتصلة — Lettres non-connectantes</h4>
 <p dir="rtl"><strong>ا · د · ذ · ر · ز · و</strong></p>
-<p>Ces 6 lettres ne se connectent jamais à la lettre qui suit (à leur gauche).<span class="inline-trans">= These 6 letters never connect to the letter that follows them.</span></p>`,
+<p>These 6 letters never connect to the letter that follows (to their left).</p>`,
     },
 
     {
@@ -768,16 +768,16 @@ const COURS_ALPHABET_ARABE = {
   ],
 
   exercises: [
-    { id: 'ar-alpha-q1', question: "Combien de lettres comporte l'alphabet arabe ?", options: ['26', '27', '28', '29'], answer: 2 },
-    { id: 'ar-alpha-q2', question: "L'arabe s'écrit :", options: ['De gauche à droite', 'De droite à gauche', 'De haut en bas', 'Sans direction fixe'], answer: 1 },
-    { id: 'ar-alpha-q3', question: "Quelle lettre arabe produit le son [ʃ] comme « ch » en français ?", options: ['س', 'ش', 'ص', 'ث'], answer: 1 },
-    { id: 'ar-alpha-q4', question: "La فَتْحَة (fatha) donne le son :", options: ['[u] court', '[i] court', '[a] court', '[a] long'], answer: 2 },
-    { id: 'ar-alpha-q5', question: "Laquelle de ces lettres ne se connecte PAS à la suivante ?", options: ['ب', 'ت', 'ر', 'ك'], answer: 2 },
-    { id: 'ar-alpha-q6', question: "Le mot كِتَاب (kitāb) signifie :", options: ['Maison', 'Livre', 'École', 'Stylo'], answer: 1 },
-    { id: 'ar-alpha-q7', question: "Quelle lettre produit le son [ħ] (H pharyngal fort) ?", options: ['هـ', 'خ', 'ح', 'ع'], answer: 2 },
-    { id: 'ar-alpha-q8', question: "La شَدَّة (shadda) indique :", options: ['Pas de voyelle', 'Un son [n] final', 'Une consonne doublée', 'Une voyelle longue'], answer: 2 },
-    { id: 'ar-alpha-q9', question: "Quel est le son de la lettre ث en arabe ?", options: ['[s]', '[θ] comme dans "think"', '[ʃ] comme "ch"', '[t]'], answer: 1 },
-    { id: 'ar-alpha-q10', question: "مَاء (mā') signifie en français :", options: ['Feu', 'Terre', 'Air', 'Eau'], answer: 3 },
+    { id: 'ar-alpha-q1', question: "How many letters does the Arabic alphabet have?", options: ['26', '27', '28', '29'], answer: 2 },
+    { id: 'ar-alpha-q2', question: "Arabic is written:", options: ['Left to right', 'Right to left', 'Top to bottom', 'With no fixed direction'], answer: 1 },
+    { id: 'ar-alpha-q3', question: "Which Arabic letter produces the sound [ʃ] like \"sh\" in \"she\"?", options: ['س', 'ش', 'ص', 'ث'], answer: 1 },
+    { id: 'ar-alpha-q4', question: "The فَتْحَة (fatha) gives the sound:", options: ['short [u]', 'short [i]', 'short [a]', 'long [a]'], answer: 2 },
+    { id: 'ar-alpha-q5', question: "Which of these letters does NOT connect to the next letter?", options: ['ب', 'ت', 'ر', 'ك'], answer: 2 },
+    { id: 'ar-alpha-q6', question: "The word كِتَاب (kitāb) means:", options: ['House', 'Book', 'School', 'Pen'], answer: 1 },
+    { id: 'ar-alpha-q7', question: "Which letter produces the sound [ħ] (strong pharyngeal H)?", options: ['هـ', 'خ', 'ح', 'ع'], answer: 2 },
+    { id: 'ar-alpha-q8', question: "The شَدَّة (shadda) indicates:", options: ['No vowel', 'A final [n] sound', 'A doubled consonant', 'A long vowel'], answer: 2 },
+    { id: 'ar-alpha-q9', question: "What sound does the letter ث make in Arabic?", options: ['[s]', '[θ] as in "think"', '[ʃ] like "sh"', '[t]'], answer: 1 },
+    { id: 'ar-alpha-q10', question: "مَاء (mā') means:", options: ['Fire', 'Earth', 'Air', 'Water'], answer: 3 },
   ],
 };
 

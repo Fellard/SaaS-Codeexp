@@ -535,7 +535,7 @@ const ENGLISH_STANDARD = [
 // ═══════════════════════════════════════════════════════════════════
 const ARABIC_STANDARD = [
   {
-    titre:       'Arabe — Exprimer le temps (التعبير عن الزمن)',
+    titre:       'التعبير عن الزمن — Expressing Time (A1–A2)',
     cours_nom:   'Arabe',
     description: 'Maîtrisez les expressions de temps en arabe : ظرف الزمان. Prépositions, adverbes temporels et expressions courantes pour situer une action dans le temps.',
     langue:      'Arabe',
@@ -635,7 +635,7 @@ const ARABIC_STANDARD = [
   },
 
   {
-    titre:       'Arabe — Exprimer un lieu (التعبير عن المكان)',
+    titre:       'التعبير عن المكان — Expressing Location (A1–A2)',
     cours_nom:   'Arabe',
     description: 'Maîtrisez les prépositions de lieu en arabe : ظرف المكان. Dans, sur, sous, devant, derrière, entre, à côté. Exercices avec exemples bilingues.',
     langue:      'Arabe',
@@ -720,7 +720,7 @@ const ARABIC_STANDARD = [
   },
 
   {
-    titre:       'Arabe — حروف الجر (Toutes les prépositions arabes)',
+    titre:       'حروف الجر — Arabic Prepositions (A1–A2)',
     cours_nom:   'Arabe',
     description: 'Guide complet des prépositions arabes حروف الجر : de, à, sur, dans, avec, par, sans. Classification, exemples et exercices progressifs pour maîtriser toutes les prépositions.',
     langue:      'Arabe',
@@ -796,7 +796,7 @@ const ARABIC_STANDARD = [
   },
 
   {
-    titre:       'Arabe — رسالة من لندن (Lettre de Londres)',
+    titre:       'رسالة من لندن — A Letter from London (A2)',
     cours_nom:   'Arabe',
     description: 'Lisez et analysez une lettre en arabe standard. Développez votre compréhension écrite, le vocabulaire de la correspondance et apprenez à rédiger une lettre en arabe.',
     langue:      'Arabe',
@@ -888,7 +888,7 @@ const ARABIC_STANDARD = [
   },
 
   {
-    titre:       'Arabe — نص : السفر والمغامرة (Voyage et aventure)',
+    titre:       'السفر والمغامرة — Travel and Adventure (A2)',
     cours_nom:   'Arabe',
     description: 'Texte de lecture en arabe standard sur le thème du voyage. Vocabulaire des transports et destinations. Niveau A2 avec exercices de compréhension et production.',
     langue:      'Arabe',
