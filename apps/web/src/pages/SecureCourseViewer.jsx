@@ -178,11 +178,36 @@ function parseExercises(raw) {
     if (!Array.isArray(arr) || arr.length === 0) return [];
 
     return arr.map((q, idx) => {
+      const id = q.id || `q${idx + 1}`;
+
+      // ── Type VF (Vrai / Faux) ──
+      if (q.type === 'vf') {
+        return {
+          id, type: 'vf',
+          q: q.question || q.q || '',
+          explanation: q.explanation || '',
+          opts: [{ k: 'a', v: '✅ Vrai' }, { k: 'b', v: '❌ Faux' }],
+          correct: q.answer === true ? 'a' : 'b',
+        };
+      }
+
+      // ── Type Order (reconstruction de phrase) ──
+      if (q.type === 'order') {
+        return {
+          id, type: 'order',
+          q: q.instruction || q.question || q.q || '',
+          words: Array.isArray(q.words) ? q.words : [],
+          answer: Array.isArray(q.answer) ? q.answer : [],
+        };
+      }
+
+      // ── Type Fill (texte à trous) + MCQ standard ──
       // Format PocketBase (options array + answer index)
       if (Array.isArray(q.options) && typeof q.answer === 'number') {
         const optTrans = q.opt_translations || [];
         return {
-          id: q.id || `q${idx + 1}`,
+          id,
+          type: q.type === 'fill' ? 'fill' : 'mcq',
           q: q.question || '',
           translation: q.translation || '',
           opts: q.options.map((v, i) => ({ k: LETTERS[i] || String(i), v, t: optTrans[i] || '' })),
@@ -192,7 +217,8 @@ function parseExercises(raw) {
       // Format legacy (opts + correct lettre)
       if (Array.isArray(q.opts) && q.correct) {
         return {
-          id: q.id || `q${idx + 1}`,
+          id,
+          type: q.type || 'mcq',
           q: q.q || q.question || '',
           translation: q.translation || '',
           opts: q.opts.map(o => typeof o === 'string' ? { k: o, v: o, t: '' } : { ...o, t: o.t || '' }),
@@ -713,6 +739,7 @@ const SecureCourseViewer = () => {
   const [activeTab,    setActiveTab]    = useState('lecture');
   const [currentPage,  setCurrentPage]  = useState(initialPage);
   const [answers,      setAnswers]      = useState({});
+  const [orderAnswers, setOrderAnswers] = useState({}); // { [qId]: number[] } — indices placés
   const [submitted,    setSubmitted]    = useState(false);
   const [correction,   setCorrection]   = useState(null);
   const [correcting,   setCorrecting]   = useState(false);
@@ -1003,26 +1030,60 @@ const SecureCourseViewer = () => {
     return () => clearTimeout(saveTimer.current);
   }, [currentPage, enrollment?.id, pages.length, courseId]);
 
-  // ── Sélection réponse ──
+  // ── Sélection réponse (MCQ / Fill / VF) ──
   const selectAnswer = useCallback((qId, key) => {
     if (submitted) return;
     setAnswers(prev => ({ ...prev, [qId]: key }));
   }, [submitted]);
 
+  // ── Order : ajouter un mot à la phrase ──
+  const handleOrderAdd = useCallback((qId, wordIdx) => {
+    if (submitted) return;
+    setOrderAnswers(prev => ({
+      ...prev,
+      [qId]: [...(prev[qId] || []), wordIdx],
+    }));
+  }, [submitted]);
+
+  // ── Order : retirer un mot placé (remet en disponible) ──
+  const handleOrderRemove = useCallback((qId, placedIdx) => {
+    if (submitted) return;
+    setOrderAnswers(prev => ({
+      ...prev,
+      [qId]: (prev[qId] || []).filter((_, i) => i !== placedIdx),
+    }));
+  }, [submitted]);
+
   // ── Soumission quiz ──
   const submitQuiz = async () => {
-    if (Object.keys(answers).length < questions.length) return;
+    if (answeredCount < questions.length) return;
     setCorrecting(true);
 
-    const enrichedAnswers = questions.map(q => ({
-      id: q.id,
-      question: q.q,
-      chosen: answers[q.id],
-      chosenLabel: q.opts.find(o => o.k === answers[q.id])?.v || '',
-      correct: q.correct,
-      correctLabel: q.opts.find(o => o.k === q.correct)?.v || '',
-      isCorrect: answers[q.id] === q.correct,
-    }));
+    const enrichedAnswers = questions.map(q => {
+      // ── Type Order ──
+      if (q.type === 'order') {
+        const placedIdxs = orderAnswers[q.id] || [];
+        const placedWords = placedIdxs.map(i => q.words[i]);
+        const isCorrect = placedWords.join(' ') === q.answer.join(' ');
+        return {
+          id: q.id, question: q.q, type: 'order',
+          chosen: placedWords.join(' '),
+          correct: q.answer.join(' '),
+          chosenLabel: placedWords.join(' '),
+          correctLabel: q.answer.join(' '),
+          isCorrect,
+        };
+      }
+      // ── MCQ / Fill / VF ──
+      return {
+        id: q.id, question: q.q, type: q.type || 'mcq',
+        chosen: answers[q.id],
+        chosenLabel: q.opts.find(o => o.k === answers[q.id])?.v || '',
+        correct: q.correct,
+        correctLabel: q.opts.find(o => o.k === q.correct)?.v || '',
+        isCorrect: answers[q.id] === q.correct,
+      };
+    });
 
     const score = enrichedAnswers.filter(a => a.isCorrect).length;
     const pct   = Math.round((score / questions.length) * 100);
@@ -1107,6 +1168,7 @@ const SecureCourseViewer = () => {
 
   const resetQuiz = () => {
     setAnswers({});
+    setOrderAnswers({});
     setSubmitted(false);
     setCorrection(null);
     setScoreDecision(null);
@@ -1116,6 +1178,7 @@ const SecureCourseViewer = () => {
 
   const restartFromLecture = () => {
     setAnswers({});
+    setOrderAnswers({});
     setSubmitted(false);
     setCorrection(null);
     setScoreDecision(null);
@@ -1210,8 +1273,11 @@ const SecureCourseViewer = () => {
 
   // ── Titre dynamique ──
   const courseTitle = course?.titre || course?.title || 'Cours de français';
-  const answeredCount = Object.keys(answers).length;
-  const allAnswered   = questions.length > 0 && answeredCount === questions.length;
+  const answeredCount = questions.filter(q => {
+    if (q.type === 'order') return (orderAnswers[q.id]?.length || 0) === q.words.length;
+    return answers[q.id] !== undefined;
+  }).length;
+  const allAnswered = questions.length > 0 && answeredCount === questions.length;
 
   // ── Loading ──
   if (hasAccess === null) {
@@ -1719,45 +1785,195 @@ const SecureCourseViewer = () => {
 
                 <div className="space-y-3 secure-content">
                   {questions.map((q, idx) => {
-                    const selected  = answers[q.id];
-                    const isCorrect = selected === q.correct;
+                    // ── Calcul isCorrect selon le type ──
+                    const selected   = answers[q.id];
+                    const placedIdxs = orderAnswers[q.id] || [];
+                    const isCorrect  = q.type === 'order'
+                      ? submitted && placedIdxs.map(i => q.words[i]).join(' ') === q.answer.join(' ')
+                      : submitted && selected === q.correct;
+                    const hasAnswer  = q.type === 'order'
+                      ? placedIdxs.length === (q.words?.length || 0)
+                      : selected !== undefined;
+
                     return (
                       <div key={q.id} className={`bg-card border rounded-2xl p-5 transition-all ${
                         submitted ? isCorrect ? 'border-emerald-300 bg-emerald-50/30' : 'border-red-300 bg-red-50/20'
                           : 'border-border hover:border-primary/30'
                       }`}>
+                        {/* ── En-tête numéro + question ── */}
                         <div className="flex items-start gap-3 mb-3">
                           <span className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-black flex-shrink-0 ${
                             submitted ? isCorrect ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'
-                              : selected ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
+                              : hasAnswer ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
                           }`}>{idx + 1}</span>
-                          <p className="font-semibold text-foreground text-sm leading-relaxed">{q.q}</p>
+                          <div className="flex-1">
+                            {/* Badge type */}
+                            {q.type === 'fill' && (
+                              <span className="inline-block text-xs bg-blue-100 text-blue-700 rounded-full px-2 py-0.5 mb-1 font-semibold">✏️ Complétez</span>
+                            )}
+                            {q.type === 'vf' && (
+                              <span className="inline-block text-xs bg-purple-100 text-purple-700 rounded-full px-2 py-0.5 mb-1 font-semibold">⚖️ Vrai ou Faux</span>
+                            )}
+                            {q.type === 'order' && (
+                              <span className="inline-block text-xs bg-amber-100 text-amber-700 rounded-full px-2 py-0.5 mb-1 font-semibold">🔀 Remettez dans l'ordre</span>
+                            )}
+                            <p className="font-semibold text-foreground text-sm leading-relaxed">{q.q}</p>
+                          </div>
                           {submitted && (isCorrect
                             ? <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0 ml-auto" />
                             : <XCircle className="w-5 h-5 text-red-500 flex-shrink-0 ml-auto" />
                           )}
                         </div>
-                        <div className="grid grid-cols-2 gap-2">
-                          {q.opts.map(opt => {
-                            const isSelected = selected === opt.k;
-                            const isRight    = opt.k === q.correct;
-                            let cls = 'border-border bg-muted/30 text-foreground hover:border-primary/50 hover:bg-primary/5';
-                            if (submitted) {
-                              if (isRight)              cls = 'border-emerald-400 bg-emerald-50 text-emerald-800 font-bold';
-                              else if (isSelected)      cls = 'border-red-400 bg-red-50 text-red-800 line-through';
-                              else                      cls = 'border-border bg-muted/10 text-muted-foreground';
-                            } else if (isSelected) {   cls = 'border-primary bg-primary/10 text-primary font-bold'; }
-                            return (
-                              <button key={opt.k} onClick={() => selectAnswer(q.id, opt.k)} disabled={submitted}
-                                className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border text-sm transition-all text-left ${cls}`}>
-                                <span className="w-5 h-5 rounded-full border-current border flex items-center justify-center text-xs font-bold flex-shrink-0">
-                                  {opt.k}
-                                </span>
-                                {opt.v}
-                              </button>
-                            );
-                          })}
-                        </div>
+
+                        {/* ══ RENDERER : ORDER ══ */}
+                        {q.type === 'order' && (() => {
+                          const placed    = placedIdxs.map(i => q.words[i]);
+                          const usedSet   = new Set(placedIdxs.map((wordIdx, pos) => `${wordIdx}-${pos}`));
+                          // Calcul mots disponibles (supporte les doublons)
+                          const usedCounts = {};
+                          placedIdxs.forEach(i => { usedCounts[i] = (usedCounts[i] || 0) + 1; });
+                          const available = q.words.map((w, i) => ({ w, i })).filter(({ i }) => {
+                            const used = usedCounts[i] || 0;
+                            const total = q.words.filter((_, j) => j === i).length;
+                            return used < total;
+                          });
+                          // Compter occurrences pour gérer les doublons correctement
+                          const wordUsedCount = {};
+                          const availableFiltered = q.words.reduce((acc, w, i) => {
+                            const key = i;
+                            if ((usedCounts[key] || 0) > 0) {
+                              usedCounts[key]--;
+                            } else {
+                              acc.push({ w, i });
+                            }
+                            return acc;
+                          }, []);
+
+                          return (
+                            <div className="space-y-2">
+                              {/* Zone phrase construite */}
+                              <div className={`min-h-[44px] border-2 border-dashed rounded-xl p-2 flex flex-wrap gap-1.5 transition-all ${
+                                submitted ? isCorrect ? 'border-emerald-300 bg-emerald-50' : 'border-red-300 bg-red-50'
+                                  : placed.length > 0 ? 'border-primary/40 bg-primary/5' : 'border-border bg-muted/20'
+                              }`}>
+                                {placed.length === 0 && (
+                                  <span className="text-xs text-muted-foreground self-center px-1">Cliquez les mots ci-dessous pour construire la phrase…</span>
+                                )}
+                                {placed.map((w, pi) => (
+                                  <button key={`placed-${pi}`}
+                                    onClick={() => handleOrderRemove(q.id, pi)}
+                                    disabled={submitted}
+                                    className={`px-2.5 py-1 rounded-lg text-sm font-semibold border transition-all ${
+                                      submitted
+                                        ? isCorrect
+                                          ? 'bg-emerald-100 border-emerald-300 text-emerald-800 cursor-default'
+                                          : 'bg-red-100 border-red-300 text-red-800 cursor-default'
+                                        : 'bg-primary text-primary-foreground border-primary hover:bg-primary/80 cursor-pointer'
+                                    }`}>{w}</button>
+                                ))}
+                              </div>
+                              {/* Mots disponibles */}
+                              {!submitted && (
+                                <div className="flex flex-wrap gap-1.5">
+                                  {availableFiltered.map(({ w, i }) => (
+                                    <button key={`avail-${i}`}
+                                      onClick={() => handleOrderAdd(q.id, i)}
+                                      className="px-2.5 py-1 rounded-lg text-sm font-medium border border-border bg-muted hover:border-primary/50 hover:bg-primary/10 transition-all cursor-pointer">
+                                      {w}
+                                    </button>
+                                  ))}
+                                </div>
+                              )}
+                              {/* Correction après soumission */}
+                              {submitted && !isCorrect && (
+                                <div className="mt-1 text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-1.5">
+                                  ✅ Réponse correcte : <strong>{q.answer.join(' ')}</strong>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })()}
+
+                        {/* ══ RENDERER : VF ══ */}
+                        {q.type === 'vf' && (
+                          <div className="space-y-2">
+                            <div className="grid grid-cols-2 gap-2">
+                              {q.opts.map(opt => {
+                                const isSelected = selected === opt.k;
+                                const isRight    = opt.k === q.correct;
+                                let cls = 'border-border bg-muted/30 text-foreground hover:border-primary/50 hover:bg-primary/5';
+                                if (submitted) {
+                                  if (isRight)         cls = 'border-emerald-400 bg-emerald-50 text-emerald-800 font-bold';
+                                  else if (isSelected) cls = 'border-red-400 bg-red-50 text-red-800 line-through';
+                                  else                 cls = 'border-border bg-muted/10 text-muted-foreground';
+                                } else if (isSelected) cls = 'border-primary bg-primary/10 text-primary font-bold';
+                                return (
+                                  <button key={opt.k} onClick={() => selectAnswer(q.id, opt.k)} disabled={submitted}
+                                    className={`flex items-center justify-center gap-2 px-3 py-3 rounded-xl border text-sm font-semibold transition-all ${cls}`}>
+                                    {opt.v}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                            {submitted && q.explanation && (
+                              <div className="mt-1 text-xs bg-blue-50 border border-blue-200 text-blue-800 rounded-lg px-3 py-1.5">
+                                💡 {q.explanation}
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {/* ══ RENDERER : FILL ══ */}
+                        {q.type === 'fill' && (
+                          <div className="space-y-2">
+                            <div className="grid grid-cols-2 gap-2">
+                              {q.opts.map(opt => {
+                                const isSelected = selected === opt.k;
+                                const isRight    = opt.k === q.correct;
+                                let cls = 'border-border bg-muted/30 text-foreground hover:border-primary/50 hover:bg-primary/5';
+                                if (submitted) {
+                                  if (isRight)         cls = 'border-emerald-400 bg-emerald-50 text-emerald-800 font-bold';
+                                  else if (isSelected) cls = 'border-red-400 bg-red-50 text-red-800 line-through';
+                                  else                 cls = 'border-border bg-muted/10 text-muted-foreground';
+                                } else if (isSelected) cls = 'border-primary bg-primary/10 text-primary font-bold';
+                                return (
+                                  <button key={opt.k} onClick={() => selectAnswer(q.id, opt.k)} disabled={submitted}
+                                    className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border text-sm transition-all text-left ${cls}`}>
+                                    <span className="w-5 h-5 rounded-full border-current border flex items-center justify-center text-xs font-bold flex-shrink-0">
+                                      {opt.k}
+                                    </span>
+                                    {opt.v}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* ══ RENDERER : MCQ (défaut) ══ */}
+                        {(!q.type || q.type === 'mcq') && (
+                          <div className="grid grid-cols-2 gap-2">
+                            {q.opts.map(opt => {
+                              const isSelected = selected === opt.k;
+                              const isRight    = opt.k === q.correct;
+                              let cls = 'border-border bg-muted/30 text-foreground hover:border-primary/50 hover:bg-primary/5';
+                              if (submitted) {
+                                if (isRight)         cls = 'border-emerald-400 bg-emerald-50 text-emerald-800 font-bold';
+                                else if (isSelected) cls = 'border-red-400 bg-red-50 text-red-800 line-through';
+                                else                 cls = 'border-border bg-muted/10 text-muted-foreground';
+                              } else if (isSelected) cls = 'border-primary bg-primary/10 text-primary font-bold';
+                              return (
+                                <button key={opt.k} onClick={() => selectAnswer(q.id, opt.k)} disabled={submitted}
+                                  className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border text-sm transition-all text-left ${cls}`}>
+                                  <span className="w-5 h-5 rounded-full border-current border flex items-center justify-center text-xs font-bold flex-shrink-0">
+                                    {opt.k}
+                                  </span>
+                                  {opt.v}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
                       </div>
                     );
                   })}
