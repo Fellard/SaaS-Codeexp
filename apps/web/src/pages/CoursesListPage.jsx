@@ -6,6 +6,7 @@ import pb from '@/lib/pocketbaseClient';
 import { useAuth } from '@/contexts/AuthContext.jsx';
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
+import CourseSignupModal from '@/components/CourseSignupModal.jsx';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Clock, BookOpen, User, Languages, Monitor, Code2, ChevronRight, GraduationCap, ArrowRight, Users, Headphones, LayoutGrid, PlayCircle, CheckCircle, RotateCcw } from 'lucide-react';
@@ -278,7 +279,8 @@ const groupCoursesByLang = (list) => {
 };
 
 // ── Carte de cours réutilisable ──────────────────────────────────
-const CourseCardItem = ({ course, langKey, sec, secCfg, lgCfg, enrollment }) => {
+const CourseCardItem = ({ course, langKey, sec, secCfg, lgCfg, enrollment, onSignup }) => {
+  const { currentUser } = useAuth();
   const displayTitle = course[`title_${langKey}`] || course.titre || course.title;
   const displayDesc  = course[`description_${langKey}`] || course.description;
   const price = course.prix || course.price || 0;
@@ -304,12 +306,20 @@ const CourseCardItem = ({ course, langKey, sec, secCfg, lgCfg, enrollment }) => 
   // CTA : rendu selon état
   let ctaNode;
   if (!isEnrolled) {
-    ctaNode = (
+    ctaNode = currentUser ? (
+      // Connecté → page détail pour s'inscrire
       <Link to={detailHref}>
         <Button size="sm" className="bg-accent hover:bg-accent/90 text-primary font-bold rounded-xl">
-          Voir le cours
+          Suivre ce cours
         </Button>
       </Link>
+    ) : (
+      // Non connecté → modal inscription directe
+      <Button size="sm"
+        className="bg-accent hover:bg-accent/90 text-primary font-bold rounded-xl"
+        onClick={() => onSignup?.({ courseId: course.id, courseName: displayTitle })}>
+        Suivre ce cours
+      </Button>
     );
   } else if (isCompleted) {
     ctaNode = (
@@ -429,7 +439,7 @@ const CourseCardItem = ({ course, langKey, sec, secCfg, lgCfg, enrollment }) => 
 };
 
 // ── Sous-section dans un groupe de langue ────────────────────────
-const CourseSubSection = ({ title, icon: Icon, accent, courses, langKey, sec, secCfg, lgCfg, enrollmentMap }) => (
+const CourseSubSection = ({ title, icon: Icon, accent, courses, langKey, sec, secCfg, lgCfg, enrollmentMap, onSignup }) => (
   <div>
     <div className="flex items-center gap-2 mb-4">
       <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0"
@@ -451,6 +461,7 @@ const CourseSubSection = ({ title, icon: Icon, accent, courses, langKey, sec, se
           secCfg={secCfg}
           lgCfg={lgCfg}
           enrollment={enrollmentMap?.[course.id]}
+          onSignup={onSignup}
         />
       ))}
     </div>
@@ -458,7 +469,7 @@ const CourseSubSection = ({ title, icon: Icon, accent, courses, langKey, sec, se
 );
 
 // ── Bloc d'un groupe de langue (titre + grille) ──────────────────
-const LangGroupBlock = ({ langKey2, courses, lgCfg, langKey, sec, secCfg, enrollmentMap }) => {
+const LangGroupBlock = ({ langKey2, courses, lgCfg, langKey, sec, secCfg, enrollmentMap, onSignup }) => {
   const standard = courses.filter(c => !isAudioCourse(c));
   const audio    = courses.filter(c => isAudioCourse(c));
   const hasBoth  = standard.length > 0 && audio.length > 0;
@@ -497,6 +508,7 @@ const LangGroupBlock = ({ langKey2, courses, lgCfg, langKey, sec, secCfg, enroll
               secCfg={secCfg}
               lgCfg={lgCfg}
               enrollmentMap={enrollmentMap}
+              onSignup={onSignup}
             />
           )}
           {audio.length > 0 && (
@@ -511,6 +523,7 @@ const LangGroupBlock = ({ langKey2, courses, lgCfg, langKey, sec, secCfg, enroll
                 secCfg={secCfg}
                 lgCfg={lgCfg}
                 enrollmentMap={enrollmentMap}
+                onSignup={onSignup}
               />
             </div>
           )}
@@ -526,6 +539,7 @@ const LangGroupBlock = ({ langKey2, courses, lgCfg, langKey, sec, secCfg, enroll
               secCfg={secCfg}
               lgCfg={lgCfg}
               enrollment={enrollmentMap?.[course.id]}
+              onSignup={onSignup}
             />
           ))}
         </div>
@@ -585,6 +599,7 @@ const CoursesListPage = () => {
   const [selectedType, setSelectedType] = useState(null); // null | 'standard' | 'audio'
   // enrollmentMap : { [course_id]: enrollment } — null = non chargé encore
   const [enrollmentMap, setEnrollmentMap] = useState({});
+  const [signupModal, setSignupModal] = useState({ open: false, courseId: null, courseName: '' });
 
   const langKey = language?.startsWith('ar') ? 'ar' : language?.startsWith('en') ? 'en' : 'fr';
   const isRtl = langKey === 'ar';
@@ -688,6 +703,14 @@ const CoursesListPage = () => {
       <Helmet>
         <title>Nos Formations - IWS LAAYOUNE</title>
       </Helmet>
+
+      {/* Modal inscription étudiant */}
+      <CourseSignupModal
+        open={signupModal.open}
+        onClose={() => setSignupModal({ open: false, courseId: null, courseName: '' })}
+        courseId={signupModal.courseId}
+        courseName={signupModal.courseName}
+      />
 
       <div className="min-h-screen flex flex-col bg-muted" dir={isRtl ? 'rtl' : 'ltr'}>
         <Header />
@@ -926,6 +949,7 @@ const CoursesListPage = () => {
                                 sec={progKey}
                                 secCfg={progSection}
                                 enrollmentMap={enrollmentMap}
+                                onSignup={({ courseId, courseName }) => setSignupModal({ open: true, courseId, courseName })}
                               />
                             );
                           })}
@@ -941,6 +965,7 @@ const CoursesListPage = () => {
                               secCfg={progSection}
                               lgCfg={null}
                               enrollment={enrollmentMap?.[course.id]}
+                              onSignup={({ courseId, courseName }) => setSignupModal({ open: true, courseId, courseName })}
                             />
                           ))}
                         </div>
@@ -973,6 +998,7 @@ const CoursesListPage = () => {
                           secCfg={null}
                           lgCfg={null}
                           enrollment={enrollmentMap?.[course.id]}
+                          onSignup={({ courseId, courseName }) => setSignupModal({ open: true, courseId, courseName })}
                         />
                       ))}
                     </div>

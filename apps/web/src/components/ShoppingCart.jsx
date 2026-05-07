@@ -1,46 +1,19 @@
 import React, { useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingCart as ShoppingCartIcon, X } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { ShoppingCart as ShoppingCartIcon, X, ShoppingBag } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 import { Button } from '@/components/ui/button';
-import { initializeCheckout } from '@/api/EcommerceApi';
-import { useToast } from '@/hooks/use-toast';
 
 const ShoppingCart = ({ isCartOpen, setIsCartOpen }) => {
-  const { toast } = useToast();
-  const { cartItems, removeFromCart, updateQuantity, getCartTotal, clearCart } = useCart();
+  const navigate = useNavigate();
+  const { cartItems, removeFromCart, updateQuantity, getCartTotal } = useCart();
 
-  const handleCheckout = useCallback(async () => {
-    if (cartItems.length === 0) {
-      toast({
-        title: 'Your cart is empty',
-        description: 'Add some products to your cart before checking out.',
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    try {
-      const items = cartItems.map(item => ({
-        variant_id: item.variant.id,
-        quantity: item.quantity,
-      }));
-
-      const successUrl = `${window.location.origin}/success`;
-      const cancelUrl = window.location.href;
-
-      const { url } = await initializeCheckout({ items, successUrl, cancelUrl });
-
-      clearCart();
-      window.location.href = url;
-    } catch (error) {
-      toast({
-        title: 'Checkout Error',
-        description: 'There was a problem initializing checkout. Please try again.',
-        variant: 'destructive',
-      });
-    }
-  }, [cartItems, clearCart, toast]);
+  const handleCheckout = useCallback(() => {
+    if (cartItems.length === 0) return;
+    setIsCartOpen(false);
+    navigate('/store/checkout');
+  }, [cartItems, navigate, setIsCartOpen]);
 
   return (
     <AnimatePresence>

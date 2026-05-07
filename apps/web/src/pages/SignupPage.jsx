@@ -10,17 +10,18 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
-  User, Music, BookOpen, ShieldCheck, Eye, EyeOff,
+  User, Music, BookOpen, Eye, EyeOff,
   ArrowLeft, ArrowRight, Check,
 } from 'lucide-react';
 import apiServerClient from '@/lib/apiServerClient';
 
 // ── Role config ──────────────────────────────────────────────────
+// Admin n'apparaît pas ici — les comptes admin se créent uniquement
+// depuis le panneau PocketBase par l'équipe IWS.
 const ROLES = [
-  { value: 'client',    label: 'Client',        icon: User,        desc: 'Accédez à nos services et produits' },
-  { value: 'etudiant',  label: 'Étudiant',       icon: BookOpen,    desc: 'Suivez nos formations en ligne' },
-  { value: 'musicien',  label: 'Musicien',       icon: Music,       desc: 'Réservez le studio et partagez votre musique' },
-  { value: 'admin',     label: 'Administrateur', icon: ShieldCheck, desc: 'Accès soumis à validation par notre équipe' },
+  { value: 'client',   label: 'Client',   icon: User,     desc: 'Accédez à nos services et produits' },
+  { value: 'etudiant', label: 'Étudiant',  icon: BookOpen, desc: 'Suivez nos formations en ligne' },
+  { value: 'musicien', label: 'Musicien',  icon: Music,    desc: 'Réservez le studio et partagez votre musique' },
 ];
 
 // ── Langues disponibles (étudiant only) ─────────────────────────
@@ -63,18 +64,8 @@ const SignupPage = () => {
   const handleSubmitFinal = async () => {
     setLoading(true);
     try {
-      if (role === 'admin') {
-        const response = await apiServerClient.fetch('/auth/request-admin', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, password, phone, company }),
-        });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'Erreur lors de la demande');
-        toast.success('Demande envoyée ! Vous recevrez un email après validation.');
-        navigate('/pending-approval');
-      } else {
-        // Standard registration
+      {
+        // Inscription standard (client / étudiant / musicien)
         const response = await apiServerClient.fetch('/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -108,7 +99,8 @@ const SignupPage = () => {
         toast.success('Bienvenue ! Votre compte a été créé avec succès.');
         navigate(getDashboardPath(role));
       }
-    } catch (error) {
+    } catch (error) {  // eslint-disable-line no-empty
+
       toast.error(error.message || 'Une erreur est survenue');
     } finally {
       setLoading(false);
@@ -182,11 +174,6 @@ const SignupPage = () => {
                         <div className="font-semibold text-primary">{label}</div>
                         <div className="text-sm text-muted-foreground">{desc}</div>
                       </div>
-                      {value === 'admin' && (
-                        <span className="ml-auto text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded-full font-medium">
-                          Validation requise
-                        </span>
-                      )}
                       {value === 'etudiant' && (
                         <span className="ml-auto text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-medium">
                           + Choix de la langue
@@ -217,11 +204,6 @@ const SignupPage = () => {
                       <selectedRole.icon className="w-5 h-5 text-accent" />
                       <div>
                         <span className="font-semibold text-primary text-sm">{selectedRole.label}</span>
-                        {role === 'admin' && (
-                          <p className="text-xs text-muted-foreground mt-0.5">
-                            Votre demande sera examinée par notre équipe.
-                          </p>
-                        )}
                         {role === 'etudiant' && (
                           <p className="text-xs text-muted-foreground mt-0.5">
                             L'étape suivante vous permettra de choisir votre langue.
@@ -254,26 +236,14 @@ const SignupPage = () => {
                       </div>
                     </div>
 
-                    {/* Phone for students and admin */}
-                    {(role === 'etudiant' || role === 'admin') && (
+                    {/* Téléphone — étudiant uniquement */}
+                    {role === 'etudiant' && (
                       <div className="space-y-2">
                         <Label htmlFor="phone">Téléphone</Label>
                         <Input
                           id="phone" value={phone}
                           onChange={e => setPhone(e.target.value)}
                           placeholder="+212 6XX XXX XXX"
-                        />
-                      </div>
-                    )}
-
-                    {/* Company for admin */}
-                    {role === 'admin' && (
-                      <div className="space-y-2">
-                        <Label htmlFor="company">Entreprise / Organisation</Label>
-                        <Input
-                          id="company" value={company}
-                          onChange={e => setCompany(e.target.value)}
-                          placeholder="Nom de votre société"
                         />
                       </div>
                     )}
@@ -317,11 +287,9 @@ const SignupPage = () => {
                       type="submit"
                       className="w-full bg-accent hover:bg-accent/90 text-primary font-bold h-12 text-base mt-2"
                     >
-                      {role === 'admin'
-                        ? 'Soumettre ma demande'
-                        : role === 'etudiant'
-                          ? <span className="flex items-center gap-2">Étape suivante : Choisir ma langue <ArrowRight className="w-4 h-4" /></span>
-                          : 'Créer mon compte'}
+                      {role === 'etudiant'
+                        ? <span className="flex items-center gap-2">Étape suivante : Choisir ma langue <ArrowRight className="w-4 h-4" /></span>
+                        : 'Créer mon compte'}
                     </Button>
 
                     <p className="text-xs text-center text-muted-foreground">

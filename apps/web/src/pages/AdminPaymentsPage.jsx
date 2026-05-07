@@ -100,7 +100,7 @@ const AdminPaymentsPage = () => {
     try {
       const [ordersRes, studentsRes] = await Promise.all([
         pb.collection('orders').getFullList({ sort: '-created', expand: 'products', requestKey: null }),
-        pb.collection('users').getFullList({ filter: 'role="etudiant"', requestKey: null }),
+        pb.collection('users').getFullList({ filter: "role!='admin'", requestKey: null }),
       ]);
 
       const studentsMap = {};

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, User, ShoppingBag, BookOpen, Settings, LogOut,
-  Menu, X, Home, Brain, Music, CalendarCheck,
+  Menu, X, Home, Brain, Music, CalendarCheck, GraduationCap, TrendingUp,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext.jsx';
 import { useTranslation } from '@/i18n/useTranslation.js';
@@ -15,12 +15,14 @@ import Logo from '@/components/Logo.jsx';
 const NAV_BY_ROLE = {
   // Chemins RBAC alignés avec App.jsx (/etudiant/dashboard/*)
   etudiant: [
-    { path: '/etudiant/dashboard',          icon: LayoutDashboard, label: 'Tableau de bord' },
-    { path: '/etudiant/dashboard/courses',  icon: BookOpen,        label: 'Mes cours'        },
-    { path: '/etudiant/dashboard/recall',   icon: Brain,           label: 'Révisions IA'     },
-    { path: '/etudiant/dashboard/orders',   icon: ShoppingBag,     label: 'Mes commandes'    },
-    { path: '/etudiant/dashboard/profile',  icon: User,            label: 'Mon profil'       },
-    { path: '/etudiant/dashboard/settings', icon: Settings,        label: 'Paramètres'       },
+    { path: '/etudiant/dashboard',           icon: LayoutDashboard, label: 'Tableau de bord' },
+    { path: '/etudiant/dashboard/parcours',    icon: GraduationCap, label: 'Mon Parcours'     },
+    { path: '/etudiant/dashboard/progression', icon: TrendingUp,   label: 'Ma Progression'   },
+    { path: '/etudiant/dashboard/courses',     icon: BookOpen,     label: 'Mes cours'        },
+    { path: '/etudiant/dashboard/recall',    icon: Brain,           label: 'Révisions IA'     },
+    { path: '/etudiant/dashboard/orders',    icon: ShoppingBag,     label: 'Mes commandes'    },
+    { path: '/etudiant/dashboard/profile',   icon: User,            label: 'Mon profil'       },
+    { path: '/etudiant/dashboard/settings',  icon: Settings,        label: 'Paramètres'       },
   ],
   client: [
     { path: '/client/dashboard',          icon: LayoutDashboard, label: 'Tableau de bord' },

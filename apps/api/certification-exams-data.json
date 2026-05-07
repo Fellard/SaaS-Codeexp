@@ -1,0 +1,811 @@
+[
+  {
+    "titre": "Examen de Certification — Français A1/A2",
+    "langue": "Francais",
+    "course_type": "exam",
+    "niveau": "A1",
+    "description": "Examen final de certification IWS. 20 questions couvrant l'ensemble du parcours A1/A2 : grammaire, vocabulaire, compréhension. Score minimum requis : 75%.",
+    "exercises": [
+      {
+        "id": "ex_1358b31c8a",
+        "type": "mcq",
+        "question": "J'arrive au cinéma ___ 7 heures du soir.",
+        "options": [
+          "dans",
+          "en",
+          "à",
+          "pendant"
+        ],
+        "answer": 2
+      },
+      {
+        "id": "ex_f5f81a82c2",
+        "type": "mcq",
+        "question": "Les enfants vont ___ école tous les matins.",
+        "options": [
+          "dans la",
+          "à la",
+          "à l'",
+          "en"
+        ],
+        "answer": 2
+      },
+      {
+        "id": "ex_1f38e7b17c",
+        "type": "mcq",
+        "question": "Donne-moi ___ eau, s'il te plaît.",
+        "options": [
+          "du",
+          "de la",
+          "de l'",
+          "des"
+        ],
+        "answer": 2
+      },
+      {
+        "id": "ex_61bcd7f5c9",
+        "type": "mcq",
+        "question": "Laquelle de ces phrases est à l'impératif ?",
+        "options": [
+          "Tu fermes la porte.",
+          "Ferme la porte !",
+          "Il ferme la porte.",
+          "Vous fermez la porte ?"
+        ],
+        "answer": 1
+      },
+      {
+        "id": "ex_391e3aa484",
+        "type": "mcq",
+        "question": "L'adjectif 'grand' s'accorde : 'une ___ maison'.",
+        "options": [
+          "grand",
+          "grands",
+          "grande",
+          "grandes"
+        ],
+        "answer": 2
+      },
+      {
+        "id": "ex_085c01be38",
+        "type": "mcq",
+        "question": "Pierre travaille ici ___ 2018.",
+        "options": [
+          "depuis",
+          "pendant",
+          "dans",
+          "en"
+        ],
+        "answer": 0
+      },
+      {
+        "id": "ex_b47cdbd961",
+        "type": "mcq",
+        "question": "Marie est ___ intelligente que Sophie. (comparatif d'égalité)",
+        "options": [
+          "plus",
+          "moins",
+          "aussi",
+          "très"
+        ],
+        "answer": 2
+      },
+      {
+        "id": "ex_fe29691bd7",
+        "type": "mcq",
+        "question": "Nous avons regardé la télé ___ deux heures.",
+        "options": [
+          "depuis",
+          "à",
+          "dans",
+          "pendant"
+        ],
+        "answer": 3
+      },
+      {
+        "id": "ex_d93dc28bfa",
+        "type": "fill",
+        "question": "Si tu travailles bien, tu ___ réussir ton examen.",
+        "options": [
+          "va",
+          "vas",
+          "allait",
+          "iras"
+        ],
+        "answer": 3
+      },
+      {
+        "id": "ex_e3d56f71f7",
+        "type": "fill",
+        "question": "Le chat est caché ___ la table.",
+        "options": [
+          "sur",
+          "devant",
+          "sous",
+          "entre"
+        ],
+        "answer": 2
+      },
+      {
+        "id": "ex_4be9fad146",
+        "type": "fill",
+        "question": "Est-ce que tu ___ le français depuis longtemps ?",
+        "options": [
+          "apprends",
+          "apprenait",
+          "apprendre",
+          "appris"
+        ],
+        "answer": 0
+      },
+      {
+        "id": "ex_69484e97dd",
+        "type": "fill",
+        "question": "Je lui ___ ce livre hier. (passé composé de 'donner')",
+        "options": [
+          "donnais",
+          "donnera",
+          "ai donné",
+          "avais donné"
+        ],
+        "answer": 2
+      },
+      {
+        "id": "ex_76cf88c87d",
+        "type": "fill",
+        "question": "C'est Marie ___ a gagné le concours. (pronom relatif)",
+        "options": [
+          "que",
+          "dont",
+          "où",
+          "qui"
+        ],
+        "answer": 3
+      },
+      {
+        "id": "ex_361803c80c",
+        "type": "order",
+        "instruction": "Reconstituez la phrase interrogative correcte :",
+        "words": [
+          "Est-ce",
+          "que",
+          "tu",
+          "parles",
+          "français",
+          "?"
+        ],
+        "answer": [
+          "Est-ce",
+          "que",
+          "tu",
+          "parles",
+          "français",
+          "?"
+        ]
+      },
+      {
+        "id": "ex_a8f954a643",
+        "type": "order",
+        "instruction": "Reconstituez la phrase avec l'impératif :",
+        "words": [
+          "la",
+          "Ferme",
+          "fenêtre",
+          "s'il",
+          "te",
+          "plaît",
+          "!"
+        ],
+        "answer": [
+          "Ferme",
+          "la",
+          "fenêtre",
+          "s'il",
+          "te",
+          "plaît",
+          "!"
+        ]
+      },
+      {
+        "id": "ex_ba441c5289",
+        "type": "order",
+        "instruction": "Mettez les mots dans l'ordre pour former une phrase correcte :",
+        "words": [
+          "intelligente",
+          "Elle",
+          "est",
+          "plus",
+          "que",
+          "lui"
+        ],
+        "answer": [
+          "Elle",
+          "est",
+          "plus",
+          "intelligente",
+          "que",
+          "lui"
+        ]
+      },
+      {
+        "id": "ex_9a5584bc6f",
+        "type": "order",
+        "instruction": "Reconstituez la phrase au passé composé :",
+        "words": [
+          "Nous",
+          "avons",
+          "regardé",
+          "film",
+          "ce",
+          "hier"
+        ],
+        "answer": [
+          "Nous",
+          "avons",
+          "regardé",
+          "ce",
+          "film",
+          "hier"
+        ]
+      },
+      {
+        "id": "ex_f1d30d0e7c",
+        "type": "vf",
+        "question": "En français, l'impératif de 'aller' à la 2e personne du singulier est 'Vas !'.",
+        "answer": false,
+        "explanation": "C'est faux. On dit 'Va !' (sans 's') à la 2e personne du singulier. Ex : 'Va dormir !'"
+      },
+      {
+        "id": "ex_1a0f441ee9",
+        "type": "vf",
+        "question": "Le passé composé de 'finir' avec 'avoir' donne : 'j'ai fini'.",
+        "answer": true,
+        "explanation": "Correct ! 'Finir' est un verbe du 2e groupe. Son participe passé est 'fini'. Ex : 'J'ai fini mon repas.'"
+      },
+      {
+        "id": "ex_c8d364a86b",
+        "type": "vf",
+        "question": "On utilise 'depuis' pour une action qui a commencé dans le passé et qui continue encore maintenant.",
+        "answer": true,
+        "explanation": "Exact ! 'Depuis' exprime une durée qui court du passé jusqu'au présent. Ex : 'Je travaille ici depuis 2018.'"
+      }
+    ],
+    "exercises_json": "[{\"id\": \"ex_1358b31c8a\", \"type\": \"mcq\", \"question\": \"J'arrive au cinéma ___ 7 heures du soir.\", \"options\": [\"dans\", \"en\", \"à\", \"pendant\"], \"answer\": 2}, {\"id\": \"ex_f5f81a82c2\", \"type\": \"mcq\", \"question\": \"Les enfants vont ___ école tous les matins.\", \"options\": [\"dans la\", \"à la\", \"à l'\", \"en\"], \"answer\": 2}, {\"id\": \"ex_1f38e7b17c\", \"type\": \"mcq\", \"question\": \"Donne-moi ___ eau, s'il te plaît.\", \"options\": [\"du\", \"de la\", \"de l'\", \"des\"], \"answer\": 2}, {\"id\": \"ex_61bcd7f5c9\", \"type\": \"mcq\", \"question\": \"Laquelle de ces phrases est à l'impératif ?\", \"options\": [\"Tu fermes la porte.\", \"Ferme la porte !\", \"Il ferme la porte.\", \"Vous fermez la porte ?\"], \"answer\": 1}, {\"id\": \"ex_391e3aa484\", \"type\": \"mcq\", \"question\": \"L'adjectif 'grand' s'accorde : 'une ___ maison'.\", \"options\": [\"grand\", \"grands\", \"grande\", \"grandes\"], \"answer\": 2}, {\"id\": \"ex_085c01be38\", \"type\": \"mcq\", \"question\": \"Pierre travaille ici ___ 2018.\", \"options\": [\"depuis\", \"pendant\", \"dans\", \"en\"], \"answer\": 0}, {\"id\": \"ex_b47cdbd961\", \"type\": \"mcq\", \"question\": \"Marie est ___ intelligente que Sophie. (comparatif d'égalité)\", \"options\": [\"plus\", \"moins\", \"aussi\", \"très\"], \"answer\": 2}, {\"id\": \"ex_fe29691bd7\", \"type\": \"mcq\", \"question\": \"Nous avons regardé la télé ___ deux heures.\", \"options\": [\"depuis\", \"à\", \"dans\", \"pendant\"], \"answer\": 3}, {\"id\": \"ex_d93dc28bfa\", \"type\": \"fill\", \"question\": \"Si tu travailles bien, tu ___ réussir ton examen.\", \"options\": [\"va\", \"vas\", \"allait\", \"iras\"], \"answer\": 3}, {\"id\": \"ex_e3d56f71f7\", \"type\": \"fill\", \"question\": \"Le chat est caché ___ la table.\", \"options\": [\"sur\", \"devant\", \"sous\", \"entre\"], \"answer\": 2}, {\"id\": \"ex_4be9fad146\", \"type\": \"fill\", \"question\": \"Est-ce que tu ___ le français depuis longtemps ?\", \"options\": [\"apprends\", \"apprenait\", \"apprendre\", \"appris\"], \"answer\": 0}, {\"id\": \"ex_69484e97dd\", \"type\": \"fill\", \"question\": \"Je lui ___ ce livre hier. (passé composé de 'donner')\", \"options\": [\"donnais\", \"donnera\", \"ai donné\", \"avais donné\"], \"answer\": 2}, {\"id\": \"ex_76cf88c87d\", \"type\": \"fill\", \"question\": \"C'est Marie ___ a gagné le concours. (pronom relatif)\", \"options\": [\"que\", \"dont\", \"où\", \"qui\"], \"answer\": 3}, {\"id\": \"ex_361803c80c\", \"type\": \"order\", \"instruction\": \"Reconstituez la phrase interrogative correcte :\", \"words\": [\"Est-ce\", \"que\", \"tu\", \"parles\", \"français\", \"?\"], \"answer\": [\"Est-ce\", \"que\", \"tu\", \"parles\", \"français\", \"?\"]}, {\"id\": \"ex_a8f954a643\", \"type\": \"order\", \"instruction\": \"Reconstituez la phrase avec l'impératif :\", \"words\": [\"la\", \"Ferme\", \"fenêtre\", \"s'il\", \"te\", \"plaît\", \"!\"], \"answer\": [\"Ferme\", \"la\", \"fenêtre\", \"s'il\", \"te\", \"plaît\", \"!\"]}, {\"id\": \"ex_ba441c5289\", \"type\": \"order\", \"instruction\": \"Mettez les mots dans l'ordre pour former une phrase correcte :\", \"words\": [\"intelligente\", \"Elle\", \"est\", \"plus\", \"que\", \"lui\"], \"answer\": [\"Elle\", \"est\", \"plus\", \"intelligente\", \"que\", \"lui\"]}, {\"id\": \"ex_9a5584bc6f\", \"type\": \"order\", \"instruction\": \"Reconstituez la phrase au passé composé :\", \"words\": [\"Nous\", \"avons\", \"regardé\", \"film\", \"ce\", \"hier\"], \"answer\": [\"Nous\", \"avons\", \"regardé\", \"ce\", \"film\", \"hier\"]}, {\"id\": \"ex_f1d30d0e7c\", \"type\": \"vf\", \"question\": \"En français, l'impératif de 'aller' à la 2e personne du singulier est 'Vas !'.\", \"answer\": false, \"explanation\": \"C'est faux. On dit 'Va !' (sans 's') à la 2e personne du singulier. Ex : 'Va dormir !'\"}, {\"id\": \"ex_1a0f441ee9\", \"type\": \"vf\", \"question\": \"Le passé composé de 'finir' avec 'avoir' donne : 'j'ai fini'.\", \"answer\": true, \"explanation\": \"Correct ! 'Finir' est un verbe du 2e groupe. Son participe passé est 'fini'. Ex : 'J'ai fini mon repas.'\"}, {\"id\": \"ex_c8d364a86b\", \"type\": \"vf\", \"question\": \"On utilise 'depuis' pour une action qui a commencé dans le passé et qui continue encore maintenant.\", \"answer\": true, \"explanation\": \"Exact ! 'Depuis' exprime une durée qui court du passé jusqu'au présent. Ex : 'Je travaille ici depuis 2018.'\"}]"
+  },
+  {
+    "titre": "Certification Exam — English A1/A2",
+    "langue": "Anglais",
+    "course_type": "exam",
+    "niveau": "A1",
+    "description": "IWS final certification exam. 20 questions covering the full A1/A2 curriculum: grammar, vocabulary, comprehension. Minimum passing score: 75%.",
+    "exercises": [
+      {
+        "id": "ex_176742e5d8",
+        "type": "mcq",
+        "question": "I arrive at the cinema ___ 7 o'clock.",
+        "options": [
+          "in",
+          "on",
+          "at",
+          "by"
+        ],
+        "answer": 2
+      },
+      {
+        "id": "ex_c7172bcc39",
+        "type": "mcq",
+        "question": "The children go ___ school every morning.",
+        "options": [
+          "in",
+          "at",
+          "to",
+          "on"
+        ],
+        "answer": 2
+      },
+      {
+        "id": "ex_9db4bc7fae",
+        "type": "mcq",
+        "question": "Give me ___ water, please.",
+        "options": [
+          "a",
+          "an",
+          "some",
+          "any"
+        ],
+        "answer": 2
+      },
+      {
+        "id": "ex_249f7cc530",
+        "type": "mcq",
+        "question": "Which sentence uses the imperative correctly?",
+        "options": [
+          "You close the door.",
+          "Close the door!",
+          "He closes the door.",
+          "Are you closing the door?"
+        ],
+        "answer": 1
+      },
+      {
+        "id": "ex_ed6c8f1c65",
+        "type": "mcq",
+        "question": "She is ___ intelligent than her brother. (comparative)",
+        "options": [
+          "more",
+          "most",
+          "much",
+          "many"
+        ],
+        "answer": 0
+      },
+      {
+        "id": "ex_7b0972779e",
+        "type": "mcq",
+        "question": "Pierre has worked here ___ 2018.",
+        "options": [
+          "for",
+          "since",
+          "during",
+          "ago"
+        ],
+        "answer": 1
+      },
+      {
+        "id": "ex_dc4936b01d",
+        "type": "mcq",
+        "question": "She is ___ tall as her sister. (equality comparison)",
+        "options": [
+          "more",
+          "most",
+          "as",
+          "so"
+        ],
+        "answer": 2
+      },
+      {
+        "id": "ex_f8ccd2d930",
+        "type": "mcq",
+        "question": "We watched TV ___ two hours.",
+        "options": [
+          "since",
+          "at",
+          "in",
+          "for"
+        ],
+        "answer": 3
+      },
+      {
+        "id": "ex_76f169aa36",
+        "type": "fill",
+        "question": "If you study hard, you ___ pass your exam.",
+        "options": [
+          "would",
+          "will",
+          "were",
+          "had"
+        ],
+        "answer": 1
+      },
+      {
+        "id": "ex_7b6c61c547",
+        "type": "fill",
+        "question": "The cat is hiding ___ the table.",
+        "options": [
+          "on",
+          "in front of",
+          "under",
+          "above"
+        ],
+        "answer": 2
+      },
+      {
+        "id": "ex_51709bbb01",
+        "type": "fill",
+        "question": "___ you been learning English for a long time?",
+        "options": [
+          "Did",
+          "Do",
+          "Were",
+          "Have"
+        ],
+        "answer": 3
+      },
+      {
+        "id": "ex_9afd929efd",
+        "type": "fill",
+        "question": "I ___ her this book yesterday. (past simple of 'give')",
+        "options": [
+          "gived",
+          "gave",
+          "gives",
+          "giving"
+        ],
+        "answer": 1
+      },
+      {
+        "id": "ex_cd4196db4d",
+        "type": "fill",
+        "question": "She is the student ___ won the competition. (relative pronoun)",
+        "options": [
+          "which",
+          "whose",
+          "whom",
+          "who"
+        ],
+        "answer": 3
+      },
+      {
+        "id": "ex_fd922c87ae",
+        "type": "order",
+        "instruction": "Reconstruct the correct question:",
+        "words": [
+          "do",
+          "you",
+          "speak",
+          "Do",
+          "English",
+          "?"
+        ],
+        "answer": [
+          "Do",
+          "you",
+          "speak",
+          "English",
+          "?"
+        ]
+      },
+      {
+        "id": "ex_fca404cc4d",
+        "type": "order",
+        "instruction": "Reconstruct the imperative sentence:",
+        "words": [
+          "the",
+          "Close",
+          "window",
+          "please",
+          ","
+        ],
+        "answer": [
+          "Close",
+          "the",
+          "window",
+          "please",
+          ","
+        ]
+      },
+      {
+        "id": "ex_3cfc75d987",
+        "type": "order",
+        "instruction": "Put the words in the correct order:",
+        "words": [
+          "more",
+          "She",
+          "is",
+          "intelligent",
+          "than",
+          "him"
+        ],
+        "answer": [
+          "She",
+          "is",
+          "more",
+          "intelligent",
+          "than",
+          "him"
+        ]
+      },
+      {
+        "id": "ex_73dabf2262",
+        "type": "order",
+        "instruction": "Reconstruct the present perfect sentence:",
+        "words": [
+          "watched",
+          "We",
+          "have",
+          "film",
+          "this",
+          "already"
+        ],
+        "answer": [
+          "We",
+          "have",
+          "already",
+          "watched",
+          "this",
+          "film"
+        ]
+      },
+      {
+        "id": "ex_166edd0b2b",
+        "type": "vf",
+        "question": "In English, the imperative form of 'to go' in the 2nd person is 'Goes!'.",
+        "answer": false,
+        "explanation": "False. The imperative is simply 'Go!' — no subject, no '-es'. Example: 'Go to sleep!'"
+      },
+      {
+        "id": "ex_365522408e",
+        "type": "vf",
+        "question": "The present perfect of 'finish' is: 'I have finished'.",
+        "answer": true,
+        "explanation": "Correct! 'Finish' is a regular verb. Its past participle is 'finished'. Example: 'I have finished my meal.'"
+      },
+      {
+        "id": "ex_f4112b663d",
+        "type": "vf",
+        "question": "We use 'since' for an action that started in the past and is still continuing now.",
+        "answer": true,
+        "explanation": "Exactly! 'Since' marks the starting point of an action that continues to the present. Example: 'I have lived here since 2018.'"
+      }
+    ],
+    "exercises_json": "[{\"id\": \"ex_176742e5d8\", \"type\": \"mcq\", \"question\": \"I arrive at the cinema ___ 7 o'clock.\", \"options\": [\"in\", \"on\", \"at\", \"by\"], \"answer\": 2}, {\"id\": \"ex_c7172bcc39\", \"type\": \"mcq\", \"question\": \"The children go ___ school every morning.\", \"options\": [\"in\", \"at\", \"to\", \"on\"], \"answer\": 2}, {\"id\": \"ex_9db4bc7fae\", \"type\": \"mcq\", \"question\": \"Give me ___ water, please.\", \"options\": [\"a\", \"an\", \"some\", \"any\"], \"answer\": 2}, {\"id\": \"ex_249f7cc530\", \"type\": \"mcq\", \"question\": \"Which sentence uses the imperative correctly?\", \"options\": [\"You close the door.\", \"Close the door!\", \"He closes the door.\", \"Are you closing the door?\"], \"answer\": 1}, {\"id\": \"ex_ed6c8f1c65\", \"type\": \"mcq\", \"question\": \"She is ___ intelligent than her brother. (comparative)\", \"options\": [\"more\", \"most\", \"much\", \"many\"], \"answer\": 0}, {\"id\": \"ex_7b0972779e\", \"type\": \"mcq\", \"question\": \"Pierre has worked here ___ 2018.\", \"options\": [\"for\", \"since\", \"during\", \"ago\"], \"answer\": 1}, {\"id\": \"ex_dc4936b01d\", \"type\": \"mcq\", \"question\": \"She is ___ tall as her sister. (equality comparison)\", \"options\": [\"more\", \"most\", \"as\", \"so\"], \"answer\": 2}, {\"id\": \"ex_f8ccd2d930\", \"type\": \"mcq\", \"question\": \"We watched TV ___ two hours.\", \"options\": [\"since\", \"at\", \"in\", \"for\"], \"answer\": 3}, {\"id\": \"ex_76f169aa36\", \"type\": \"fill\", \"question\": \"If you study hard, you ___ pass your exam.\", \"options\": [\"would\", \"will\", \"were\", \"had\"], \"answer\": 1}, {\"id\": \"ex_7b6c61c547\", \"type\": \"fill\", \"question\": \"The cat is hiding ___ the table.\", \"options\": [\"on\", \"in front of\", \"under\", \"above\"], \"answer\": 2}, {\"id\": \"ex_51709bbb01\", \"type\": \"fill\", \"question\": \"___ you been learning English for a long time?\", \"options\": [\"Did\", \"Do\", \"Were\", \"Have\"], \"answer\": 3}, {\"id\": \"ex_9afd929efd\", \"type\": \"fill\", \"question\": \"I ___ her this book yesterday. (past simple of 'give')\", \"options\": [\"gived\", \"gave\", \"gives\", \"giving\"], \"answer\": 1}, {\"id\": \"ex_cd4196db4d\", \"type\": \"fill\", \"question\": \"She is the student ___ won the competition. (relative pronoun)\", \"options\": [\"which\", \"whose\", \"whom\", \"who\"], \"answer\": 3}, {\"id\": \"ex_fd922c87ae\", \"type\": \"order\", \"instruction\": \"Reconstruct the correct question:\", \"words\": [\"do\", \"you\", \"speak\", \"Do\", \"English\", \"?\"], \"answer\": [\"Do\", \"you\", \"speak\", \"English\", \"?\"]}, {\"id\": \"ex_fca404cc4d\", \"type\": \"order\", \"instruction\": \"Reconstruct the imperative sentence:\", \"words\": [\"the\", \"Close\", \"window\", \"please\", \",\"], \"answer\": [\"Close\", \"the\", \"window\", \"please\", \",\"]}, {\"id\": \"ex_3cfc75d987\", \"type\": \"order\", \"instruction\": \"Put the words in the correct order:\", \"words\": [\"more\", \"She\", \"is\", \"intelligent\", \"than\", \"him\"], \"answer\": [\"She\", \"is\", \"more\", \"intelligent\", \"than\", \"him\"]}, {\"id\": \"ex_73dabf2262\", \"type\": \"order\", \"instruction\": \"Reconstruct the present perfect sentence:\", \"words\": [\"watched\", \"We\", \"have\", \"film\", \"this\", \"already\"], \"answer\": [\"We\", \"have\", \"already\", \"watched\", \"this\", \"film\"]}, {\"id\": \"ex_166edd0b2b\", \"type\": \"vf\", \"question\": \"In English, the imperative form of 'to go' in the 2nd person is 'Goes!'.\", \"answer\": false, \"explanation\": \"False. The imperative is simply 'Go!' — no subject, no '-es'. Example: 'Go to sleep!'\"}, {\"id\": \"ex_365522408e\", \"type\": \"vf\", \"question\": \"The present perfect of 'finish' is: 'I have finished'.\", \"answer\": true, \"explanation\": \"Correct! 'Finish' is a regular verb. Its past participle is 'finished'. Example: 'I have finished my meal.'\"}, {\"id\": \"ex_f4112b663d\", \"type\": \"vf\", \"question\": \"We use 'since' for an action that started in the past and is still continuing now.\", \"answer\": true, \"explanation\": \"Exactly! 'Since' marks the starting point of an action that continues to the present. Example: 'I have lived here since 2018.'\"}]"
+  },
+  {
+    "titre": "اختبار الشهادة — العربية والإنجليزية A1/A2",
+    "langue": "Arabe",
+    "course_type": "exam",
+    "niveau": "A1",
+    "description": "الاختبار النهائي لشهادة IWS. 20 سؤالاً تغطي المنهج الكامل A1/A2: قواعد، مفردات، وفهم. الحد الأدنى للنجاح: 75%.",
+    "exercises": [
+      {
+        "id": "ex_a39c1a6656",
+        "type": "mcq",
+        "question": "I arrive at the cinema ___ 7 o'clock. أختر حرف الجر الصحيح:",
+        "options": [
+          "in",
+          "on",
+          "at",
+          "by"
+        ],
+        "answer": 2
+      },
+      {
+        "id": "ex_65607cc7b4",
+        "type": "mcq",
+        "question": "الجملة: 'Go to school every day.' هذه جملة في صيغة:",
+        "options": [
+          "المضارع البسيط",
+          "الأمر",
+          "الماضي",
+          "المستقبل"
+        ],
+        "answer": 1
+      },
+      {
+        "id": "ex_f6eebea7b4",
+        "type": "mcq",
+        "question": "ما الكلمة الصحيحة لإكمال الجملة: 'Give me ___ water.'?",
+        "options": [
+          "a",
+          "an",
+          "some",
+          "the"
+        ],
+        "answer": 2
+      },
+      {
+        "id": "ex_9467dc841f",
+        "type": "mcq",
+        "question": "أي جملة تستخدم المقارنة بالتفضيل بشكل صحيح؟",
+        "options": [
+          "She is more tall than him.",
+          "She is taller than him.",
+          "She is most tall than him.",
+          "She is tallest than him."
+        ],
+        "answer": 1
+      },
+      {
+        "id": "ex_55638199e9",
+        "type": "mcq",
+        "question": "She is ___ intelligent as her sister. (المساواة في الصفة)",
+        "options": [
+          "more",
+          "most",
+          "as",
+          "so"
+        ],
+        "answer": 2
+      },
+      {
+        "id": "ex_a8ffddaf9a",
+        "type": "mcq",
+        "question": "ما معنى 'since' في الجملة: 'I have lived here since 2018'?",
+        "options": [
+          "لمدة",
+          "منذ / من وقت محدد",
+          "قبل",
+          "بعد"
+        ],
+        "answer": 1
+      },
+      {
+        "id": "ex_274f616f91",
+        "type": "mcq",
+        "question": "أي الكلمات التالية تُعبّر عن مكان (حرف جر مكاني)؟",
+        "options": [
+          "since",
+          "for",
+          "under",
+          "ago"
+        ],
+        "answer": 2
+      },
+      {
+        "id": "ex_d3539bdabd",
+        "type": "mcq",
+        "question": "We watched TV ___ two hours. أي حرف جر يدل على المدة الزمنية؟",
+        "options": [
+          "since",
+          "at",
+          "in",
+          "for"
+        ],
+        "answer": 3
+      },
+      {
+        "id": "ex_543d1e4b18",
+        "type": "fill",
+        "question": "If you study hard, you ___ pass your exam. (الجملة الشرطية من النوع الأول)",
+        "options": [
+          "would",
+          "will",
+          "were",
+          "had"
+        ],
+        "answer": 1
+      },
+      {
+        "id": "ex_6b096ddd5b",
+        "type": "fill",
+        "question": "The cat is hiding ___ the table. (القطة مختبئة تحت الطاولة)",
+        "options": [
+          "on",
+          "in front of",
+          "under",
+          "above"
+        ],
+        "answer": 2
+      },
+      {
+        "id": "ex_6d5dcc8582",
+        "type": "fill",
+        "question": "___ you been learning English for a long time? أكمل بالفعل المساعد الصحيح:",
+        "options": [
+          "Did",
+          "Do",
+          "Were",
+          "Have"
+        ],
+        "answer": 3
+      },
+      {
+        "id": "ex_9cab081a3e",
+        "type": "fill",
+        "question": "I ___ her this book yesterday. (ماضي فعل 'give')",
+        "options": [
+          "gived",
+          "gave",
+          "gives",
+          "giving"
+        ],
+        "answer": 1
+      },
+      {
+        "id": "ex_fa85169050",
+        "type": "fill",
+        "question": "She is the student ___ won the competition. (الضمير الموصول للعاقل)",
+        "options": [
+          "which",
+          "whose",
+          "whom",
+          "who"
+        ],
+        "answer": 3
+      },
+      {
+        "id": "ex_860588c0b4",
+        "type": "order",
+        "instruction": "رتّب الكلمات لتكوين سؤال صحيح بالإنجليزية:",
+        "words": [
+          "do",
+          "you",
+          "speak",
+          "Do",
+          "English",
+          "?"
+        ],
+        "answer": [
+          "Do",
+          "you",
+          "speak",
+          "English",
+          "?"
+        ]
+      },
+      {
+        "id": "ex_6948625aa3",
+        "type": "order",
+        "instruction": "رتّب الكلمات لتكوين جملة أمر صحيحة:",
+        "words": [
+          "the",
+          "Close",
+          "window",
+          "please",
+          ","
+        ],
+        "answer": [
+          "Close",
+          "the",
+          "window",
+          "please",
+          ","
+        ]
+      },
+      {
+        "id": "ex_13e4928c25",
+        "type": "order",
+        "instruction": "رتّب الكلمات لتكوين جملة مقارنة صحيحة:",
+        "words": [
+          "more",
+          "She",
+          "is",
+          "intelligent",
+          "than",
+          "him"
+        ],
+        "answer": [
+          "She",
+          "is",
+          "more",
+          "intelligent",
+          "than",
+          "him"
+        ]
+      },
+      {
+        "id": "ex_db3067af55",
+        "type": "order",
+        "instruction": "رتّب الكلمات لتكوين جملة في المضارع التام:",
+        "words": [
+          "watched",
+          "We",
+          "have",
+          "film",
+          "this",
+          "already"
+        ],
+        "answer": [
+          "We",
+          "have",
+          "already",
+          "watched",
+          "this",
+          "film"
+        ]
+      },
+      {
+        "id": "ex_f6931328b9",
+        "type": "vf",
+        "question": "في اللغة الإنجليزية، صيغة الأمر من الفعل 'go' هي 'Goes!'.",
+        "answer": false,
+        "explanation": "خطأ. صيغة الأمر هي 'Go!' فقط، بدون ضمير أو لاحقة. مثال: 'Go to sleep!'"
+      },
+      {
+        "id": "ex_911b6d6759",
+        "type": "vf",
+        "question": "المضارع التام للفعل 'finish' هو: 'I have finished'.",
+        "answer": true,
+        "explanation": "صحيح! 'finish' فعل منتظم، ومصدره الماضي 'finished'. مثال: 'I have finished my homework.'"
+      },
+      {
+        "id": "ex_7711aa688e",
+        "type": "vf",
+        "question": "نستخدم 'since' للتعبير عن فعل بدأ في الماضي ولا يزال مستمراً حتى الآن.",
+        "answer": true,
+        "explanation": "صحيح تماماً! 'since' تحدد نقطة البداية. مثال: 'I have studied English since 2020.'"
+      }
+    ],
+    "exercises_json": "[{\"id\": \"ex_a39c1a6656\", \"type\": \"mcq\", \"question\": \"I arrive at the cinema ___ 7 o'clock. أختر حرف الجر الصحيح:\", \"options\": [\"in\", \"on\", \"at\", \"by\"], \"answer\": 2}, {\"id\": \"ex_65607cc7b4\", \"type\": \"mcq\", \"question\": \"الجملة: 'Go to school every day.' هذه جملة في صيغة:\", \"options\": [\"المضارع البسيط\", \"الأمر\", \"الماضي\", \"المستقبل\"], \"answer\": 1}, {\"id\": \"ex_f6eebea7b4\", \"type\": \"mcq\", \"question\": \"ما الكلمة الصحيحة لإكمال الجملة: 'Give me ___ water.'?\", \"options\": [\"a\", \"an\", \"some\", \"the\"], \"answer\": 2}, {\"id\": \"ex_9467dc841f\", \"type\": \"mcq\", \"question\": \"أي جملة تستخدم المقارنة بالتفضيل بشكل صحيح؟\", \"options\": [\"She is more tall than him.\", \"She is taller than him.\", \"She is most tall than him.\", \"She is tallest than him.\"], \"answer\": 1}, {\"id\": \"ex_55638199e9\", \"type\": \"mcq\", \"question\": \"She is ___ intelligent as her sister. (المساواة في الصفة)\", \"options\": [\"more\", \"most\", \"as\", \"so\"], \"answer\": 2}, {\"id\": \"ex_a8ffddaf9a\", \"type\": \"mcq\", \"question\": \"ما معنى 'since' في الجملة: 'I have lived here since 2018'?\", \"options\": [\"لمدة\", \"منذ / من وقت محدد\", \"قبل\", \"بعد\"], \"answer\": 1}, {\"id\": \"ex_274f616f91\", \"type\": \"mcq\", \"question\": \"أي الكلمات التالية تُعبّر عن مكان (حرف جر مكاني)؟\", \"options\": [\"since\", \"for\", \"under\", \"ago\"], \"answer\": 2}, {\"id\": \"ex_d3539bdabd\", \"type\": \"mcq\", \"question\": \"We watched TV ___ two hours. أي حرف جر يدل على المدة الزمنية؟\", \"options\": [\"since\", \"at\", \"in\", \"for\"], \"answer\": 3}, {\"id\": \"ex_543d1e4b18\", \"type\": \"fill\", \"question\": \"If you study hard, you ___ pass your exam. (الجملة الشرطية من النوع الأول)\", \"options\": [\"would\", \"will\", \"were\", \"had\"], \"answer\": 1}, {\"id\": \"ex_6b096ddd5b\", \"type\": \"fill\", \"question\": \"The cat is hiding ___ the table. (القطة مختبئة تحت الطاولة)\", \"options\": [\"on\", \"in front of\", \"under\", \"above\"], \"answer\": 2}, {\"id\": \"ex_6d5dcc8582\", \"type\": \"fill\", \"question\": \"___ you been learning English for a long time? أكمل بالفعل المساعد الصحيح:\", \"options\": [\"Did\", \"Do\", \"Were\", \"Have\"], \"answer\": 3}, {\"id\": \"ex_9cab081a3e\", \"type\": \"fill\", \"question\": \"I ___ her this book yesterday. (ماضي فعل 'give')\", \"options\": [\"gived\", \"gave\", \"gives\", \"giving\"], \"answer\": 1}, {\"id\": \"ex_fa85169050\", \"type\": \"fill\", \"question\": \"She is the student ___ won the competition. (الضمير الموصول للعاقل)\", \"options\": [\"which\", \"whose\", \"whom\", \"who\"], \"answer\": 3}, {\"id\": \"ex_860588c0b4\", \"type\": \"order\", \"instruction\": \"رتّب الكلمات لتكوين سؤال صحيح بالإنجليزية:\", \"words\": [\"do\", \"you\", \"speak\", \"Do\", \"English\", \"?\"], \"answer\": [\"Do\", \"you\", \"speak\", \"English\", \"?\"]}, {\"id\": \"ex_6948625aa3\", \"type\": \"order\", \"instruction\": \"رتّب الكلمات لتكوين جملة أمر صحيحة:\", \"words\": [\"the\", \"Close\", \"window\", \"please\", \",\"], \"answer\": [\"Close\", \"the\", \"window\", \"please\", \",\"]}, {\"id\": \"ex_13e4928c25\", \"type\": \"order\", \"instruction\": \"رتّب الكلمات لتكوين جملة مقارنة صحيحة:\", \"words\": [\"more\", \"She\", \"is\", \"intelligent\", \"than\", \"him\"], \"answer\": [\"She\", \"is\", \"more\", \"intelligent\", \"than\", \"him\"]}, {\"id\": \"ex_db3067af55\", \"type\": \"order\", \"instruction\": \"رتّب الكلمات لتكوين جملة في المضارع التام:\", \"words\": [\"watched\", \"We\", \"have\", \"film\", \"this\", \"already\"], \"answer\": [\"We\", \"have\", \"already\", \"watched\", \"this\", \"film\"]}, {\"id\": \"ex_f6931328b9\", \"type\": \"vf\", \"question\": \"في اللغة الإنجليزية، صيغة الأمر من الفعل 'go' هي 'Goes!'.\", \"answer\": false, \"explanation\": \"خطأ. صيغة الأمر هي 'Go!' فقط، بدون ضمير أو لاحقة. مثال: 'Go to sleep!'\"}, {\"id\": \"ex_911b6d6759\", \"type\": \"vf\", \"question\": \"المضارع التام للفعل 'finish' هو: 'I have finished'.\", \"answer\": true, \"explanation\": \"صحيح! 'finish' فعل منتظم، ومصدره الماضي 'finished'. مثال: 'I have finished my homework.'\"}, {\"id\": \"ex_7711aa688e\", \"type\": \"vf\", \"question\": \"نستخدم 'since' للتعبير عن فعل بدأ في الماضي ولا يزال مستمراً حتى الآن.\", \"answer\": true, \"explanation\": \"صحيح تماماً! 'since' تحدد نقطة البداية. مثال: 'I have studied English since 2020.'\"}]"
+  }
+]

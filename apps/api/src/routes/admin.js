@@ -857,10 +857,12 @@ router.post('/courses/:id/generate-description', requireAdmin, async (req, res) 
 
 // ── GET /admin/all-students ─────────────────────────────────────────
 // Retourne étudiants + inscriptions + cours + commandes en un seul appel.
+// On récupère TOUS les utilisateurs ayant au moins une inscription,
+// quel que soit leur rôle (etudiant, client, etc.).
 router.get('/all-students', requireAdmin, async (req, res) => {
   try {
-    const [students, enrollments, courses, orders] = await Promise.all([
-      pb.collection('users').getFullList({ filter: "role='etudiant'", sort: '-created', $autoCancel: false }),
+    // 1. Inscriptions en premier pour déterminer quels users afficher
+    const [enrollments, courses, orders] = await Promise.all([
       pb.collection('course_enrollments').getFullList({ $autoCancel: false }),
       pb.collection('courses').getFullList({
         fields: 'id,title,titre,category,categorie,section,level,niveau,price,prix',
@@ -868,6 +870,21 @@ router.get('/all-students', requireAdmin, async (req, res) => {
       }),
       pb.collection('orders').getFullList({ sort: '-created', $autoCancel: false }),
     ]);
+
+    // 2. IDs uniques des utilisateurs ayant au moins une inscription
+    const enrolledUserIds = [...new Set(enrollments.map(e => e.user_id).filter(Boolean))];
+
+    // 3. Récupérer ces utilisateurs (tous rôles confondus)
+    let students = [];
+    if (enrolledUserIds.length > 0) {
+      const filter = enrolledUserIds.map(id => `id='${id}'`).join('||');
+      students = await pb.collection('users').getFullList({
+        filter,
+        sort: '-created',
+        $autoCancel: false,
+      });
+    }
+
     return res.json({ students, enrollments, courses, orders });
   } catch (err) {
     logger.error('Erreur récupération all-students:', err);

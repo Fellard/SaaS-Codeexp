@@ -550,6 +550,30 @@ const StudentDashboard = () => {
                 </Card>
               )}
 
+              {/* Mon Parcours — widget CTA */}
+              <Card className="border-2 border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50 overflow-hidden">
+                <div className="h-1 bg-gradient-to-r from-amber-400 to-orange-500" />
+                <CardContent className="pt-5 pb-4">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-11 h-11 rounded-xl bg-amber-100 flex items-center justify-center flex-shrink-0">
+                      <GraduationCap className="w-5 h-5 text-amber-600" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-foreground text-sm">Mon Parcours</p>
+                      <p className="text-xs text-muted-foreground">Progression certifiante</p>
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
+                    Suivez votre parcours étape par étape. Chaque cours validé (≥ 70%) débloque le suivant vers le certificat.
+                  </p>
+                  <Link to="/etudiant/dashboard/parcours">
+                    <Button className="w-full gap-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold rounded-xl shadow-md shadow-amber-500/20">
+                      <GraduationCap className="w-4 h-4" /> Voir mon parcours
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
+
               {/* Accès rapide */}
               <Card className="border border-border">
                 <CardHeader className="pb-2">
@@ -559,6 +583,7 @@ const StudentDashboard = () => {
                 </CardHeader>
                 <CardContent className="space-y-1.5 pt-0">
                   {[
+                    { to: '/etudiant/dashboard/parcours', icon: '🎓', label: 'Mon Parcours',       sub: 'Progression certifiante'  },
                     { to: '/etudiant/dashboard/profile',  icon: '👤', label: 'Mon profil',        sub: 'Modifier mes informations' },
                     { to: '/formation',                   icon: '📚', label: 'Catalogue de cours', sub: 'Toutes les formations IWS' },
                     { to: '/etudiant/dashboard/orders',   icon: '🧾', label: 'Mes commandes',      sub: 'Historique des paiements'  },

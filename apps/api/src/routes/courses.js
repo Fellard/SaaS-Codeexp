@@ -726,7 +726,46 @@ router.post('/:courseId/submit-score', requireEtudiant, async (req, res) => {
   }
 
   const scoreNum = Math.min(100, Math.max(0, Math.round(Number(score))));
-  const PASS_THRESHOLD = 80;
+
+  // Seuil selon le type de cours : exam = 75%, standard = 80%
+  let PASS_THRESHOLD = 80;
+  let isExam = false;
+  try {
+    const course = await pb.collection('courses').getOne(courseId, { $autoCancel: false });
+    if (course.course_type === 'exam') { PASS_THRESHOLD = 75; isExam = true; }
+  } catch { /* course non trouvé : seuil par défaut */ }
+
+  // ── Cooldown 24h pour les examens de certification ────────────
+  if (isExam) {
+    await ensureScoresCollection();
+    try {
+      const lastAttempts = await pb.collection('course_scores').getFullList({
+        filter: `user_id="${userId}" && course_id="${courseId}"`,
+        sort:   '-submitted_at',
+        $autoCancel: false,
+      });
+      if (lastAttempts.length > 0) {
+        const lastTime   = new Date(lastAttempts[0].submitted_at).getTime();
+        const now        = Date.now();
+        const elapsed    = now - lastTime;
+        const cooldownMs = 24 * 60 * 60 * 1000; // 24h
+        if (elapsed < cooldownMs) {
+          const nextAttemptAt = new Date(lastTime + cooldownMs).toISOString();
+          const remainingMs   = cooldownMs - elapsed;
+          const remainingH    = Math.floor(remainingMs / 3600000);
+          const remainingMin  = Math.floor((remainingMs % 3600000) / 60000);
+          return res.status(429).json({
+            error:         'Cooldown actif',
+            cooldown:      true,
+            nextAttemptAt,
+            remainingMs,
+            message:       `Vous devez attendre encore ${remainingH}h${remainingMin.toString().padStart(2,'0')} avant de repasser l'examen.`,
+          });
+        }
+      }
+    } catch { /* pas de tentative précédente → autorisé */ }
+  }
+
   const passed = scoreNum >= PASS_THRESHOLD;
 
   logger.info(`submit-score | user=${userId} course=${courseId} score=${scoreNum} passed=${passed}`);
@@ -793,10 +832,9 @@ router.post('/:courseId/submit-score', requireEtudiant, async (req, res) => {
       passed,
       score:    scoreNum,
       attempt:  attemptNumber,
-      // action que le frontend doit exécuter
       action:   passed ? 'proceed_to_next' : 'restart_lecture',
       message:  passed
-        ? `✅ Félicitations ! Module validé avec ${scoreNum}/100. Vous pouvez passer à la suite.`
+        ? `✅ Félicitations ! Validé avec ${scoreNum}/100. Vous pouvez passer à la suite.`
         : `❌ Score insuffisant : ${scoreNum}/100 (minimum requis : ${PASS_THRESHOLD}). Révisez le cours et réessayez.`,
       nextStep: passed
         ? 'Passez au cours suivant ou au dialogue IA pour pratiquer.'
@@ -810,8 +848,9 @@ router.post('/:courseId/submit-score', requireEtudiant, async (req, res) => {
 
 /**
  * GET /courses/:courseId/my-score
- * Retourne le dernier score de l'utilisateur pour ce cours.
- * Response : { score, passed, attempt, hasScore }
+ * Retourne le meilleur score + dernier score de l'utilisateur pour ce cours.
+ * Inclut l'info cooldown si l'examen est en période de blocage 24h.
+ * Response : { hasScore, score, passed, attempt, lastAttempt, cooldown?, nextAttemptAt? }
  */
 router.get('/:courseId/my-score', requireEtudiant, async (req, res) => {
   const { courseId } = req.params;
@@ -830,17 +869,193 @@ router.get('/:courseId/my-score', requireEtudiant, async (req, res) => {
       return res.json({ hasScore: false });
     }
 
-    const best = scores.reduce((a, b) => (b.score > a.score ? b : a), scores[0]);
+    const last = scores[0];
+    const best = scores.reduce((a, b) => (b.score > a.score ? b : a), last);
+
+    // Vérifier cooldown 24h pour les examens
+    let cooldown      = false;
+    let nextAttemptAt = null;
+    try {
+      const course = await pb.collection('courses').getOne(courseId, { $autoCancel: false });
+      if (course.course_type === 'exam') {
+        const lastTime   = new Date(last.submitted_at).getTime();
+        const elapsed    = Date.now() - lastTime;
+        const cooldownMs = 24 * 60 * 60 * 1000;
+        if (elapsed < cooldownMs) {
+          cooldown      = true;
+          nextAttemptAt = new Date(lastTime + cooldownMs).toISOString();
+        }
+      }
+    } catch { /* non bloquant */ }
+
     return res.json({
-      hasScore:    true,
-      score:       best.score,
-      passed:      best.passed,
-      attempt:     scores.length,
-      lastAttempt: scores[0],
+      hasScore:     true,
+      score:        best.score,
+      passed:       best.passed,
+      attempt:      scores.length,
+      lastAttempt:  last,
+      bestAttempt:  best,
+      cooldown,
+      nextAttemptAt,
     });
   } catch (err) {
-    // Collection pas encore créée → aucun score
-    return res.json({ hasScore: false });
+    logger.error('my-score error:', err.message);
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+
+/**
+ * GET /courses/path/:langue
+ * Retourne le parcours ordonné pour une langue donnée (Francais | Anglais | Arabe),
+ * avec le statut lock/unlock/in_progress/completed pour l'utilisateur connecté.
+ *
+ * Règle de déblocage : le cours N est débloqué si le cours N-1 (même langue)
+ * a un score ≥ 70 dans course_scores (ou enrollment.complete = true).
+ *
+ * Response :
+ * {
+ *   langue, total, completed, inProgress,
+ *   courses: [{ id, titre, sort_order, niveau, status, score, progression }]
+ * }
+ */
+router.get('/path/:langue', requireEtudiant, async (req, res) => {
+  const { langue } = req.params;
+  const userId     = req.userId;
+  const UNLOCK_THRESHOLD = 70; // score minimum pour débloquer le cours suivant
+
+  const LANGUES_VALIDES = ['Francais', 'Anglais', 'Arabe'];
+  if (!LANGUES_VALIDES.includes(langue)) {
+    return res.status(400).json({ error: `Langue invalide. Valeurs acceptées : ${LANGUES_VALIDES.join(', ')}` });
+  }
+
+  try {
+    // 1 ── Charger tous les cours (standard + exam) de la langue, triés par sort_order
+    const allCourses = await pb.collection('courses').getFullList({
+      filter:      `langue = "${langue}" && (course_type = "standard" || course_type = "exam")`,
+      sort:        'sort_order,titre',
+      $autoCancel: false,
+    });
+
+    if (allCourses.length === 0) {
+      return res.json({ langue, total: 0, completed: 0, inProgress: 0, courses: [] });
+    }
+
+    // 2 ── Charger les enrollments de l'utilisateur pour ces cours
+    const courseIds = allCourses.map(c => c.id);
+    let enrollments = [];
+    try {
+      enrollments = await pb.collection('course_enrollments').getFullList({
+        filter: `user_id = "${userId}"`,
+        $autoCancel: false,
+      });
+    } catch { /* pas encore d'enrollments */ }
+
+    // 3 ── Charger les meilleurs scores de l'utilisateur
+    let scores = [];
+    try {
+      scores = await pb.collection('course_scores').getFullList({
+        filter: `user_id = "${userId}"`,
+        $autoCancel: false,
+      });
+    } catch { /* collection pas encore créée */ }
+
+    // Index rapide : courseId → enrollment / meilleur score
+    const enrollMap = {};
+    for (const e of enrollments) {
+      if (courseIds.includes(e.course_id)) enrollMap[e.course_id] = e;
+    }
+    const scoreMap = {}; // courseId → meilleur score
+    for (const s of scores) {
+      if (courseIds.includes(s.course_id)) {
+        if (!scoreMap[s.course_id] || s.score > scoreMap[s.course_id]) {
+          scoreMap[s.course_id] = s.score;
+        }
+      }
+    }
+
+    // 4 ── Construire le parcours ordonné avec statut lock
+    const standardCourses = allCourses.filter(c => c.course_type !== 'exam');
+    const examCourses     = allCourses.filter(c => c.course_type === 'exam');
+
+    const sorted = [
+      ...standardCourses.sort((a, b) => {
+        const oa = a.sort_order || 999;
+        const ob = b.sort_order || 999;
+        return oa !== ob ? oa - ob : (a.titre || '').localeCompare(b.titre || '');
+      }),
+      ...examCourses, // les examens toujours en dernier
+    ];
+
+    // Tous les cours standard validés ? (pour débloquer l'examen)
+    const allStandardPassed = standardCourses.every(c => {
+      const s = scoreMap[c.id] ?? null;
+      const e = enrollMap[c.id];
+      return (s !== null && s >= UNLOCK_THRESHOLD) || e?.complete === true;
+    });
+
+    const result = [];
+    for (let i = 0; i < sorted.length; i++) {
+      const course    = sorted[i];
+      const isExam    = course.course_type === 'exam';
+      const enroll    = enrollMap[course.id];
+      const bestScore = scoreMap[course.id] ?? null;
+
+      // Règle de verrouillage
+      let locked = false;
+      if (isExam) {
+        // L'examen est verrouillé tant que tous les cours standard ne sont pas validés
+        locked = !allStandardPassed;
+      } else if (i > 0) {
+        const prevCourse = sorted[i - 1];
+        const prevScore  = scoreMap[prevCourse.id] ?? null;
+        const prevEnroll = enrollMap[prevCourse.id];
+        const prevPassed = (prevScore !== null && prevScore >= UNLOCK_THRESHOLD)
+                        || (prevEnroll?.complete === true);
+        locked = !prevPassed;
+      }
+
+      // Seuil de réussite selon le type
+      const passThreshold = isExam ? 75 : 80;
+
+      // Statut : completed | in_progress | available | locked
+      let status = locked ? 'locked' : 'available';
+      if (!locked) {
+        if (enroll?.complete || (bestScore !== null && bestScore >= passThreshold)) {
+          status = 'completed';
+        } else if (enroll && (enroll.progression || 0) > 0) {
+          status = 'in_progress';
+        }
+      }
+
+      result.push({
+        id:          course.id,
+        titre:       course.titre,
+        sort_order:  course.sort_order || i + 1,
+        niveau:      course.niveau || 'A1',
+        duree:       course.duree  || 0,
+        isExam,
+        status,
+        locked,
+        score:       bestScore,
+        progression: enroll?.progression || 0,
+      });
+    }
+
+    const completedCount  = result.filter(c => c.status === 'completed').length;
+    const inProgressCount = result.filter(c => c.status === 'in_progress').length;
+
+    return res.json({
+      langue,
+      total:      result.length,
+      completed:  completedCount,
+      inProgress: inProgressCount,
+      courses:    result,
+    });
+
+  } catch (err) {
+    logger.error('GET /courses/path/:langue error:', err.message);
+    return res.status(500).json({ error: err.message });
   }
 });
 

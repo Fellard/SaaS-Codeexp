@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext.jsx';
 import { useLanguage } from '@/hooks/useLanguage.jsx';
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
+import CourseSignupModal from '@/components/CourseSignupModal.jsx';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -203,8 +204,10 @@ export default function CourseDetailPage() {
     }
   };
 
+  const [showSignupModal, setShowSignupModal] = useState(false);
+
   const handleEnroll = async () => {
-    if (!currentUser) { navigate('/login'); return; }
+    if (!currentUser) { setShowSignupModal(true); return; }
     // Paid course → redirect to SecureCourseViewer which handles the payment wall
     if (course.price > 0 && !isFreeByTier) {
       navigate(`/dashboard/courses/${id}/view`);
@@ -295,6 +298,15 @@ export default function CourseDetailPage() {
   return (
     <>
       <Helmet><title>{course.title} — IWS</title></Helmet>
+
+      {/* Modal inscription étudiant */}
+      <CourseSignupModal
+        open={showSignupModal}
+        onClose={() => setShowSignupModal(false)}
+        courseId={id}
+        courseName={course?.title || course?.titre}
+      />
+
       <div className="min-h-screen flex flex-col bg-slate-50" dir={isRtl ? 'rtl' : 'ltr'}>
         <Header />
 

@@ -721,6 +721,141 @@ const AudioDrillPanel = ({ page }) => {
 };
 
 // ─────────────────────────────────────────────────────────────────
+// COMPOSANT — Piste audio (type: 'audio') — Écoute & Compréhension
+// ─────────────────────────────────────────────────────────────────
+const AudioTrackPlayer = ({ page, isRtl }) => {
+  const audioRef = useRef(null);
+  const [playing,  setPlaying]  = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [loaded,   setLoaded]   = useState(false);
+
+  const audioUrl   = page.audio_url   || null;
+  const piste      = page.piste_numero || '?';
+  const transcript = page.transcript  || '';
+
+  const fmt = (s) => {
+    if (!s || !isFinite(s)) return '0:00';
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60);
+    return `${m}:${sec.toString().padStart(2, '0')}`;
+  };
+
+  const togglePlay = () => {
+    if (!audioRef.current) return;
+    if (playing) { audioRef.current.pause(); }
+    else         { audioRef.current.play();  }
+  };
+
+  const handleSeek = (e) => {
+    if (!audioRef.current || !duration) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const ratio = (e.clientX - rect.left) / rect.width;
+    audioRef.current.currentTime = ratio * duration;
+  };
+
+  if (!audioUrl) {
+    return (
+      <div className="space-y-4">
+        {/* Placeholder lecteur */}
+        <div className="bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/20 rounded-2xl p-6 text-center">
+          <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
+            <svg className="w-7 h-7 text-primary" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+            </svg>
+          </div>
+          <p className="font-bold text-foreground mb-1">Piste {piste}</p>
+          <p className="text-sm text-muted-foreground">Audio en cours d'ajout — disponible prochainement</p>
+        </div>
+
+        {/* Transcript */}
+        {transcript && (
+          <div className="bg-card border border-border rounded-xl p-4">
+            <p className="text-xs font-bold text-primary uppercase tracking-wider mb-3 flex items-center gap-1.5">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Transcription
+            </p>
+            <div className="text-sm text-foreground leading-relaxed whitespace-pre-wrap" dir={isRtl ? 'rtl' : 'ltr'}
+              dangerouslySetInnerHTML={{ __html: transcript }} />
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      {/* Lecteur audio */}
+      <div className="bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/20 rounded-2xl p-5">
+        <audio
+          ref={audioRef}
+          src={audioUrl}
+          onPlay={() => setPlaying(true)}
+          onPause={() => setPlaying(false)}
+          onEnded={() => { setPlaying(false); setProgress(duration); }}
+          onLoadedMetadata={(e) => { setDuration(e.target.duration); setLoaded(true); }}
+          onTimeUpdate={(e) => setProgress(e.target.currentTime)}
+          preload="metadata"
+        />
+
+        <div className="flex items-center gap-4">
+          {/* Bouton play/pause */}
+          <button
+            onClick={togglePlay}
+            disabled={!loaded}
+            className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-md hover:bg-primary/90 disabled:opacity-50 flex-shrink-0 transition-transform active:scale-95"
+          >
+            {playing ? (
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+              </svg>
+            ) : (
+              <svg className="w-5 h-5 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+            )}
+          </button>
+
+          {/* Barre de progression + temps */}
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-bold text-primary mb-2">Piste {piste}</p>
+            <div
+              className="w-full h-2 bg-primary/20 rounded-full cursor-pointer relative overflow-hidden"
+              onClick={handleSeek}
+            >
+              <div
+                className="absolute inset-y-0 left-0 bg-primary rounded-full transition-all"
+                style={{ width: duration ? `${(progress / duration) * 100}%` : '0%' }}
+              />
+            </div>
+            <div className="flex justify-between text-xs text-muted-foreground mt-1">
+              <span>{fmt(progress)}</span>
+              <span>{fmt(duration)}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Transcript */}
+      {transcript && (
+        <div className="bg-card border border-border rounded-xl p-4">
+          <p className="text-xs font-bold text-primary uppercase tracking-wider mb-3 flex items-center gap-1.5">
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Transcription
+          </p>
+          <div className="text-sm text-foreground leading-relaxed whitespace-pre-wrap" dir={isRtl ? 'rtl' : 'ltr'}
+            dangerouslySetInnerHTML={{ __html: transcript }} />
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────────
 // COMPOSANT PRINCIPAL
 // ─────────────────────────────────────────────────────────────────
 const SecureCourseViewer = () => {
@@ -1719,6 +1854,8 @@ const SecureCourseViewer = () => {
               </div>
               {pages[currentPage]?.type === 'audio-drill'
                 ? <AudioDrillPanel page={pages[currentPage]} />
+                : pages[currentPage]?.type === 'audio'
+                ? <AudioTrackPlayer page={pages[currentPage]} isRtl={isRtl} />
                 : <div className="lesson-content" dir={isRtl ? 'rtl' : 'ltr'}
                     dangerouslySetInnerHTML={{ __html: pages[currentPage]?.content || '' }} />
               }

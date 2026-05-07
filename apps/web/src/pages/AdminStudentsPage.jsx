@@ -379,7 +379,9 @@ const AdminStudentsPage = () => {
            { status: 'fulfilled', value: apiData.courses || [] },
            { status: 'fulfilled', value: apiData.orders || [] }]
         : await Promise.allSettled([
-            pb.collection('users').getFullList({ filter: "role='etudiant'", sort: '-created', requestKey: null }),
+            // Fallback: on récupère tous les utilisateurs non-admin
+            // (le filtrage par inscriptions se fait ensuite côté client)
+            pb.collection('users').getFullList({ filter: "role!='admin'", sort: '-created', requestKey: null }),
             pb.collection('courses').getFullList({ requestKey: null }),
             pb.collection('orders').getFullList({ sort: '-created', requestKey: null }),
           ]);
@@ -498,8 +500,8 @@ const AdminStudentsPage = () => {
     const subscribe = async () => {
       try {
         unsubUsers = await pb.collection('users').subscribe('*', (e) => {
-          // Ne traite que les étudiants
-          if (e.record?.role && e.record.role !== 'etudiant') return;
+          // Ignore les changements sur les admins (pas concernés par la formation)
+          if (e.record?.role === 'admin') return;
           if (e.action === 'delete') {
             // Suppression immédiate dans l'état local (pas besoin de refetch)
             setStudents(prev => prev.filter(s => s.id !== e.record.id));

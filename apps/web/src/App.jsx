@@ -38,6 +38,9 @@ import CoursesPage from '@/pages/CoursesPage.jsx';
 import SecureCourseViewer from '@/pages/SecureCourseViewer.jsx';
 import RecallPage from '@/pages/RecallPage.jsx';
 import StudentCoursesPage from '@/pages/StudentCoursesPage.jsx';
+import LearningPathPage from '@/pages/LearningPathPage.jsx';
+import CertificatePage from '@/pages/CertificatePage.jsx';
+import StudentProgressPage from '@/pages/StudentProgressPage.jsx';
 
 // ── Dashboard Client (/client/dashboard) ─────────────────────────────────────
 import ClientDashboardPage from '@/pages/ClientDashboardPage.jsx';
@@ -69,6 +72,10 @@ import AdminFormationPaymentsPage from '@/pages/AdminFormationPaymentsPage.jsx';
 import AdminMagasinPage from '@/pages/AdminMagasinPage.jsx';
 import AdminStudioPage from '@/pages/AdminStudioPage.jsx';
 import AdminWebAgencyPage from '@/pages/AdminWebAgencyPage.jsx';
+
+// ── Pages Magasin — checkout invité ──────────────────────────────────────────
+import StoreCheckoutPage from '@/pages/StoreCheckoutPage.jsx';
+import StoreSuccessPage  from '@/pages/StoreSuccessPage.jsx';
 
 // ── Pages Web Agency ─────────────────────────────────────────────────────────
 import WebAgencyPage from '@/pages/WebAgencyPage.jsx';
@@ -108,6 +115,8 @@ function App() {
               <Route path="/formation/inscription" element={<FormationInscriptionPage />} />
               <Route path="/courses/:id" element={<CourseDetailPage />} />
               <Route path="/store" element={<StorePage />} />
+              <Route path="/store/checkout" element={<StoreCheckoutPage />} />
+              <Route path="/store/success"  element={<StoreSuccessPage />} />
               <Route path="/product/:id" element={<ProductDetailPage />} />
               <Route path="/success" element={<PaymentSuccessPage />} />
               <Route path="/payment/success" element={<ProtectedRoute><PaymentCapturePage /></ProtectedRoute>} />
@@ -152,6 +161,18 @@ function App() {
               <Route
                 path="/etudiant/dashboard/courses/view"
                 element={<RoleRoute allowedRoles={['etudiant']}><SecureCourseViewer /></RoleRoute>}
+              />
+              <Route
+                path="/etudiant/dashboard/parcours"
+                element={<RoleRoute allowedRoles={['etudiant']}><LearningPathPage /></RoleRoute>}
+              />
+              <Route
+                path="/etudiant/certificate/:courseId"
+                element={<RoleRoute allowedRoles={['etudiant']}><CertificatePage /></RoleRoute>}
+              />
+              <Route
+                path="/etudiant/dashboard/progression"
+                element={<RoleRoute allowedRoles={['etudiant']}><StudentProgressPage /></RoleRoute>}
               />
               <Route
                 path="/etudiant/dashboard/recall"

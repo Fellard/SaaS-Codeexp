@@ -1,0 +1,10 @@
+import 'dotenv/config';
+import PocketBase from 'pocketbase';
+const pb = new PocketBase(process.env.PB_URL || 'http://127.0.0.1:8090');
+await pb.collection('_superusers').authWithPassword(process.env.PB_SUPERUSER_EMAIL, process.env.PB_SUPERUSER_PASSWORD);
+const coll = await pb.send('/api/collections/courses', { method: 'GET' });
+const fields = coll.fields || [];
+const ctField = fields.find(f => f.name === 'course_type');
+const caField = fields.find(f => f.name === 'categorie_age');
+console.log('course_type values:', JSON.stringify(ctField?.values));
+console.log('categorie_age values:', JSON.stringify(caField?.values));

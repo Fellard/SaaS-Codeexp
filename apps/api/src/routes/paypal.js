@@ -69,7 +69,11 @@ router.get('/config', (req, res) => {
  * Retourne : { id: "PAYPAL_ORDER_ID" }
  */
 router.post('/create-order', async (req, res) => {
-  const { amount, description, orderId, orderType = 'formation', courseId, userId } = req.body;
+  const {
+    amount, description, orderId, orderType = 'formation', courseId, userId,
+    // Champs spécifiques magasin (orderType === 'store')
+    storeKey, section, clientNom, clientEmail, clientTel, adresse, ville, codePostal, items,
+  } = req.body;
 
   if (!amount || amount <= 0) {
     return res.status(400).json({ error: 'amount requis (en MAD)' });
@@ -81,7 +85,30 @@ router.post('/create-order', async (req, res) => {
 
     // ── Créer une commande PocketBase en attente ─────────────────
     let pbOrderId = orderId || null;
-    if (!pbOrderId && userId) {
+
+    if (!pbOrderId && orderType === 'store') {
+      // ── Commande magasin (invité, sans compte) ──────────────────
+      try {
+        const pbRecord = await pb.collection('store_orders').create({
+          store:           storeKey  || '',
+          section:         section   || '',
+          client_nom:      clientNom || 'Client',
+          client_email:    clientEmail || '',
+          client_tel:      clientTel   || '',
+          adresse:         adresse     || '',
+          ville:           ville       || '',
+          code_postal:     codePostal  || '',
+          items:           JSON.stringify(items || []),
+          total:           amount,
+          status:          'pending',
+        }, { requestKey: null });
+        pbOrderId = pbRecord.id;
+        logger.info(`store_orders created: ${pbOrderId} (pending) — store=${storeKey}`);
+      } catch (pbErr) {
+        logger.error('store_orders creation failed:', pbErr.message);
+      }
+    } else if (!pbOrderId && userId) {
+      // ── Commande formation (utilisateur connecté) ───────────────
       try {
         const pbRecord = await pb.collection('orders').create({
           user_id:        userId,
@@ -100,14 +127,24 @@ router.post('/create-order', async (req, res) => {
     }
 
     // ── Construire l'URL de retour avec tous les paramètres ──────
-    const returnParams = new URLSearchParams({
-      order_type: orderType,
-      ...(pbOrderId  && { pb_order_id: pbOrderId }),
-      ...(courseId   && { course_id:   courseId   }),
-      ...(userId     && { user_id:     userId     }),
-    });
-    const returnUrl = `${process.env.SITE_URL}/payment/success?${returnParams}`;
-    const cancelUrl = `${process.env.SITE_URL}/payment/cancel?${courseId ? `course_id=${courseId}` : ''}`;
+    let returnUrl, cancelUrl;
+    if (orderType === 'store') {
+      const returnParams = new URLSearchParams({
+        order_type: 'store',
+        ...(pbOrderId && { pb_order_id: pbOrderId }),
+      });
+      returnUrl = `${process.env.SITE_URL}/store/success?${returnParams}`;
+      cancelUrl = `${process.env.SITE_URL}/store`;
+    } else {
+      const returnParams = new URLSearchParams({
+        order_type: orderType,
+        ...(pbOrderId  && { pb_order_id: pbOrderId }),
+        ...(courseId   && { course_id:   courseId   }),
+        ...(userId     && { user_id:     userId     }),
+      });
+      returnUrl = `${process.env.SITE_URL}/payment/success?${returnParams}`;
+      cancelUrl = `${process.env.SITE_URL}/payment/cancel?${courseId ? `course_id=${courseId}` : ''}`;
+    }
 
     // ── Créer la commande PayPal ──────────────────────────────────
     const token = await getAccessToken();
@@ -202,17 +239,44 @@ router.post('/capture-order', async (req, res) => {
 
     // ── Mettre à jour PocketBase si paiement réussi ──────────────
     if (captureStatus === 'COMPLETED' && pbOrderId) {
-      const collection = orderType === 'web_agency' ? 'web_orders' : 'orders';
-      try {
-        await pb.collection(collection).update(pbOrderId, {
-          status:           'completed',
-          payment_method:   'paypal',
-          paypal_order_id:  paypalOrderId,
-          paid_at:          new Date().toISOString(),
-        }, { requestKey: null });
-        logger.info(`PocketBase ${collection} ${pbOrderId} → completed`);
-      } catch (pbErr) {
-        logger.error(`PocketBase update failed for ${pbOrderId}:`, pbErr.message);
+      if (orderType === 'store') {
+        // ── Commande magasin ────────────────────────────────────────
+        try {
+          const order = await pb.collection('store_orders').update(pbOrderId, {
+            status:          'paid',
+            paypal_order_id: paypalOrderId,
+            paid_at:         new Date().toISOString(),
+          }, { requestKey: null });
+          logger.info(`store_orders ${pbOrderId} → paid`);
+
+          // Email de confirmation
+          if (order.client_email) {
+            try {
+              await pb.collection('_superusers').authWithPassword(
+                process.env.PB_SUPERUSER_EMAIL, process.env.PB_SUPERUSER_PASSWORD
+              );
+              // PocketBase n'a pas de sendMail natif accessible via SDK —
+              // on loggue l'info pour un futur hook PB ou SMTP externe
+              logger.info(`[EMAIL] Confirmation à envoyer → ${order.client_email} pour commande #${pbOrderId}`);
+            } catch {}
+          }
+        } catch (pbErr) {
+          logger.error(`store_orders update failed for ${pbOrderId}:`, pbErr.message);
+        }
+      } else {
+        // ── Commande formation / web_agency ────────────────────────
+        const collection = orderType === 'web_agency' ? 'web_orders' : 'orders';
+        try {
+          await pb.collection(collection).update(pbOrderId, {
+            status:           'completed',
+            payment_method:   'paypal',
+            paypal_order_id:  paypalOrderId,
+            paid_at:          new Date().toISOString(),
+          }, { requestKey: null });
+          logger.info(`PocketBase ${collection} ${pbOrderId} → completed`);
+        } catch (pbErr) {
+          logger.error(`PocketBase update failed for ${pbOrderId}:`, pbErr.message);
+        }
       }
     }
 
