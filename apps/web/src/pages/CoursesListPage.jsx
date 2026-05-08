@@ -743,17 +743,22 @@ const CoursesListPage = () => {
                 <h2 className="text-2xl font-bold text-foreground">Choisissez votre programme</h2>
                 <p className="text-muted-foreground text-sm mt-2">Cliquez sur un programme pour filtrer les formations disponibles</p>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                {Object.values(SECTIONS).map(section => (
-                  <ProgrammeCard
-                    key={section.key}
-                    section={section}
-                    count={sectionCounts[section.key] || 0}
-                    active={activeSection === section.key}
-                    onClick={() => handleSectionClick(section.key)}
-                  />
-                ))}
-              </div>
+              {(() => {
+                const visibleSections = Object.values(SECTIONS).filter(s => (sectionCounts[s.key] || 0) > 0);
+                return (
+                  <div className={`grid grid-cols-1 gap-5 ${visibleSections.length === 1 ? 'md:grid-cols-1 max-w-sm mx-auto' : visibleSections.length === 2 ? 'md:grid-cols-2 max-w-2xl mx-auto' : 'md:grid-cols-3'}`}>
+                    {visibleSections.map(section => (
+                      <ProgrammeCard
+                        key={section.key}
+                        section={section}
+                        count={sectionCounts[section.key] || 0}
+                        active={activeSection === section.key}
+                        onClick={() => handleSectionClick(section.key)}
+                      />
+                    ))}
+                  </div>
+                );
+              })()}
 
               {/* CTA inscription par programme */}
               {activeSection && SECTIONS[activeSection] && (

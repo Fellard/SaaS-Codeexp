@@ -1046,6 +1046,556 @@ const TOPICS = [
     },
   },
 
+  // ──────────────────────────────────────────────────────────────────
+  // INDICATEURS DE TEMPS — Time Expressions — مؤشرات الزمن
+  // ──────────────────────────────────────────────────────────────────
+  {
+    id: 'indicateurs_temps',
+    detectFR: t => /indicateur.*temps|depuis.*il y a|pendant.*dans/i.test(t),
+    en: {
+      titre:       'Time Expressions in English: for, since, ago, in, during… (B1)',
+      cours_nom:   'Anglais',
+      langue:      'Anglais',
+      niveau:      'B1',
+      description: 'Master English time expressions: for, since, ago, in, during, until, by, from… Learn how to situate actions in the past, present and future with precision.',
+      pages: [
+        {
+          id: 'en-time-exp-p1', type: 'lesson',
+          title: '🕐 Time Expressions in English',
+          content: `<div class="lesson-intro">
+<div class="lesson-badge">📚 English Grammar — B1</div>
+<h2>Time Expressions in English</h2>
+<p class="lead">Time expressions help you place actions accurately in the past, present, or future.</p>
+<div class="lesson-objectives"><h4>🎯 Learning Objectives</h4><ul>
+<li>Distinguish <strong>for</strong>, <strong>since</strong>, <strong>ago</strong></li>
+<li>Use <strong>in</strong>, <strong>during</strong>, <strong>until</strong>, <strong>by</strong>, <strong>from… on</strong></li>
+<li>Understand which tense goes with each expression</li>
+</ul></div></div>
+<div class="rule-box"><h4>⏮ Past — Completed Actions</h4><ul>
+<li><strong>ago</strong> → past moment from now: <em>She left <strong>two hours ago</strong>.</em></li>
+<li><strong>for</strong> + past tense → duration now finished: <em>I waited <strong>for an hour</strong>.</em></li>
+<li><strong>during</strong> + noun → period when sth happened: <em>It rained <strong>during the night</strong>.</em></li>
+<li><strong>in</strong> + time taken → how long to complete: <em>He read the book <strong>in two days</strong>.</em></li>
+</ul></div>
+<div class="rule-box"><h4>⏯ Present / Ongoing</h4><ul>
+<li><strong>for</strong> + present perfect → duration still continuing: <em>I have lived here <strong>for five years</strong>.</em></li>
+<li><strong>since</strong> + start point → ongoing from that moment: <em>She has worked here <strong>since 2019</strong>.</em></li>
+</ul></div>
+<div class="rule-box"><h4>⏭ Future</h4><ul>
+<li><strong>in</strong> + duration → future moment from now: <em>He will arrive <strong>in ten minutes</strong>.</em></li>
+<li><strong>until / till</strong> → up to a time limit: <em>I will wait <strong>until noon</strong>.</em></li>
+<li><strong>by</strong> → no later than: <em>Submit the report <strong>by Friday</strong>.</em></li>
+<li><strong>from… on / starting from</strong> → beginning of a period: <em><strong>From Monday on</strong>, new rules apply.</em></li>
+</ul></div>
+<div class="lesson-highlight">⚠️ <strong>Key difference</strong>: <em>for</em> vs <em>since</em><br>
+→ <strong>for</strong> + duration (for 3 years, for a week)<br>
+→ <strong>since</strong> + starting point (since 2020, since Monday)
+</div>
+<div class="rule-box"><h4>📋 Quick Reference Table</h4>
+<table><thead><tr><th>Expression</th><th>Use</th><th>Example</th></tr></thead><tbody>
+<tr><td><strong>for</strong></td><td>duration (past or ongoing)</td><td>I've known him for ten years.</td></tr>
+<tr><td><strong>since</strong></td><td>starting point (ongoing)</td><td>I've known him since 2014.</td></tr>
+<tr><td><strong>ago</strong></td><td>past moment</td><td>I met him five years ago.</td></tr>
+<tr><td><strong>in</strong></td><td>time to complete / future</td><td>Done in 2 hours. / Back in 5 min.</td></tr>
+<tr><td><strong>during</strong></td><td>within a period</td><td>during the meeting</td></tr>
+<tr><td><strong>until / by</strong></td><td>deadline / limit</td><td>until Friday / by 6pm</td></tr>
+</tbody></table></div>`,
+        },
+        {
+          id: 'en-time-exp-bridge', type: 'bridge',
+          title: '🌍 Time Expressions across 3 Languages',
+          content: `<h3>📖 Time Expressions across 3 Languages</h3>
+<div class="rule-box"><h4>📊 Comparison Table FR | EN | AR</h4>
+<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead><tbody>
+<tr><td>Ongoing duration</td><td>depuis 3 ans</td><td>for 3 years (pres. perf.)</td><td>منذ 3 سنوات</td></tr>
+<tr><td>Past moment</td><td>il y a 2 jours</td><td>2 days ago</td><td>منذ يومين / قبل يومين</td></tr>
+<tr><td>Finished duration</td><td>pendant une heure</td><td>for an hour (past)</td><td>لمدة ساعة</td></tr>
+<tr><td>Future moment</td><td>dans 10 minutes</td><td>in 10 minutes</td><td>بعد 10 دقائق</td></tr>
+<tr><td>Deadline</td><td>jusqu'à lundi</td><td>until / by Monday</td><td>حتى يوم الاثنين</td></tr>
+</tbody></table></div>
+<div class="example-box"><h4>✏️ Same idea in 3 languages</h4><ul>
+<li>🇬🇧 <em>I have been working here for three years.</em></li>
+<li>🇫🇷 <em>Je travaille ici depuis trois ans.</em></li>
+<li>🇸🇦 <em>أعمل هنا منذ ثلاث سنوات.</em></li>
+</ul></div>`,
+        },
+      ],
+      exercises: [
+        { id:'en-time-q1', type:'qcm', question:'Choose the correct expression: "She has lived in Paris _______ 2015."', options:['for','since','ago','during'], answer:1 },
+        { id:'en-time-q2', type:'qcm', question:'"I finished the project _______ two hours." (how long it took)', options:['since','ago','in','for'], answer:2 },
+        { id:'en-time-q3', type:'qcm', question:'"He called me _______ an hour." (an hour before now)', options:['since','in','during','ago'], answer:3 },
+        { id:'en-time-q4', type:'fill', question:'Complete: "Please submit your report _______ Friday." (no later than)', options:['until','by','since','for'], answer:1 },
+        { id:'en-time-q5', type:'fill', question:'Complete: "I\'ve known her _______ ten years."', options:['since','ago','for','during'], answer:2 },
+        { id:'en-time-q6', type:'order', instruction:'Put the words in the correct order:', words:['here','I','for','have','years','three','worked'], answer:['I','have','worked','here','for','three','years'] },
+        { id:'en-time-q7', type:'vf', question:'"Since" is followed by a duration (e.g. since three years).', answer:false, explanation:'"Since" is followed by a starting point (since 2020, since Monday). For durations, use "for" (for three years, for a week).' },
+        { id:'en-time-q8', type:'vf', question:'"Ago" is used with past tenses.', answer:true, explanation:'"Ago" refers to a completed action in the past (e.g. "He left two hours ago"). It is used with simple past, never with the present perfect.' },
+      ],
+    },
+    ar: {
+      titre:       'مؤشرات الزمن في العربية: منذ، قبل، خلال، بعد، حتى… (B1)',
+      cours_nom:   'Arabe',
+      langue:      'Arabe',
+      niveau:      'B1',
+      description: 'تعلّم مؤشرات الزمن في اللغة العربية: منذ، قبل، خلال، بعد، حتى، لمدة، ابتداءً من… لتحديد الأفعال في الماضي والحاضر والمستقبل بدقة.',
+      pages: [
+        {
+          id: 'ar-time-exp-p1', type: 'lesson',
+          title: '🕐 مؤشرات الزمن في العربية',
+          content: `<div class="lesson-intro">
+<div class="lesson-badge">📚 قواعد اللغة العربية — B1</div>
+<h2 dir="rtl">مؤشرات الزمن</h2>
+<p class="lead" dir="rtl">تُستخدم مؤشرات الزمن لتحديد موقع الفعل في الزمن: ماضٍ، حاضر، أو مستقبل.</p>
+</div>
+<div class="rule-box"><h4 dir="rtl">⏮ الماضي</h4>
+<table><thead><tr><th>المؤشر</th><th>الاستخدام</th><th>مثال</th></tr></thead><tbody>
+<tr><td dir="rtl"><strong>قبل + مدة</strong></td><td>لحظة في الماضي</td><td dir="rtl">وصلتُ قبلَ ساعتين.</td></tr>
+<tr><td dir="rtl"><strong>منذ + مدة</strong></td><td>مدة منتهية في الماضي</td><td dir="rtl">انتظرتُ منذ ساعة.</td></tr>
+<tr><td dir="rtl"><strong>لمدة + زمن</strong></td><td>مدة الفعل المنتهي</td><td dir="rtl">عملتُ لمدة ثلاث سنوات.</td></tr>
+<tr><td dir="rtl"><strong>خلال + فترة</strong></td><td>فترة وقوع الحدث</td><td dir="rtl">أمطرت السماء خلال الليل.</td></tr>
+</tbody></table></div>
+<div class="rule-box"><h4 dir="rtl">⏯ الحاضر / المستمر</h4><ul dir="rtl">
+<li><strong>منذ + تاريخ أو مدة</strong> → فعل مستمر حتى الآن: <em>أعيشُ هنا <strong>منذ</strong> خمس سنوات.</em></li>
+<li><strong>ما زلتُ / لا أزال</strong> → استمرارية: <em><strong>ما زلتُ</strong> أتعلّم.</em></li>
+</ul></div>
+<div class="rule-box"><h4 dir="rtl">⏭ المستقبل</h4><ul dir="rtl">
+<li><strong>بعد + مدة</strong> → لحظة مستقبلية: <em>سأصلُ <strong>بعد</strong> عشر دقائق.</em></li>
+<li><strong>حتى / إلى</strong> → حدّ زمني: <em>سأنتظرُ <strong>حتى</strong> الظهر.</em></li>
+<li><strong>ابتداءً من</strong> → بداية فترة: <em><strong>ابتداءً من</strong> الاثنين، تبدأ القواعد الجديدة.</em></li>
+</ul></div>
+<div class="lesson-highlight" dir="rtl">⚠️ <strong>فرق مهم</strong>: منذ للماضي المستمر / قبل لحظة في الماضي<br>
+→ <strong>منذ</strong>: أعمل هنا منذ 2019 (لا أزال أعمل)<br>
+→ <strong>قبل</strong>: بدأتُ العمل قبل 5 سنوات (إشارة إلى الماضي)</div>`,
+        },
+        {
+          id: 'ar-time-exp-bridge', type: 'bridge',
+          title: '🌍 مؤشرات الزمن في 3 لغات',
+          content: `<h3 dir="rtl">📖 مؤشرات الزمن في ثلاث لغات</h3>
+<div class="rule-box"><h4>📊 جدول مقارن FR | EN | AR</h4>
+<table><thead><tr><th>المفهوم</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead><tbody>
+<tr><td>مدة مستمرة</td><td>depuis 3 ans</td><td>for 3 years</td><td dir="rtl">منذ 3 سنوات</td></tr>
+<tr><td>لحظة ماضية</td><td>il y a 2 jours</td><td>2 days ago</td><td dir="rtl">قبل يومين</td></tr>
+<tr><td>مدة منتهية</td><td>pendant une heure</td><td>for an hour</td><td dir="rtl">لمدة ساعة</td></tr>
+<tr><td>لحظة مستقبلية</td><td>dans 10 minutes</td><td>in 10 minutes</td><td dir="rtl">بعد 10 دقائق</td></tr>
+<tr><td>حدّ زمني</td><td>jusqu'à lundi</td><td>until Monday</td><td dir="rtl">حتى يوم الاثنين</td></tr>
+</tbody></table></div>`,
+        },
+      ],
+      exercises: [
+        { id:'ar-time-q1', type:'qcm', question:'أكمل الجملة: "أعيشُ في هذه المدينة _______ خمس سنوات." (الفعل مستمر)', options:['قبل','منذ','خلال','بعد'], answer:1 },
+        { id:'ar-time-q2', type:'qcm', question:'ما الفرق بين "منذ" و"قبل"؟', options:['لا فرق بينهما','منذ للمستمر / قبل للحظة الماضية','قبل للمستمر / منذ للماضي المنتهي','منذ للمستقبل'], answer:1 },
+        { id:'ar-time-q3', type:'fill', question:'أكمل: "سأعود _______ ساعة." (لحظة مستقبلية)', options:['منذ','قبل','بعد','خلال'], answer:2 },
+        { id:'ar-time-q4', type:'fill', question:'أكمل: "عملتُ في الشركة _______ ثلاث سنوات ثم استقلتُ." (مدة منتهية)', options:['منذ','لمدة','بعد','حتى'], answer:1 },
+        { id:'ar-time-q5', type:'vf', question:'"بعد" تُستخدم مع الأفعال الماضية فقط.', answer:false, explanation:'"بعد" تُستخدم مع المستقبل (سأصل بعد ساعة) وليس مع الماضي. أما للإشارة إلى لحظة ماضية فنستخدم "قبل".' },
+        { id:'ar-time-q6', type:'vf', question:'"منذ" في العربية تُعادل كلاً من "for" و"since" في الإنجليزية.', answer:true, explanation:'نعم، "منذ" في العربية تُغطّي معنى "since" (منذ 2020) و"for" (منذ ثلاث سنوات). السياق هو الذي يحدد المعنى الدقيق.' },
+      ],
+    },
+  },
+
+  // ──────────────────────────────────────────────────────────────────
+  // PRONOMS RELATIFS COMPOSÉS — Relative Clauses — الأسماء الموصولة
+  // ──────────────────────────────────────────────────────────────────
+  {
+    id: 'pronoms_relatifs_composes',
+    detectFR: t => /pron.*relat.*compos|lequel.*auquel|auquel.*duquel/i.test(t),
+    en: {
+      titre:       'Relative Clauses with Prepositions: which, whom, whose… (B1)',
+      cours_nom:   'Anglais',
+      langue:      'Anglais',
+      niveau:      'B1',
+      description: 'Master relative clauses with prepositions in English: which, whom, whose, where. Learn when to use "who" vs "which" and how to handle prepositions in relative clauses.',
+      pages: [
+        {
+          id: 'en-rel-p1', type: 'lesson',
+          title: '🔗 Relative Clauses with Prepositions',
+          content: `<div class="lesson-intro">
+<div class="lesson-badge">📚 English Grammar — B1</div>
+<h2>Relative Clauses with Prepositions</h2>
+<p class="lead">A relative clause adds information about a noun using <strong>who, which, that, whose, where, when</strong>.</p>
+</div>
+<div class="rule-box"><h4>📋 Relative Pronouns — Quick Guide</h4>
+<table><thead><tr><th>Pronoun</th><th>Refers to</th><th>Example</th></tr></thead><tbody>
+<tr><td><strong>who / that</strong></td><td>people (subject)</td><td>The man <strong>who</strong> called you is here.</td></tr>
+<tr><td><strong>whom</strong></td><td>people (object / after prep)</td><td>The colleague <strong>with whom</strong> I work.</td></tr>
+<tr><td><strong>which / that</strong></td><td>things</td><td>The book <strong>which</strong> I read was great.</td></tr>
+<tr><td><strong>whose</strong></td><td>possession</td><td>The student <strong>whose</strong> work I graded.</td></tr>
+<tr><td><strong>where</strong></td><td>places</td><td>The city <strong>where</strong> I grew up.</td></tr>
+<tr><td><strong>when</strong></td><td>time</td><td>The day <strong>when</strong> we met.</td></tr>
+</tbody></table></div>
+<div class="rule-box"><h4>🔧 Prepositions in Relative Clauses</h4>
+<p>In formal English, the preposition goes <strong>before</strong> the relative pronoun:</p>
+<ul>
+<li>Formal: <em>The project <strong>on which</strong> I am working.</em></li>
+<li>Informal: <em>The project <strong>which</strong> I am working <strong>on</strong>.</em></li>
+<li>Formal: <em>The person <strong>with whom</strong> I spoke.</em></li>
+<li>Informal: <em>The person <strong>who</strong> I spoke <strong>with</strong>.</em></li>
+</ul>
+</div>
+<div class="lesson-highlight">⚠️ <strong>Key difference with French</strong>:<br>
+→ French: <em>lequel / laquelle</em> → agrees in gender and number<br>
+→ English: <em>which / whom</em> → invariable, no gender agreement
+</div>`,
+        },
+        {
+          id: 'en-rel-bridge', type: 'bridge',
+          title: '🌍 Relative Pronouns in 3 Languages',
+          content: `<h3>📖 Relative Pronouns in 3 Languages</h3>
+<div class="rule-box"><h4>📊 Comparison FR | EN | AR</h4>
+<table><thead><tr><th>Structure</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead><tbody>
+<tr><td>Thing (object)</td><td>sur lequel / laquelle</td><td>on which</td><td>الذي / التي</td></tr>
+<tr><td>Person (object)</td><td>avec qui / avec lequel</td><td>with whom / with who</td><td>الذي / التي معه</td></tr>
+<tr><td>Possession</td><td>dont</td><td>whose</td><td>الذي يملك…</td></tr>
+<tr><td>Place</td><td>où</td><td>where</td><td>حيثُ / الذي في</td></tr>
+</tbody></table></div>
+<div class="example-box"><h4>✏️ Same idea in 3 languages</h4><ul>
+<li>🇬🇧 <em>That is the reason for which I came. / That's why I came.</em></li>
+<li>🇫🇷 <em>C'est la raison pour laquelle je suis venu.</em></li>
+<li>🇸🇦 <em>هذا هو السبب الذي جئتُ من أجله.</em></li>
+</ul></div>`,
+        },
+      ],
+      exercises: [
+        { id:'en-rel-q1', type:'qcm', question:'Choose the correct pronoun: "The tool _______ I work with is broken."', options:['who','whom','which','whose'], answer:2 },
+        { id:'en-rel-q2', type:'qcm', question:'Formal version: "The colleague _____ I work with."', options:['with who','with whom','with which','with that'], answer:1 },
+        { id:'en-rel-q3', type:'qcm', question:'"The student _______ essay I corrected passed the exam."', options:['who','which','whose','whom'], answer:2 },
+        { id:'en-rel-q4', type:'fill', question:'Complete: "The hotel _______ we stayed was very comfortable."', options:['where','which','whose','whom'], answer:0 },
+        { id:'en-rel-q5', type:'vf', question:'In English, relative pronouns agree in gender with their antecedent.', answer:false, explanation:'English relative pronouns (which, whom, whose) do not change for gender or number. This is different from French (lequel/laquelle/lesquels/lesquelles) which must agree.' },
+        { id:'en-rel-q6', type:'vf', question:'"Whom" is used for people in formal contexts, especially after a preposition.', answer:true, explanation:'"Whom" is the object form of "who". It is used after prepositions (with whom, for whom) and in formal writing. In informal speech, "who" is increasingly used instead.' },
+      ],
+    },
+    ar: {
+      titre:       'الأسماء الموصولة في العربية: الذي، التي، الذين، اللواتي… (B1)',
+      cours_nom:   'Arabe',
+      langue:      'Arabe',
+      niveau:      'B1',
+      description: 'تعلّم الأسماء الموصولة في العربية: الذي، التي، اللذان، اللتان، الذين، اللواتي. فهم الصلة وعائدها وكيفية استخدامها في الجمل المركبة.',
+      pages: [
+        {
+          id: 'ar-rel-p1', type: 'lesson',
+          title: '🔗 الأسماء الموصولة في العربية',
+          content: `<div class="lesson-intro">
+<div class="lesson-badge">📚 قواعد اللغة العربية — B1</div>
+<h2 dir="rtl">الأسماء الموصولة</h2>
+<p class="lead" dir="rtl">الاسم الموصول هو اسم يربط جملتين معًا، ويُحدد شيئًا أو شخصًا ذُكر من قبل.</p>
+</div>
+<div class="rule-box"><h4 dir="rtl">📋 جدول الأسماء الموصولة</h4>
+<table><thead><tr><th>الحالة</th><th>الاسم الموصول</th><th>مثال</th></tr></thead><tbody>
+<tr><td dir="rtl">مفرد مذكر</td><td dir="rtl"><strong>الذي</strong></td><td dir="rtl">الرجلُ <strong>الذي</strong> كلّمتُه صديقي.</td></tr>
+<tr><td dir="rtl">مفرد مؤنث</td><td dir="rtl"><strong>التي</strong></td><td dir="rtl">المرأةُ <strong>التي</strong> قرأتُ كتابَها.</td></tr>
+<tr><td dir="rtl">مثنى مذكر</td><td dir="rtl"><strong>اللذان / اللذَين</strong></td><td dir="rtl">الرجلان <strong>اللذان</strong> جاءا.</td></tr>
+<tr><td dir="rtl">مثنى مؤنث</td><td dir="rtl"><strong>اللتان / اللتَين</strong></td><td dir="rtl">المرأتان <strong>اللتان</strong> اجتمعتا.</td></tr>
+<tr><td dir="rtl">جمع مذكر</td><td dir="rtl"><strong>الذين</strong></td><td dir="rtl">الطلابُ <strong>الذين</strong> نجحوا.</td></tr>
+<tr><td dir="rtl">جمع مؤنث</td><td dir="rtl"><strong>اللواتي / اللائي</strong></td><td dir="rtl">الطالباتُ <strong>اللواتي</strong> اجتهدن.</td></tr>
+</tbody></table></div>
+<div class="rule-box"><h4 dir="rtl">🔧 الجملة الاسمية الموصولة — الصلة والعائد</h4>
+<p dir="rtl">يجب أن تحتوي جملة الصلة على ضمير يعود على الاسم الموصول (العائد):</p>
+<ul dir="rtl">
+<li><em>الكتابُ <strong>الذي</strong> قرأتُ<strong>ه</strong> جميلٌ.</em> (الهاء = عائد)</li>
+<li><em>الطالبةُ <strong>التي</strong> تحدّثتُ معها نجحت.</em> (ها = عائد)</li>
+</ul>
+</div>
+<div class="lesson-highlight" dir="rtl">⚠️ الاسم الموصول يتطابق مع مرجعه في الجنس والعدد.<br>
+لكنه لا يتطابق معه في الإعراب (الرفع/النصب/الجر).</div>`,
+        },
+        {
+          id: 'ar-rel-bridge', type: 'bridge',
+          title: '🌍 الأسماء الموصولة في 3 لغات',
+          content: `<h3 dir="rtl">📖 الأسماء الموصولة في ثلاث لغات</h3>
+<div class="rule-box"><h4>📊 جدول مقارن FR | EN | AR</h4>
+<table><thead><tr><th>الحالة</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead><tbody>
+<tr><td>مفرد مذكر</td><td>lequel / qui</td><td>which / who</td><td dir="rtl">الذي</td></tr>
+<tr><td>مفرد مؤنث</td><td>laquelle / qui</td><td>which / who</td><td dir="rtl">التي</td></tr>
+<tr><td>جمع مذكر</td><td>lesquels</td><td>which / who</td><td dir="rtl">الذين</td></tr>
+<tr><td>جمع مؤنث</td><td>lesquelles</td><td>which / who</td><td dir="rtl">اللواتي</td></tr>
+<tr><td>تملّك</td><td>dont</td><td>whose</td><td dir="rtl">الذي/التي + ضمير ملكية</td></tr>
+</tbody></table></div>`,
+        },
+      ],
+      exercises: [
+        { id:'ar-rel-q1', type:'qcm', question:'اختر الاسم الموصول المناسب: "الطالبُ _______ نجحَ في الامتحان."', options:['التي','الذي','الذين','اللواتي'], answer:1 },
+        { id:'ar-rel-q2', type:'qcm', question:'"الطالباتُ _______ اجتهدن حصلن على جوائز."', options:['الذي','التي','الذين','اللواتي'], answer:3 },
+        { id:'ar-rel-q3', type:'fill', question:'أكمل بالضمير العائد: "الكتابُ الذي اشتريتُ _______ مفيدٌ."', options:['ه','ها','هم','هن'], answer:0 },
+        { id:'ar-rel-q4', type:'vf', question:'الاسم الموصول في العربية يتطابق مع مرجعه في الجنس والعدد.', answer:true, explanation:'نعم، يجب مطابقة الاسم الموصول لمرجعه: الذي (مذكر مفرد)، التي (مؤنث مفرد)، الذين (جمع مذكر)، اللواتي (جمع مؤنث).' },
+        { id:'ar-rel-q5', type:'vf', question:'يمكن حذف العائد في جملة الصلة العربية.', answer:false, explanation:'العائد (الضمير الذي يعود على الاسم الموصول) ضروري في جملة الصلة في العربية: "الكتابُ الذي قرأتُه" — لا يمكن حذف الهاء.' },
+      ],
+    },
+  },
+
+  // ──────────────────────────────────────────────────────────────────
+  // HOMOPHONES — Grammatical Confusables — المتشابهات اللفظية
+  // ──────────────────────────────────────────────────────────────────
+  {
+    id: 'homophones',
+    detectFR: t => /homophone|a.à|son.sont|ou.où/i.test(t),
+    en: {
+      titre:       'English Homophones and Confusables: there/their, to/too, your/you\'re… (B1-B2)',
+      cours_nom:   'Anglais',
+      langue:      'Anglais',
+      niveau:      'B1-B2',
+      description: 'Stop confusing common English homophones and look-alikes: there/their/they\'re, to/too/two, your/you\'re, its/it\'s, affect/effect, then/than. Clear rules with practice exercises.',
+      pages: [
+        {
+          id: 'en-homo-p1', type: 'lesson',
+          title: '🔤 English Homophones and Confusables',
+          content: `<div class="lesson-intro">
+<div class="lesson-badge">📚 English Grammar — B1/B2</div>
+<h2>Homophones and Confusables</h2>
+<p class="lead">Words that sound the same but are spelled differently and have different meanings.</p>
+</div>
+<div class="rule-box"><h4>1️⃣ there / their / they're</h4><ul>
+<li><strong>there</strong> = place or existence: <em>Put it over <strong>there</strong>. <strong>There</strong> is a problem.</em></li>
+<li><strong>their</strong> = possessive (belonging to them): <em><strong>Their</strong> car is red.</em></li>
+<li><strong>they're</strong> = they are: <em><strong>They're</strong> coming tomorrow.</em> → replace with "they are" ✓</li>
+</ul></div>
+<div class="rule-box"><h4>2️⃣ to / too / two</h4><ul>
+<li><strong>to</strong> = preposition or infinitive: <em>I go <strong>to</strong> school. I want <strong>to</strong> learn.</em></li>
+<li><strong>too</strong> = also / excessively: <em>She's coming <strong>too</strong>. It's <strong>too</strong> hot.</em></li>
+<li><strong>two</strong> = number 2: <em>I have <strong>two</strong> cats.</em></li>
+</ul></div>
+<div class="rule-box"><h4>3️⃣ your / you're</h4><ul>
+<li><strong>your</strong> = possessive: <em>Is this <strong>your</strong> bag?</em></li>
+<li><strong>you're</strong> = you are: <em><strong>You're</strong> doing great!</em> → replace with "you are" ✓</li>
+</ul></div>
+<div class="rule-box"><h4>4️⃣ its / it's</h4><ul>
+<li><strong>its</strong> = possessive of it: <em>The dog wagged <strong>its</strong> tail.</em></li>
+<li><strong>it's</strong> = it is / it has: <em><strong>It's</strong> raining. <strong>It's</strong> been a long day.</em></li>
+</ul></div>
+<div class="rule-box"><h4>5️⃣ affect / effect</h4><ul>
+<li><strong>affect</strong> = verb (to influence): <em>Stress can <strong>affect</strong> your health.</em></li>
+<li><strong>effect</strong> = noun (result): <em>The <strong>effect</strong> of stress on health is well-known.</em></li>
+</ul></div>
+<div class="lesson-highlight">💡 <strong>Quick check</strong>: For contractions (you're, they're, it's), try replacing with the full form. If it works → use the apostrophe form. If not → use the possessive.</div>`,
+        },
+        {
+          id: 'en-homo-bridge', type: 'bridge',
+          title: '🌍 Homophones in 3 Languages',
+          content: `<h3>📖 Grammatical Homophones across 3 Languages</h3>
+<div class="rule-box"><h4>📊 Comparison FR | EN | AR</h4>
+<table><thead><tr><th>Category</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead><tbody>
+<tr><td>Verb vs preposition</td><td>a / à</td><td>—</td><td>—</td></tr>
+<tr><td>Possessive vs verb</td><td>son / sont</td><td>their / they're · your / you're · its / it's</td><td dir="rtl">— (spelling differs)</td></tr>
+<tr><td>Conjunction vs place</td><td>ou / où</td><td>—</td><td dir="rtl">—</td></tr>
+<tr><td>Verb vs noun</td><td>—</td><td>affect / effect</td><td dir="rtl">—</td></tr>
+</tbody></table></div>
+<div class="tip-box"><h4>💡 Why so many homophones?</h4>
+<ul>
+<li>🇫🇷 French: many verb endings (-e, -es, -ent) are silent → lots of grammatical homophones</li>
+<li>🇬🇧 English: historical spelling frozen when pronunciation evolved → sound-spelling mismatches</li>
+<li>🇸🇦 Arabic: short vowels written as diacritics (harakāt) — often omitted in modern text → context-dependent</li>
+</ul></div>`,
+        },
+      ],
+      exercises: [
+        { id:'en-homo-q1', type:'qcm', question:'Choose the correct word: "Put the bag over _____."', options:['their','there','they\'re'], answer:1 },
+        { id:'en-homo-q2', type:'qcm', question:'"_____ coming to the party tonight."', options:['There','Their','They\'re'], answer:2 },
+        { id:'en-homo-q3', type:'qcm', question:'"The cat hurt _____ paw."', options:['it\'s','its','its\''], answer:1 },
+        { id:'en-homo-q4', type:'fill', question:'Complete: "Is this _____ jacket?" (belonging to you)', options:['you\'re','your','there'], answer:1 },
+        { id:'en-homo-q5', type:'fill', question:'Complete: "Lack of sleep can _____ your concentration." (verb)', options:['effect','affect','effects'], answer:1 },
+        { id:'en-homo-q6', type:'order', instruction:'Put the words in order:', words:['there','books','on','Their','table','the','are'], answer:['Their','books','are','on','the','table','there'] },
+        { id:'en-homo-q7', type:'vf', question:'"It\'s" can always replace "its" in a sentence.', answer:false, explanation:'"It\'s" means "it is" or "it has". "Its" is a possessive pronoun. They are not interchangeable: "The cat ate its food" cannot become "The cat ate it\'s food".' },
+        { id:'en-homo-q8', type:'vf', question:'To check "they\'re", you can replace it with "they are".', answer:true, explanation:'If "they are" fits in the sentence, use "they\'re" (contraction). If not, use "their" (possessive) or "there" (place).' },
+      ],
+    },
+    ar: {
+      titre:       'المتشابهات اللفظية والإملائية في العربية (B1-B2)',
+      cours_nom:   'Arabe',
+      langue:      'Arabe',
+      niveau:      'B1-B2',
+      description: 'تعلّم التمييز بين الكلمات المتشابهة لفظًا أو إملاءً في العربية: إن/أن، هـ/ة، ال التعريف واللام الشمسية والقمرية، الهمزات، والفروق بين الألف المقصورة والممدودة.',
+      pages: [
+        {
+          id: 'ar-homo-p1', type: 'lesson',
+          title: '🔤 المتشابهات اللفظية والإملائية',
+          content: `<div class="lesson-intro">
+<div class="lesson-badge">📚 قواعد اللغة العربية — B1/B2</div>
+<h2 dir="rtl">المتشابهات الإملائية في العربية</h2>
+<p class="lead" dir="rtl">كلمات تُنطق بشكل متشابه لكنها تختلف في الكتابة والمعنى.</p>
+</div>
+<div class="rule-box"><h4 dir="rtl">1️⃣ إن / أن</h4><ul dir="rtl">
+<li><strong>إن</strong> (بكسر الهمزة) = حرف شرط أو توكيد في أول الجملة: <em><strong>إن</strong> تجتهد تنجح. / <strong>إن</strong> الصبرَ مفتاحُ الفرج.</em></li>
+<li><strong>أن</strong> (بفتح الهمزة) = مصدرية بعد فعل: <em>أريد <strong>أن</strong> أتعلّم. / يسعدني <strong>أن</strong> تزورني.</em></li>
+</ul></div>
+<div class="rule-box"><h4 dir="rtl">2️⃣ تاء مربوطة (ة) / هاء (ه)</h4><ul dir="rtl">
+<li><strong>ة</strong> تاء مربوطة → تُقرأ [ة/ت] عند الوصل، تكون في نهاية الأسماء المؤنثة: <em>مدرسَ<strong>ة</strong>، سيارَ<strong>ة</strong></em></li>
+<li><strong>ه</strong> هاء → تُقرأ دائمًا [ه]: <em>وجهَ<strong>ه</strong>، كتابَ<strong>ه</strong></em> (ضمير)</li>
+</ul></div>
+<div class="rule-box"><h4 dir="rtl">3️⃣ الألف المقصورة (ى) / الألف الممدودة (ا)</h4><ul dir="rtl">
+<li><strong>ى</strong> ألف مقصورة (لا نقطتين) في نهاية الكلمة: <em>مستشف<strong>ى</strong>، يُصل<strong>ى</strong></em></li>
+<li><strong>ا</strong> ألف ممدودة: <em>هذ<strong>ا</strong>، كتب<strong>ا</strong></em></li>
+<li>قاعدة: الفعل الثلاثي المعتل → يُكتب بالألف الممدودة (رمَا، دعَا). ما زاد على الثلاثي → ألف مقصورة (يُصلّى، رعى)</li>
+</ul></div>
+<div class="rule-box"><h4 dir="rtl">4️⃣ الهمزات: أ / إ / ء / ؤ / ئ</h4><ul dir="rtl">
+<li><strong>أ</strong> همزة فتح (أكل، أسد)</li>
+<li><strong>إ</strong> همزة كسر (إنسان، إسلام)</li>
+<li><strong>ؤ</strong> همزة على واو (يؤكل، مؤمن)</li>
+<li><strong>ئ</strong> همزة على ياء (بئر، سئل)</li>
+<li><strong>ء</strong> همزة مفردة في الوسط أو الآخر (مسألة، جزء)</li>
+</ul></div>
+<div class="lesson-highlight" dir="rtl">💡 <strong>قاعدة عملية</strong>: لتمييز "إن" من "أن" — <br>
+→ إذا جاء بعدها مصدر مؤوّل (فعل) → <strong>أن</strong> المفتوحة<br>
+→ إذا كانت في أول الجملة للتوكيد أو الشرط → <strong>إن</strong> المكسورة</div>`,
+        },
+        {
+          id: 'ar-homo-bridge', type: 'bridge',
+          title: '🌍 المتشابهات في 3 لغات',
+          content: `<h3 dir="rtl">📖 المتشابهات الإملائية في ثلاث لغات</h3>
+<div class="rule-box"><h4>📊 جدول مقارن FR | EN | AR</h4>
+<table><thead><tr><th>الظاهرة</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead><tbody>
+<tr><td>تصريف فعلي مقابل غير فعلي</td><td>a / à</td><td>its / it's</td><td dir="rtl">إن / أن</td></tr>
+<tr><td>نهايات متشابهة</td><td>son / sont</td><td>their / they're</td><td dir="rtl">ة / ه</td></tr>
+<tr><td>حروف متشابهة</td><td>ou / où</td><td>to / too</td><td dir="rtl">ى / ا</td></tr>
+</tbody></table></div>`,
+        },
+      ],
+      exercises: [
+        { id:'ar-homo-q1', type:'qcm', question:'اختر الصحيح: "أريد _______ أتعلم العربية."', options:['إن','أن','آن'], answer:1 },
+        { id:'ar-homo-q2', type:'qcm', question:'اختر الصحيح: "_______ الصبرَ مفتاحُ الفرج."', options:['أن','آن','إن'], answer:2 },
+        { id:'ar-homo-q3', type:'fill', question:'أكمل: "ذهبتُ إلى المدرس___ كل يوم." (مؤنث)', options:['ه','ة','ا'], answer:1 },
+        { id:'ar-homo-q4', type:'fill', question:'أكمل: "فتح الولدُ كتابَ___." (ضمير ملكية مذكر)', options:['ة','ت','ه'], answer:2 },
+        { id:'ar-homo-q5', type:'vf', question:'الألف المقصورة (ى) والألف الممدودة (ا) ينطقان بنفس الطريقة في نهاية الكلمة.', answer:true, explanation:'نعم، كلتاهما تُنطق [a] في نهاية الكلمة. الفرق إملائي فقط: (ى) لا نقطتين تحتها، بينما (ا) ألف عادية.' },
+        { id:'ar-homo-q6', type:'vf', question:'"إن" بكسر الهمزة تأتي دائمًا قبل الفعل مباشرةً.', answer:false, explanation:'"إن" الشرطية تأتي قبل الفعل (إن تذاكر تنجح)، أما "إن" التوكيدية فتأتي قبل الاسم (إن الصبرَ جميلٌ). لا تشترط دائمًا مجيء فعل بعدها مباشرةً.' },
+      ],
+    },
+  },
+
+  // ──────────────────────────────────────────────────────────────────
+  // VERBES + PRÉPOSITIONS — Phrasal Verbs / Verb-Preposition — الأفعال مع حروف الجر
+  // ──────────────────────────────────────────────────────────────────
+  {
+    id: 'verbes_prepositions',
+    detectFR: t => /verbe.*préposition|commencer.*à.*finir.*de|prép.*à.*de|à.*de.*commencer/i.test(t),
+    en: {
+      titre:       'Verbs with Prepositions and Phrasal Verbs in English (B2)',
+      cours_nom:   'Anglais',
+      langue:      'Anglais',
+      niveau:      'B2',
+      description: 'Master English verbs that require specific prepositions (depend on, consist of, agree with) and common phrasal verbs (look up, give up, turn down). Essential for fluency at B2 level.',
+      pages: [
+        {
+          id: 'en-verb-prep-p1', type: 'lesson',
+          title: '⚙️ Verbs with Prepositions & Phrasal Verbs',
+          content: `<div class="lesson-intro">
+<div class="lesson-badge">📚 English Grammar — B2</div>
+<h2>Verbs with Prepositions and Phrasal Verbs</h2>
+<p class="lead">Many English verbs require a specific preposition. The meaning can change completely with a different preposition.</p>
+</div>
+<div class="rule-box"><h4>🔵 Common Verb + Preposition Combinations</h4>
+<table><thead><tr><th>Verb + Prep</th><th>Meaning</th><th>Example</th></tr></thead><tbody>
+<tr><td><strong>depend on</strong></td><td>rely on</td><td>It depends on the weather.</td></tr>
+<tr><td><strong>agree with</strong></td><td>share an opinion</td><td>I agree with you.</td></tr>
+<tr><td><strong>consist of</strong></td><td>be made up of</td><td>The team consists of 5 people.</td></tr>
+<tr><td><strong>succeed in</strong></td><td>manage to do</td><td>She succeeded in passing the exam.</td></tr>
+<tr><td><strong>apologize for</strong></td><td>say sorry about</td><td>He apologized for being late.</td></tr>
+<tr><td><strong>insist on</strong></td><td>demand firmly</td><td>She insisted on paying.</td></tr>
+<tr><td><strong>result in</strong></td><td>cause</td><td>The delay resulted in extra costs.</td></tr>
+<tr><td><strong>dream of / about</strong></td><td>imagine</td><td>I dream of travelling the world.</td></tr>
+</tbody></table></div>
+<div class="rule-box"><h4>🔴 Common Phrasal Verbs</h4>
+<table><thead><tr><th>Phrasal Verb</th><th>Meaning</th><th>Example</th></tr></thead><tbody>
+<tr><td><strong>give up</strong></td><td>stop trying / quit</td><td>Don't give up!</td></tr>
+<tr><td><strong>look up</strong></td><td>search for information</td><td>Look up the word in the dictionary.</td></tr>
+<tr><td><strong>turn down</strong></td><td>refuse / reduce volume</td><td>She turned down the job offer.</td></tr>
+<tr><td><strong>put off</strong></td><td>postpone</td><td>Don't put off what you can do today.</td></tr>
+<tr><td><strong>bring up</strong></td><td>raise (a child / a topic)</td><td>He brought up an interesting point.</td></tr>
+<tr><td><strong>run out of</strong></td><td>have no more of sth</td><td>We've run out of milk.</td></tr>
+</tbody></table></div>
+<div class="lesson-highlight">⚠️ <strong>Same verb, different preposition = different meaning</strong>:<br>
+→ <em>look <strong>at</strong></em> (direct gaze) / <em>look <strong>for</strong></em> (search) / <em>look <strong>after</strong></em> (take care of) / <em>look <strong>up</strong></em> (find info)
+</div>`,
+        },
+        {
+          id: 'en-verb-prep-bridge', type: 'bridge',
+          title: '🌍 Verb + Preposition in 3 Languages',
+          content: `<h3>📖 Verb + Preposition across 3 Languages</h3>
+<div class="rule-box"><h4>📊 Comparison FR | EN | AR</h4>
+<table><thead><tr><th>Meaning</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead><tbody>
+<tr><td>start doing</td><td>commencer à</td><td>start / begin + -ing or to</td><td dir="rtl">يبدأ في / بـ</td></tr>
+<tr><td>stop doing</td><td>arrêter de</td><td>stop + -ing</td><td dir="rtl">يتوقف عن</td></tr>
+<tr><td>decide to</td><td>décider de</td><td>decide to</td><td dir="rtl">يقرر + أن</td></tr>
+<tr><td>succeed in</td><td>réussir à</td><td>succeed in + -ing</td><td dir="rtl">ينجح في</td></tr>
+<tr><td>dream of</td><td>rêver de</td><td>dream of / about + -ing</td><td dir="rtl">يحلم بـ</td></tr>
+</tbody></table></div>
+<div class="tip-box"><h4>⚠️ Key structural differences</h4><ul>
+<li>🇫🇷 The preposition (à/de) is fixed and must be memorized for each verb</li>
+<li>🇬🇧 Choice between infinitive (to + V) or gerund (V-ing) also depends on the verb</li>
+<li>🇸🇦 Verbs use specific prepositions (في، عن، على، بـ) that must be learned per verb</li>
+</ul></div>`,
+        },
+      ],
+      exercises: [
+        { id:'en-vprep-q1', type:'qcm', question:'Choose the correct preposition: "She succeeded _____ passing the exam."', options:['to','in','at','on'], answer:1 },
+        { id:'en-vprep-q2', type:'qcm', question:'"The delay resulted _____ extra costs."', options:['from','of','in','to'], answer:2 },
+        { id:'en-vprep-q3', type:'qcm', question:'What does "turn down" mean?', options:['increase the volume','refuse / reject','postpone','look for'], answer:1 },
+        { id:'en-vprep-q4', type:'fill', question:'Complete: "Don\'t give _____! Keep trying."', options:['on','in','up','off'], answer:2 },
+        { id:'en-vprep-q5', type:'fill', question:'Complete: "I\'m looking _____ my keys — have you seen them?"', options:['at','after','up','for'], answer:3 },
+        { id:'en-vprep-q6', type:'order', instruction:'Put the words in order:', words:['apologized','being','He','for','late'], answer:['He','apologized','for','being','late'] },
+        { id:'en-vprep-q7', type:'vf', question:'"Look at", "look for" and "look after" all have the same meaning.', answer:false, explanation:'These phrasal verbs have completely different meanings: "look at" = direct gaze, "look for" = search, "look after" = take care of. The preposition changes the meaning entirely.' },
+        { id:'en-vprep-q8', type:'vf', question:'"Depend on" and "insist on" both use the preposition "on".', answer:true, explanation:'Yes, both verbs take "on": "It depends on you" and "She insisted on paying." In English, the correct preposition for each verb must be memorized — there is no universal rule.' },
+      ],
+    },
+    ar: {
+      titre:       'الأفعال مع حروف الجر في العربية: نجح في، حلم بـ، توقف عن… (B2)',
+      cours_nom:   'Arabe',
+      langue:      'Arabe',
+      niveau:      'B2',
+      description: 'تعلّم الأفعال العربية التي تتطلب حروف جر محددة: نجح في، حلم بـ، توقف عن، أقدم على، تخلّى عن، تكوّن من… مع أمثلة وتمارين متنوعة.',
+      pages: [
+        {
+          id: 'ar-verb-prep-p1', type: 'lesson',
+          title: '⚙️ الأفعال مع حروف الجر',
+          content: `<div class="lesson-intro">
+<div class="lesson-badge">📚 قواعد اللغة العربية — B2</div>
+<h2 dir="rtl">الأفعال مع حروف الجر</h2>
+<p class="lead" dir="rtl">كثير من الأفعال العربية تستلزم حرف جر معيّن. تغيير حرف الجر يُغير المعنى.</p>
+</div>
+<div class="rule-box"><h4 dir="rtl">🔵 الأفعال مع حرف الجر "في"</h4>
+<table><thead><tr><th>الفعل + حرف الجر</th><th>المعنى</th><th>مثال</th></tr></thead><tbody>
+<tr><td dir="rtl"><strong>نجح في</strong></td><td>achieve success</td><td dir="rtl">نجحَ في الامتحان.</td></tr>
+<tr><td dir="rtl"><strong>فكّر في</strong></td><td>think about</td><td dir="rtl">أفكّر في مستقبلي.</td></tr>
+<tr><td dir="rtl"><strong>بدأ في</strong></td><td>start doing</td><td dir="rtl">بدأ في العمل.</td></tr>
+<tr><td dir="rtl"><strong>رغب في</strong></td><td>desire / want</td><td dir="rtl">يرغب في السفر.</td></tr>
+</tbody></table></div>
+<div class="rule-box"><h4 dir="rtl">🔴 الأفعال مع حرف الجر "عن"</h4>
+<table><thead><tr><th>الفعل + حرف الجر</th><th>المعنى</th><th>مثال</th></tr></thead><tbody>
+<tr><td dir="rtl"><strong>توقف عن</strong></td><td>stop doing</td><td dir="rtl">توقّف عن التدخين.</td></tr>
+<tr><td dir="rtl"><strong>تخلّى عن</strong></td><td>give up / abandon</td><td dir="rtl">تخلّى عن أحلامه.</td></tr>
+<tr><td dir="rtl"><strong>ابتعد عن</strong></td><td>stay away from</td><td dir="rtl">ابتعد عن الضجيج.</td></tr>
+<tr><td dir="rtl"><strong>بحث عن</strong></td><td>look for</td><td dir="rtl">بحث عن عمل.</td></tr>
+</tbody></table></div>
+<div class="rule-box"><h4 dir="rtl">🟡 الأفعال مع "بـ" و"على" و"من"</h4>
+<table><thead><tr><th>الفعل</th><th>المعنى</th><th>مثال</th></tr></thead><tbody>
+<tr><td dir="rtl"><strong>حلم بـ</strong></td><td>dream of</td><td dir="rtl">يحلم بالسفر.</td></tr>
+<tr><td dir="rtl"><strong>أقدم على</strong></td><td>proceed to do</td><td dir="rtl">أقدمَ على اتخاذ القرار.</td></tr>
+<tr><td dir="rtl"><strong>تكوّن من</strong></td><td>consist of</td><td dir="rtl">يتكوّن الفريق من عشرة أعضاء.</td></tr>
+<tr><td dir="rtl"><strong>اعتذر عن</strong></td><td>apologize for</td><td dir="rtl">اعتذر عن التأخر.</td></tr>
+</tbody></table></div>
+<div class="lesson-highlight" dir="rtl">⚠️ <strong>تنبيه</strong>: لا توجد قاعدة ثابتة لاختيار حرف الجر — يجب حفظ كل فعل مع حرف جره الخاص.</div>`,
+        },
+        {
+          id: 'ar-verb-prep-bridge', type: 'bridge',
+          title: '🌍 الأفعال مع حروف الجر في 3 لغات',
+          content: `<h3 dir="rtl">📖 الأفعال مع حروف الجر في ثلاث لغات</h3>
+<div class="rule-box"><h4>📊 جدول مقارن FR | EN | AR</h4>
+<table><thead><tr><th>المعنى</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead><tbody>
+<tr><td>البدء في عمل</td><td>commencer à</td><td>start + -ing / to</td><td dir="rtl">بدأ في / بدأ بـ</td></tr>
+<tr><td>التوقف عن عمل</td><td>arrêter de</td><td>stop + -ing</td><td dir="rtl">توقّف عن</td></tr>
+<tr><td>اتخاذ قرار</td><td>décider de</td><td>decide to</td><td dir="rtl">قرّر أن / أقدم على</td></tr>
+<tr><td>النجاح في شيء</td><td>réussir à</td><td>succeed in</td><td dir="rtl">نجح في</td></tr>
+<tr><td>الحلم بشيء</td><td>rêver de</td><td>dream of</td><td dir="rtl">حلم بـ</td></tr>
+</tbody></table></div>`,
+        },
+      ],
+      exercises: [
+        { id:'ar-vprep-q1', type:'qcm', question:'أكمل: "نجحَ الطالبُ _______ الامتحان."', options:['على','من','في','عن'], answer:2 },
+        { id:'ar-vprep-q2', type:'qcm', question:'"بحثَ المدير _______ موظف جديد."', options:['في','عن','على','بـ'], answer:1 },
+        { id:'ar-vprep-q3', type:'fill', question:'أكمل: "يحلمُ كثيرون _______ السفر إلى الخارج."', options:['عن','في','بـ','على'], answer:2 },
+        { id:'ar-vprep-q4', type:'fill', question:'أكمل: "توقّف _______ التدخين من أجل صحته."', options:['في','بـ','على','عن'], answer:3 },
+        { id:'ar-vprep-q5', type:'order', instruction:'رتّب الكلمات لتكوين جملة صحيحة:', words:['في','نجح','الامتحان','الطالب'], answer:['نجح','الطالب','في','الامتحان'] },
+        { id:'ar-vprep-q6', type:'vf', question:'جميع الأفعال العربية تستخدم نفس حرف الجر.', answer:false, explanation:'لا توجد قاعدة موحدة: كل فعل يلزم حرف جره الخاص. مثلاً: نجح "في"، بحث "عن"، حلم "بـ"، أقدم "على". يجب حفظ كل تركيب على حدة.' },
+        { id:'ar-vprep-q7', type:'vf', question:'"فكّر في" و"بحث عن" يستخدمان نفس حرف الجر.', answer:false, explanation:'"فكّر" تتبعها "في" (فكّر في الأمر)، بينما "بحث" تتبعها "عن" (بحث عن الحقيقة). حروف الجر مختلفة وتغيير أحدهما يُفسد المعنى.' },
+      ],
+    },
+  },
+
 ];
 
 // ════════════════════════════════════════════════════════════════════

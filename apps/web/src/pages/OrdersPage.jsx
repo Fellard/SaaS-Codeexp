@@ -276,17 +276,54 @@ const OrdersPage = () => {
               <div className="text-center py-14">
                 <ShoppingBag className="w-12 h-12 text-muted-foreground/20 mx-auto mb-3" />
                 <p className="font-semibold text-foreground mb-1">
-                  {orders.length === 0 ? 'Aucune commande' : 'Aucune commande dans cette catégorie'}
+                  {orders.length === 0 ? 'Aucune commande pour le moment' : 'Aucune commande dans cette catégorie'}
                 </p>
-                <p className="text-sm text-muted-foreground mb-4">
+                <p className="text-sm text-muted-foreground mb-5">
                   {orders.length === 0
-                    ? 'Inscrivez-vous à une formation pour créer votre première commande'
+                    ? currentUser?.role === 'client'
+                      ? 'Explorez nos services — magasin, agence web, studio et formations.'
+                      : currentUser?.role === 'musicien'
+                      ? 'Réservez le studio ou parcourez nos équipements.'
+                      : 'Inscrivez-vous à une formation pour créer votre première commande.'
                     : 'Essayez un autre filtre'}
                 </p>
-                {orders.length === 0 && (
-                  <Link to="/formation/inscription">
+                {orders.length === 0 && currentUser?.role === 'client' && (
+                  <div className="flex flex-wrap justify-center gap-3">
+                    <Link to="/store">
+                      <Button variant="outline" className="rounded-xl gap-2 font-bold">
+                        <ShoppingBag className="w-4 h-4" /> Magasin
+                      </Button>
+                    </Link>
+                    <Link to="/agence">
+                      <Button variant="outline" className="rounded-xl gap-2 font-bold">
+                        <Globe className="w-4 h-4" /> Web Agency
+                      </Button>
+                    </Link>
+                    <Link to="/formation">
+                      <Button className="bg-[#00274D] hover:bg-[#003a70] text-white rounded-xl gap-2 font-bold">
+                        <GraduationCap className="w-4 h-4" /> Formations
+                      </Button>
+                    </Link>
+                  </div>
+                )}
+                {orders.length === 0 && currentUser?.role === 'musicien' && (
+                  <div className="flex flex-wrap justify-center gap-3">
+                    <Link to="/studio">
+                      <Button className="bg-[#00274D] hover:bg-[#003a70] text-white rounded-xl gap-2 font-bold">
+                        <GraduationCap className="w-4 h-4" /> Réserver le studio
+                      </Button>
+                    </Link>
+                    <Link to="/store">
+                      <Button variant="outline" className="rounded-xl gap-2 font-bold">
+                        <ShoppingBag className="w-4 h-4" /> Magasin
+                      </Button>
+                    </Link>
+                  </div>
+                )}
+                {orders.length === 0 && currentUser?.role === 'etudiant' && (
+                  <Link to="/formation">
                     <Button className="bg-accent hover:bg-accent/90 text-primary font-bold rounded-xl gap-2">
-                      <GraduationCap className="w-4 h-4" /> S'inscrire à une formation
+                      <GraduationCap className="w-4 h-4" /> Découvrir les formations
                     </Button>
                   </Link>
                 )}
