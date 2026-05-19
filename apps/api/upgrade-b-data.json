@@ -1,0 +1,632 @@
+[
+  {
+    "titre": "La comparaison : comparatif et superlatif (A1-A2)",
+    "langue": "Francais",
+    "page4": {
+      "id": "fr-comp-p4",
+      "type": "lesson",
+      "title": "Exemples corrigés — La comparaison",
+      "content": "<h3>✅ Exemples corrigés</h3><div class=\"rule-box\"><div><strong>Comparatif d'inégalité :</strong><br><em>Marie est <strong>plus grande que</strong> Paul.</em> ✓<br><em>Ce livre est <strong>moins cher que</strong> l'autre.</em> ✓<br><em>Il court <strong>aussi vite que</strong> son frère.</em> ✓</div></div><div class=\"rule-box\"><div><strong>Superlatif :</strong><br><em>C'est <strong>le meilleur</strong> restaurant de la ville.</em> ✓<br><em>Elle est <strong>la plus intelligente</strong> de la classe.</em> ✓<br><span class=\"inline-trans\">⚠️ Jamais 'plus meilleur' — meilleur = déjà comparatif de bon</span></div></div><div class=\"rule-box\"><div><strong>Adverbes irréguliers :</strong><br><em>bien → <strong>mieux</strong></em> (jamais 'plus bien')<br><em>bon → <strong>meilleur</strong></em> (jamais 'plus bon')<br><em>mauvais → <strong>pire</strong></em> (ou 'plus mauvais')</div></div>"
+    },
+    "q8": {
+      "id": "fr-comp-q8",
+      "type": "fill",
+      "question": "Complétez : 'Ce restaurant est _______ que celui d'hier.' (bon)",
+      "options": [
+        "plus bon",
+        "meilleur",
+        "le meilleur",
+        "mieux"
+      ],
+      "answer": 1
+    },
+    "q9": {
+      "id": "fr-comp-q9",
+      "type": "order",
+      "instruction": "Remettez dans l'ordre pour former une phrase correcte :",
+      "words": [
+        "aussi",
+        "Marie",
+        "est",
+        "que",
+        "Paul",
+        "grande"
+      ],
+      "answer": [
+        "Marie",
+        "est",
+        "aussi",
+        "grande",
+        "que",
+        "Paul"
+      ]
+    },
+    "q10": {
+      "id": "fr-comp-q10",
+      "type": "vf",
+      "question": "On peut dire 'plus meilleur' en français.",
+      "answer": false,
+      "explanation": "'Meilleur' est déjà le comparatif de supériorité de 'bon'. On dit 'meilleur', jamais 'plus bon' ni 'plus meilleur'."
+    }
+  },
+  {
+    "titre": "Identifier les temps verbaux : passé, présent, futur (A1-A2)",
+    "langue": "Francais",
+    "page4": {
+      "id": "fr-temps-p4",
+      "type": "lesson",
+      "title": "Exemples corrigés — Identifier les temps",
+      "content": "<h3>✅ Exemples corrigés</h3><div class=\"rule-box\"><div><strong>Identifier le temps :</strong><br><em>Je <strong>mangeais</strong> souvent des pâtes.</em> ✓ → Imparfait (habitude)<br><em>Il <strong>a téléphoné</strong> hier soir.</em> ✓ → Passé composé (ponctuel)<br><em>Demain, nous <strong>partirons</strong> en vacances.</em> ✓ → Futur simple</div></div><div class=\"rule-box\"><div><strong>Indices de temps utiles :</strong><br>hier / la semaine dernière → <strong>passé composé</strong><br>tous les jours / souvent → <strong>imparfait</strong><br>demain / dans 3 jours → <strong>futur simple</strong><br>en ce moment / maintenant → <strong>présent</strong></div></div><div class=\"rule-box\"><div><strong>Cas particulier :</strong><br><em>Je <strong>pars</strong> demain matin.</em> ✓ → Présent à valeur future (courant en français parlé)</div></div>"
+    },
+    "q8": {
+      "id": "fr-temps-q8",
+      "type": "fill",
+      "question": "Complétez : 'Hier, elle _______ (aller) au marché.' → Passé composé",
+      "options": [
+        "allait",
+        "est allée",
+        "va",
+        "ira"
+      ],
+      "answer": 1
+    },
+    "q9": {
+      "id": "fr-temps-q9",
+      "type": "order",
+      "instruction": "Remettez dans l'ordre : 'Il travaillait ici tous les jours.'",
+      "words": [
+        "tous",
+        "il",
+        "les",
+        "travaillait",
+        "ici",
+        "jours"
+      ],
+      "answer": [
+        "il",
+        "travaillait",
+        "ici",
+        "tous",
+        "les",
+        "jours"
+      ]
+    },
+    "q10": {
+      "id": "fr-temps-q10",
+      "type": "vf",
+      "question": "En français, le présent de l'indicatif peut exprimer une action future.",
+      "answer": true,
+      "explanation": "Oui — ex : 'Je pars demain.' = futur proche exprimé au présent. Très courant en français courant."
+    }
+  },
+  {
+    "titre": "Les pronoms compléments d'objet direct (COD) (A1-A2)",
+    "langue": "Francais",
+    "page4": {
+      "id": "fr-cod-p4",
+      "type": "lesson",
+      "title": "Exemples corrigés — Les pronoms COD",
+      "content": "<h3>✅ Exemples corrigés</h3><div class=\"rule-box\"><div><strong>Remplacement par un pronom COD :</strong><br><em>Je vois <strong>Marie</strong>. → Je <strong>la</strong> vois.</em> ✓<br><em>Tu manges <strong>le pain</strong>. → Tu <strong>le</strong> manges.</em> ✓<br><em>Il prend <strong>les clés</strong>. → Il <strong>les</strong> prend.</em> ✓</div></div><div class=\"rule-box\"><div><strong>Impératif affirmatif :</strong><br><em>Regarde <strong>ce film</strong>. → Regarde-<strong>le</strong> !</em> ✓ (COD après le verbe)<br><em>Appelle <strong>ta mère</strong>. → Appelle-<strong>la</strong> !</em> ✓</div></div><div class=\"rule-box\"><div><strong>Accord au passé composé :</strong><br><em>J'ai acheté <strong>ces chaussures</strong>. → Je <strong>les</strong> ai achetée<strong>s</strong>.</em> ✓<br><span class=\"inline-trans\">⚠️ Le participe s'accorde avec le COD placé avant l'auxiliaire.</span></div></div>"
+    },
+    "q8": {
+      "id": "fr-cod-q8",
+      "type": "fill",
+      "question": "Complétez : 'Tu connais Paul ? — Oui, je _______ connais bien.'",
+      "options": [
+        "lui",
+        "le",
+        "la",
+        "les"
+      ],
+      "answer": 1
+    },
+    "q9": {
+      "id": "fr-cod-q9",
+      "type": "order",
+      "instruction": "Remettez dans l'ordre : 'Je la vois souvent au parc.'",
+      "words": [
+        "au",
+        "la",
+        "Je",
+        "vois",
+        "parc",
+        "souvent"
+      ],
+      "answer": [
+        "Je",
+        "la",
+        "vois",
+        "souvent",
+        "au",
+        "parc"
+      ]
+    },
+    "q10": {
+      "id": "fr-cod-q10",
+      "type": "vf",
+      "question": "À l'impératif affirmatif, le pronom COD se place AVANT le verbe.",
+      "answer": false,
+      "explanation": "À l'impératif affirmatif, le COD se place APRÈS le verbe avec un trait d'union : 'Regarde-le !' — contrairement à l'impératif négatif : 'Ne le regarde pas !'"
+    }
+  },
+  {
+    "titre": "Le passé composé : révisions complètes (A2)",
+    "langue": "Francais",
+    "page4": {
+      "id": "fr-pc-p4",
+      "type": "lesson",
+      "title": "Exemples corrigés — Le passé composé",
+      "content": "<h3>✅ Exemples corrigés</h3><div class=\"rule-box\"><div><strong>Auxiliaire AVOIR (la plupart des verbes) :</strong><br><em>Nous <strong>avons mangé</strong> une pizza.</em> ✓ (pas d'accord)<br><em>Il <strong>a regardé</strong> le match.</em> ✓</div></div><div class=\"rule-box\"><div><strong>Auxiliaire ÊTRE (Dr Mrs Vandertramp + pronominaux) :</strong><br><em>Elle <strong>est arrivée</strong> hier.</em> ✓ (accord : +e)<br><em>Ils <strong>se sont levés</strong> tôt.</em> ✓ (accord : +s)<br><em>Nous <strong>sommes partis</strong> à 8h.</em> ✓ (accord : +s)</div></div><div class=\"rule-box\"><div><strong>Accord avec COD antéposé :</strong><br><em>La lettre que j'<strong>ai écrite</strong>…</em> ✓ (COD 'que'=lettre avant le verbe → accord)<br><em>Je les <strong>ai vus</strong>.</em> ✓ (COD 'les' avant → accord)</div></div>"
+    },
+    "q8": {
+      "id": "fr-pc-q8",
+      "type": "fill",
+      "question": "Complétez : 'Marie _______ (partir) à 8h ce matin.'",
+      "options": [
+        "a parti",
+        "est partie",
+        "est partis",
+        "a partié"
+      ],
+      "answer": 1
+    },
+    "q9": {
+      "id": "fr-pc-q9",
+      "type": "order",
+      "instruction": "Remettez dans l'ordre : 'Nous avons vu ce film hier soir.'",
+      "words": [
+        "soir",
+        "avons",
+        "Nous",
+        "vu",
+        "hier",
+        "film",
+        "ce"
+      ],
+      "answer": [
+        "Nous",
+        "avons",
+        "vu",
+        "ce",
+        "film",
+        "hier",
+        "soir"
+      ]
+    },
+    "q10": {
+      "id": "fr-pc-q10",
+      "type": "vf",
+      "question": "Avec l'auxiliaire 'avoir', le participe passé s'accorde toujours avec le sujet.",
+      "answer": false,
+      "explanation": "Avec 'avoir', le participe s'accorde uniquement avec le COD quand il est PLACÉ AVANT le verbe. Il ne s'accorde jamais automatiquement avec le sujet."
+    }
+  },
+  {
+    "titre": "Comparatives and Superlatives in English (A1-A2)",
+    "langue": "Anglais",
+    "page4": {
+      "id": "en-comp-p4",
+      "type": "lesson",
+      "title": "Corrected Examples — Comparatives & Superlatives",
+      "content": "<h3>✅ Corrected Examples</h3><div class=\"rule-box\"><div><strong>Short adjectives (+ -er / the -est) :</strong><br><em>Tom is <strong>taller than</strong> Sam.</em> ✓<br><em>She is <strong>the tallest</strong> in the class.</em> ✓<br><span class=\"inline-trans\">⚠️ Never 'more tall' — use '-er' for 1-syllable adjectives</span></div></div><div class=\"rule-box\"><div><strong>Long adjectives (more / the most) :</strong><br><em>This film is <strong>more interesting than</strong> that one.</em> ✓<br><em>It is <strong>the most beautiful</strong> city in Europe.</em> ✓</div></div><div class=\"rule-box\"><div><strong>Irregular forms :</strong><br>good → <strong>better</strong> → <strong>the best</strong><br>bad → <strong>worse</strong> → <strong>the worst</strong><br>far → <strong>farther/further</strong> → <strong>the farthest/furthest</strong></div></div>"
+    },
+    "q8": {
+      "id": "en-comp-q8",
+      "type": "fill",
+      "question": "Complete: 'This is _______ film I have ever seen.' (good)",
+      "options": [
+        "the more good",
+        "the best",
+        "the better",
+        "the most good"
+      ],
+      "answer": 1
+    },
+    "q9": {
+      "id": "en-comp-q9",
+      "type": "order",
+      "instruction": "Put the words in order: 'She is taller than her brother.'",
+      "words": [
+        "her",
+        "She",
+        "is",
+        "brother",
+        "taller",
+        "than"
+      ],
+      "answer": [
+        "She",
+        "is",
+        "taller",
+        "than",
+        "her",
+        "brother"
+      ]
+    },
+    "q10": {
+      "id": "en-comp-q10",
+      "type": "vf",
+      "question": "We can say 'more better' in English.",
+      "answer": false,
+      "explanation": "'Better' is already the comparative of 'good'. Never add 'more' to irregular comparative forms (better, worse, further)."
+    }
+  },
+  {
+    "titre": "Identifying Verb Tenses — Past, Present & Future (A1-A2)",
+    "langue": "Anglais",
+    "page4": {
+      "id": "en-temps-p4",
+      "type": "lesson",
+      "title": "Corrected Examples — Identifying Tenses",
+      "content": "<h3>✅ Corrected Examples</h3><div class=\"rule-box\"><div><strong>Identifying tenses in context :</strong><br><em>I <strong>was watching</strong> TV when she called.</em> ✓ → Past continuous (action in progress)<br><em>She <strong>has lived</strong> here for 5 years.</em> ✓ → Present perfect (still ongoing)<br><em>We <strong>will travel</strong> to Spain next summer.</em> ✓ → Future simple</div></div><div class=\"rule-box\"><div><strong>Key time markers :</strong><br>yesterday / ago → <strong>past simple</strong><br>for / since / just → <strong>present perfect</strong><br>tomorrow / next week → <strong>future</strong><br>now / at the moment → <strong>present continuous</strong></div></div><div class=\"rule-box\"><div><strong>Present simple vs continuous :</strong><br><em>I <strong>drink</strong> coffee every morning.</em> ✓ (habit)<br><em>I <strong>am drinking</strong> coffee right now.</em> ✓ (happening now)</div></div>"
+    },
+    "q8": {
+      "id": "en-temps-q8",
+      "type": "fill",
+      "question": "Choose the correct tense: 'She _______ in Paris for ten years.' (live — still true)",
+      "options": [
+        "lived",
+        "was living",
+        "has lived",
+        "is living"
+      ],
+      "answer": 2
+    },
+    "q9": {
+      "id": "en-temps-q9",
+      "type": "order",
+      "instruction": "Put the words in order: 'I was reading when he arrived.'",
+      "words": [
+        "when",
+        "reading",
+        "I",
+        "arrived",
+        "was",
+        "he"
+      ],
+      "answer": [
+        "I",
+        "was",
+        "reading",
+        "when",
+        "he",
+        "arrived"
+      ]
+    },
+    "q10": {
+      "id": "en-temps-q10",
+      "type": "vf",
+      "question": "The present continuous can describe future arrangements.",
+      "answer": true,
+      "explanation": "Yes — 'I am meeting John tomorrow' uses present continuous to describe a planned future event. Very common in everyday English."
+    }
+  },
+  {
+    "titre": "Direct Object Pronouns — me, you, him, her, it… (A1-A2)",
+    "langue": "Anglais",
+    "page4": {
+      "id": "en-cod-p4",
+      "type": "lesson",
+      "title": "Corrected Examples — Object Pronouns",
+      "content": "<h3>✅ Corrected Examples</h3><div class=\"rule-box\"><div><strong>Replacing the object with a pronoun :</strong><br><em>I see <strong>Mary</strong> every day. → I see <strong>her</strong> every day.</em> ✓<br><em>She calls <strong>Tom</strong> often. → She calls <strong>him</strong> often.</em> ✓<br><em>They love <strong>us</strong>.</em> ✓ (object pronoun after verb)</div></div><div class=\"rule-box\"><div><strong>Position — AFTER the verb in English :</strong><br><em>I see <strong>her</strong>.</em> ✓ (NOT 'I her see')<br><em>He told <strong>me</strong> the truth.</em> ✓<br><span class=\"inline-trans\">⚠️ Unlike French, English object pronouns always follow the verb</span></div></div><div class=\"rule-box\"><div><strong>No gender for objects in English :</strong><br><em>I saw the film → I saw <strong>it</strong>.</em> ✓ (not 'him' or 'her')<br><em>I bought the car → I bought <strong>it</strong>.</em> ✓</div></div>"
+    },
+    "q8": {
+      "id": "en-cod-q8",
+      "type": "fill",
+      "question": "Complete: 'I know Sarah well. I see _______ every day.'",
+      "options": [
+        "she",
+        "her",
+        "him",
+        "hers"
+      ],
+      "answer": 1
+    },
+    "q9": {
+      "id": "en-cod-q9",
+      "type": "order",
+      "instruction": "Put the words in order: 'She called him yesterday.'",
+      "words": [
+        "yesterday",
+        "him",
+        "She",
+        "called"
+      ],
+      "answer": [
+        "She",
+        "called",
+        "him",
+        "yesterday"
+      ]
+    },
+    "q10": {
+      "id": "en-cod-q10",
+      "type": "vf",
+      "question": "In English, object pronouns come BEFORE the verb.",
+      "answer": false,
+      "explanation": "In English, object pronouns always come AFTER the verb ('I see her', not 'I her see'). This is different from French ('Je la vois') where the pronoun precedes the verb."
+    }
+  },
+  {
+    "titre": "The Present Perfect — Form, Use and Review (A2)",
+    "langue": "Anglais",
+    "page4": {
+      "id": "en-pc-p4",
+      "type": "lesson",
+      "title": "Corrected Examples — Present Perfect",
+      "content": "<h3>✅ Corrected Examples</h3><div class=\"rule-box\"><div><strong>Form — have/has + past participle :</strong><br><em>I <strong>have visited</strong> Paris.</em> ✓<br><em>She <strong>has never eaten</strong> sushi.</em> ✓<br><em>They <strong>have just arrived</strong>.</em> ✓</div></div><div class=\"rule-box\"><div><strong>Key adverbs :</strong><br>already / yet / just / ever / never → <strong>present perfect</strong><br>yesterday / last year / in 2010 → <strong>past simple</strong> (specific time = NOT present perfect)<br><span class=\"inline-trans\">⚠️ 'I have seen him yesterday.' ✗ → 'I saw him yesterday.' ✓</span></div></div><div class=\"rule-box\"><div><strong>For / Since :</strong><br><em>I have lived here <strong>for</strong> 5 years.</em> ✓ (duration)<br><em>I have lived here <strong>since</strong> 2019.</em> ✓ (starting point)</div></div>"
+    },
+    "q8": {
+      "id": "en-pc-q8",
+      "type": "fill",
+      "question": "Choose the correct form: 'She _______ never _______ Japan.' (visit)",
+      "options": [
+        "has / visited",
+        "have / visited",
+        "has / visit",
+        "did / visit"
+      ],
+      "answer": 0
+    },
+    "q9": {
+      "id": "en-pc-q9",
+      "type": "order",
+      "instruction": "Put the words in order: 'I have already eaten dinner.'",
+      "words": [
+        "dinner",
+        "already",
+        "I",
+        "eaten",
+        "have"
+      ],
+      "answer": [
+        "I",
+        "have",
+        "already",
+        "eaten",
+        "dinner"
+      ]
+    },
+    "q10": {
+      "id": "en-pc-q10",
+      "type": "vf",
+      "question": "We can use the present perfect with 'yesterday'.",
+      "answer": false,
+      "explanation": "'Yesterday' is a specific past time marker, so we use the past simple: 'I saw him yesterday.' — NOT 'I have seen him yesterday.' The present perfect is for unspecified past time."
+    }
+  },
+  {
+    "titre": "المقارنة وأسلوب التفضيل في اللغة العربية (A1-A2)",
+    "langue": "Arabe",
+    "page4": {
+      "id": "ar-comp-p4",
+      "type": "lesson",
+      "title": "أمثلة مصحَّحة — المقارنة والتفضيل",
+      "content": "<h3>✅ أمثلة مصحَّحة</h3><div class=\"rule-box\"><div><strong>أسلوب التفضيل (أفعل) :</strong><br><em>محمد <strong>أطول</strong> من أحمد.</em> ✓ → تفضيل<br><em>هذا الكتاب <strong>أكبر</strong> من ذلك.</em> ✓<br><span class=\"inline-trans\">⚠️ لا نجمع بين أفعل و'أكثر' معاً</span></div></div><div class=\"rule-box\"><div><strong>أسلوب المساواة :</strong><br><em>فاطمة <strong>مثل</strong> أختها في الذكاء.</em> ✓<br><em>هذا المنزل <strong>بنفس</strong> حجم ذلك.</em> ✓</div></div><div class=\"rule-box\"><div><strong>نماذج وزن أفعل :</strong><br>كبير ← <strong>أكبر</strong> | صغير ← <strong>أصغر</strong><br>طويل ← <strong>أطول</strong> | قصير ← <strong>أقصر</strong><br>ذكي ← <strong>أذكى</strong> | جميل ← <strong>أجمل</strong></div></div>"
+    },
+    "q8": {
+      "id": "ar-comp-q8",
+      "type": "fill",
+      "question": "أكمل : 'هذا المبنى _______ من ذلك.' (كبير → أفعل التفضيل)",
+      "options": [
+        "أكثر كبيراً",
+        "أكبر",
+        "الأكبر",
+        "كبير جداً"
+      ],
+      "answer": 1
+    },
+    "q9": {
+      "id": "ar-comp-q9",
+      "type": "order",
+      "instruction": "رتّب الكلمات لتكوين جملة صحيحة :",
+      "words": [
+        "أحمد",
+        "أطول",
+        "من",
+        "محمد"
+      ],
+      "answer": [
+        "محمد",
+        "أطول",
+        "من",
+        "أحمد"
+      ]
+    },
+    "q10": {
+      "id": "ar-comp-q10",
+      "type": "vf",
+      "question": "يمكن استخدام 'أكثر' مع وزن 'أفعل' في نفس الجملة للتفضيل.",
+      "answer": false,
+      "explanation": "لا يجوز الجمع بين 'أكثر' ووزن 'أفعل' — نقول 'أكبر' أو 'أكثر كبراً'، لكن ليس 'أكثر أكبر'. هذا خطأ شائع."
+    }
+  },
+  {
+    "titre": "التعرف على الأزمنة الفعلية — الماضي والحاضر والمستقبل (A1-A2)",
+    "langue": "Arabe",
+    "page4": {
+      "id": "ar-temps-p4",
+      "type": "lesson",
+      "title": "أمثلة مصحَّحة — الأزمنة الفعلية",
+      "content": "<h3>✅ أمثلة مصحَّحة</h3><div class=\"rule-box\"><div><strong>الفعل الماضي :</strong><br><em><strong>ذهبَ</strong> محمد إلى المدرسة.</em> ✓ → حدث وانتهى<br><em><strong>أكلتُ</strong> الفطور صباحاً.</em> ✓</div></div><div class=\"rule-box\"><div><strong>الفعل المضارع (حاضر أو مستقبل) :</strong><br><em><strong>يذهبُ</strong> محمد إلى المدرسة كل يوم.</em> ✓ → عادة<br><em>سوف <strong>يذهبُ</strong> غداً.</em> ✓ → مستقبل مع سوف/سـ</div></div><div class=\"rule-box\"><div><strong>مؤشرات زمنية :</strong><br>أمس / منذ → <strong>الماضي</strong><br>الآن / دائماً → <strong>المضارع</strong><br>غداً / سوف → <strong>المستقبل</strong></div></div>"
+    },
+    "q8": {
+      "id": "ar-temps-q8",
+      "type": "fill",
+      "question": "اختر الفعل الصحيح : '_______ محمد إلى البيت أمس.'",
+      "options": [
+        "يذهب",
+        "ذهب",
+        "سيذهب",
+        "يذهبان"
+      ],
+      "answer": 1
+    },
+    "q9": {
+      "id": "ar-temps-q9",
+      "type": "order",
+      "instruction": "رتّب الكلمات : 'ستسافر فاطمة إلى باريس غداً.'",
+      "words": [
+        "باريس",
+        "فاطمة",
+        "غداً",
+        "إلى",
+        "ستسافر"
+      ],
+      "answer": [
+        "ستسافر",
+        "فاطمة",
+        "إلى",
+        "باريس",
+        "غداً"
+      ]
+    },
+    "q10": {
+      "id": "ar-temps-q10",
+      "type": "vf",
+      "question": "يُستخدم الفعل المضارع في العربية للدلالة على المستقبل مع 'سوف' أو 'سـ'.",
+      "answer": true,
+      "explanation": "نعم — يُضاف 'سوف' أو السين 'سـ' قبل الفعل المضارع للدلالة على المستقبل: 'سيذهب' = 'سوف يذهب'."
+    }
+  },
+  {
+    "titre": "مؤشرات الزمن في العربية : منذ، خلال، قبل… (A1-A2)",
+    "langue": "Arabe",
+    "page4": {
+      "id": "ar-ind-p4",
+      "type": "lesson",
+      "title": "أمثلة مصحَّحة — مؤشرات الزمن",
+      "content": "<h3>✅ أمثلة مصحَّحة</h3><div class=\"rule-box\"><div><strong>منذ (since / for) :</strong><br><em>أعيش هنا <strong>منذ</strong> ثلاث سنوات.</em> ✓ → لا يزال مستمراً<br><em>لم أره <strong>منذ</strong> الأمس.</em> ✓</div></div><div class=\"rule-box\"><div><strong>قبل / بعد :</strong><br><em><strong>قبل</strong> الدرس، أراجع ملاحظاتي.</em> ✓<br><em><strong>بعد</strong> الامتحان، سنحتفل.</em> ✓</div></div><div class=\"rule-box\"><div><strong>خلال / أثناء :</strong><br><em><strong>خلال</strong> الصيف، أسافر كثيراً.</em> ✓ → مدة<br><em><strong>أثناء</strong> الدرس، يجب الانتباه.</em> ✓</div></div>"
+    },
+    "q8": {
+      "id": "ar-ind-q8",
+      "type": "fill",
+      "question": "أكمل : 'أعمل في هذه الشركة _______ خمس سنوات.'",
+      "options": [
+        "بعد",
+        "منذ",
+        "خلال",
+        "قبل"
+      ],
+      "answer": 1
+    },
+    "q9": {
+      "id": "ar-ind-q9",
+      "type": "order",
+      "instruction": "رتّب الكلمات : 'قبل الامتحان أذاكر دروسي.'",
+      "words": [
+        "دروسي",
+        "قبل",
+        "أذاكر",
+        "الامتحان"
+      ],
+      "answer": [
+        "قبل",
+        "الامتحان",
+        "أذاكر",
+        "دروسي"
+      ]
+    },
+    "q10": {
+      "id": "ar-ind-q10",
+      "type": "vf",
+      "question": "'منذ' في العربية تعادل 'for' و'since' معاً في الإنجليزية.",
+      "answer": true,
+      "explanation": "نعم — 'منذ' تُستخدم للمدة (= for : منذ ثلاث سنوات) والنقطة الزمنية (= since : منذ عام 2020). السياق هو الذي يحدد المعنى."
+    }
+  },
+  {
+    "titre": "ضمائر المفعول به المباشر في العربية (A1-A2)",
+    "langue": "Arabe",
+    "page4": {
+      "id": "ar-cod-p4",
+      "type": "lesson",
+      "title": "أمثلة مصحَّحة — ضمائر المفعول به",
+      "content": "<h3>✅ أمثلة مصحَّحة</h3><div class=\"rule-box\"><div><strong>الضمير المتصل بالفعل :</strong><br><em>رأيتُ فاطمة. → رأيتُ<strong>ها</strong>.</em> ✓ → ضمير متصل للمؤنث<br><em>كلّمتُ محمداً. → كلّمتُ<strong>ه</strong>.</em> ✓ → ضمير متصل للمذكر<br><em>زرتُ الأصدقاء. → زرتُ<strong>هم</strong>.</em> ✓ → جمع</div></div><div class=\"rule-box\"><div><strong>جدول الضمائر المتصلة :</strong><br>هو ← <strong>ـه</strong> | هي ← <strong>ـها</strong><br>أنتَ ← <strong>ـكَ</strong> | أنتِ ← <strong>ـكِ</strong><br>أنا ← <strong>ـني</strong> | نحن ← <strong>ـنا</strong></div></div>"
+    },
+    "q8": {
+      "id": "ar-cod-q8",
+      "type": "fill",
+      "question": "أكمل : 'رأيتُ الولدَ في المدرسة. → رأيتُ_______ في المدرسة.'",
+      "options": [
+        "ها",
+        "هم",
+        "ه",
+        "ني"
+      ],
+      "answer": 2
+    },
+    "q9": {
+      "id": "ar-cod-q9",
+      "type": "order",
+      "instruction": "رتّب الكلمات : 'أحبّه كثيراً.'",
+      "words": [
+        "كثيراً",
+        "أحبّه"
+      ],
+      "answer": [
+        "أحبّه",
+        "كثيراً"
+      ]
+    },
+    "q10": {
+      "id": "ar-cod-q10",
+      "type": "vf",
+      "question": "في العربية، ضمير المفعول به يكون دائماً كلمة مستقلة منفصلة عن الفعل.",
+      "answer": false,
+      "explanation": "في العربية، ضمائر المفعول به متصلة بالفعل (لاحقات/suffixes) : رأيتُه، كلّمتُها — بخلاف الفرنسية (je le vois) والإنجليزية (I see him) حيث هي كلمات مستقلة."
+    }
+  },
+  {
+    "titre": "الماضي التام في العربية وما يقابله في الفرنسية (A2)",
+    "langue": "Arabe",
+    "page4": {
+      "id": "ar-pc-p4",
+      "type": "lesson",
+      "title": "أمثلة مصحَّحة — الماضي التام",
+      "content": "<h3>✅ أمثلة مصحَّحة</h3><div class=\"rule-box\"><div><strong>الماضي التام (كان + قد + ماضي) :</strong><br><em><strong>كان</strong> محمد <strong>قد وصل</strong> قبل أن نبدأ.</em> ✓<br><em>لما وصلتُ، <strong>كانت</strong> فاطمة <strong>قد غادرت</strong>.</em> ✓</div></div><div class=\"rule-box\"><div><strong>مقارنة مع الفرنسية :</strong><br>العربية : كان + قد + فعل ماضٍ<br>الفرنسية : avais/avait + participe passé<br><em>Il <strong>était parti</strong> avant mon arrivée.</em> = <em>كان <strong>قد غادر</strong> قبل وصولي.</em></div></div><div class=\"rule-box\"><div><strong>الفرق بين الماضي البسيط والتام :</strong><br><em>وصلتُ ← بسيط (حدث في الماضي)</em><br><em>كنتُ قد وصلتُ ← تام (حدث قبل حدث آخر ماضٍ)</em></div></div>"
+    },
+    "q8": {
+      "id": "ar-pc-q8",
+      "type": "fill",
+      "question": "أكمل : 'لما وصل أحمد، كانت فاطمة _______ غادرت.'",
+      "options": [
+        "قد",
+        "لقد",
+        "كانت",
+        "منذ"
+      ],
+      "answer": 0
+    },
+    "q9": {
+      "id": "ar-pc-q9",
+      "type": "order",
+      "instruction": "رتّب : 'كان محمد قد أكل قبل أن نصل.'",
+      "words": [
+        "أن",
+        "كان",
+        "قبل",
+        "نصل",
+        "قد",
+        "أكل",
+        "محمد"
+      ],
+      "answer": [
+        "كان",
+        "محمد",
+        "قد",
+        "أكل",
+        "قبل",
+        "أن",
+        "نصل"
+      ]
+    },
+    "q10": {
+      "id": "ar-pc-q10",
+      "type": "vf",
+      "question": "الماضي التام في العربية يُعبَّر عنه بـ 'كان + قد + فعل ماضٍ'.",
+      "answer": true,
+      "explanation": "نعم — الصيغة المعيارية للماضي التام في العربية هي 'كان + قد + فعل ماضٍ'، وهي تعادل الـ plus-que-parfait في الفرنسية والـ past perfect في الإنجليزية."
+    }
+  }
+]

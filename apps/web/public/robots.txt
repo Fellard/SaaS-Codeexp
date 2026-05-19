@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://iwslaayoune.com/sitemap.xml

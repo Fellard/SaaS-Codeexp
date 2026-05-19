@@ -1,0 +1,1848 @@
+[
+  {
+    "titre": "Exprimer le temps en français — Niveau A1",
+    "langue": "Francais",
+    "bridge_page": {
+      "id": "orig-fr-time-bridge",
+      "type": "bridge",
+      "title": "Le temps dans les 3 langues",
+      "content": "<h3>📖 Le temps dans les 3 langues</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>Pendant la nuit</td><td>pendant la nuit</td><td>at night / during the night</td><td>في الليل</td></tr><tr><td>Depuis + durée</td><td>depuis 3 ans</td><td>for 3 years</td><td>منذ 3 سنوات</td></tr><tr><td>Il y a + durée</td><td>il y a 2 jours</td><td>2 days ago</td><td>منذ يومين</td></tr><tr><td>Dans + futur</td><td>dans 5 minutes</td><td>in 5 minutes</td><td>بعد 5 دقائق</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>Je travaille ici depuis trois ans.</em></li><li>🇬🇧 <em>I have been working here for three years.</em></li><li>🇸🇦 <em>أعمل هنا منذ ثلاث سنوات.</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇫🇷 'depuis' = for/since (durée continue) ≠ 'il y a' (moment révolu)</li><li>🇬🇧 'since' + date précise vs 'for' + durée</li><li>🇸🇦 'منذ' remplace les deux : since 2020 = منذ 2020 / for 3 years = منذ 3 سنوات</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-fr-time-fill",
+      "type": "fill",
+      "question": "Complétez : 'Elle attend _______ une heure.'",
+      "options": [
+        "il y a",
+        "depuis",
+        "pendant",
+        "dans"
+      ],
+      "answer": 1
+    },
+    "q_order": {
+      "id": "orig-fr-time-ord",
+      "type": "order",
+      "instruction": "Remettez dans l'ordre :",
+      "words": [
+        "ans",
+        "ici",
+        "depuis",
+        "travaille",
+        "trois",
+        "Il"
+      ],
+      "answer": [
+        "Il",
+        "travaille",
+        "ici",
+        "depuis",
+        "trois",
+        "ans"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-fr-time-vf",
+      "type": "vf",
+      "question": "On utilise 'il y a' pour une action qui dure encore dans le présent.",
+      "answer": false,
+      "explanation": "'Il y a' indique un moment révolu (ex : il y a 3 ans). Pour une action qui dure encore, on utilise 'depuis' : je travaille ici depuis 3 ans."
+    }
+  },
+  {
+    "titre": "Expressing Time in English — Grammar & Exercises",
+    "langue": "Anglais",
+    "bridge_page": {
+      "id": "orig-en-time-bridge",
+      "type": "bridge",
+      "title": "Time expressions across 3 languages",
+      "content": "<h3>📖 Time expressions across 3 languages</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>Duration (ongoing)</td><td>for 3 years</td><td>depuis 3 ans</td><td>منذ 3 سنوات</td></tr><tr><td>Past point</td><td>2 days ago</td><td>il y a 2 jours</td><td>منذ يومين</td></tr><tr><td>Future</td><td>in 5 minutes</td><td>dans 5 minutes</td><td>بعد 5 دقائق</td></tr><tr><td>Starting point</td><td>since Monday</td><td>depuis lundi</td><td>منذ الاثنين</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>I have been working here for three years.</em></li><li>🇬🇧 <em>Je travaille ici depuis trois ans.</em></li><li>🇸🇦 <em>أعمل هنا منذ ثلاث سنوات.</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇬🇧 'since' needs a starting point (since 2020), 'for' needs a duration (for 3 years)</li><li>🇫🇷 'depuis' covers BOTH since and for</li><li>🇸🇦 'منذ' also covers both — context determines the meaning</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-en-time-fill",
+      "type": "fill",
+      "question": "Complete: 'I have lived here _______ 2019.'",
+      "options": [
+        "for",
+        "since",
+        "ago",
+        "during"
+      ],
+      "answer": 1
+    },
+    "q_order": {
+      "id": "orig-en-time-ord",
+      "type": "order",
+      "instruction": "Put the words in order:",
+      "words": [
+        "have",
+        "three",
+        "I",
+        "years",
+        "for",
+        "waited"
+      ],
+      "answer": [
+        "I",
+        "have",
+        "waited",
+        "for",
+        "three",
+        "years"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-en-time-vf",
+      "type": "vf",
+      "question": "We use 'ago' to describe an action that is still happening now.",
+      "answer": false,
+      "explanation": "'Ago' refers to a completed past action (e.g. 3 years ago). For ongoing actions, use 'for' or 'since' with the present perfect."
+    }
+  },
+  {
+    "titre": "التعبير عن الزمن — Expressing Time in Arabic",
+    "langue": "Arabe",
+    "bridge_page": {
+      "id": "orig-ar-time-bridge",
+      "type": "bridge",
+      "title": "التعبير عن الزمن في اللغات الثلاث",
+      "content": "<h3>📖 التعبير عن الزمن في اللغات الثلاث</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>الاستمرار</td><td>منذ 3 سنوات</td><td>depuis 3 ans / for 3 years</td><td>منذ 3 سنوات</td></tr><tr><td>الماضي المنتهي</td><td>منذ يومين</td><td>il y a 2 jours / 2 days ago</td><td>منذ يومين</td></tr><tr><td>المستقبل</td><td>بعد 5 دقائق</td><td>dans 5 min / in 5 min</td><td>بعد 5 دقائق</td></tr><tr><td>خلال فترة</td><td>خلال الصيف</td><td>pendant l'été / during summer</td><td>خلال الصيف</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>أعمل هنا منذ ثلاث سنوات.</em></li><li>🇬🇧 <em>I have been working here for three years.</em></li><li>🇸🇦 <em>Je travaille ici depuis trois ans.</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇸🇦 'منذ' يُستخدم للاستمرار والنقطة الزمنية معاً</li><li>🇫🇷 'depuis' للاستمرار و'il y a' للماضي المنتهي — فرق مهم</li><li>🇬🇧 'for' للمدة و'since' لنقطة البداية</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-ar-time-fill",
+      "type": "fill",
+      "question": "أكمل : 'أسكن في هذا البيت _______ خمس سنوات.'",
+      "options": [
+        "قبل",
+        "منذ",
+        "بعد",
+        "خلال"
+      ],
+      "answer": 1
+    },
+    "q_order": {
+      "id": "orig-ar-time-ord",
+      "type": "order",
+      "instruction": "رتّب الكلمات :",
+      "words": [
+        "سنوات",
+        "هنا",
+        "منذ",
+        "ثلاث",
+        "أعيش"
+      ],
+      "answer": [
+        "أعيش",
+        "هنا",
+        "منذ",
+        "ثلاث",
+        "سنوات"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-ar-time-vf",
+      "type": "vf",
+      "question": "تُستخدم كلمة 'بعد' للدلالة على الزمن الماضي.",
+      "answer": false,
+      "explanation": "'بعد' تدل على المستقبل أو ما يلي حدثاً ما. للدلالة على الماضي نستخدم 'منذ' أو 'قبل'."
+    }
+  },
+  {
+    "titre": "Exprimer un lieu",
+    "langue": "Francais",
+    "bridge_page": {
+      "id": "orig-fr-lieu-bridge",
+      "type": "bridge",
+      "title": "Exprimer le lieu dans les 3 langues",
+      "content": "<h3>📖 Exprimer le lieu dans les 3 langues</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>Position</td><td>sur / sous / devant</td><td>on / under / in front of</td><td>على / تحت / أمام</td></tr><tr><td>Mouvement vers</td><td>aller à / en / au</td><td>go to</td><td>الذهاب إلى</td></tr><tr><td>Intérieur</td><td>dans</td><td>in / inside</td><td>داخل / في</td></tr><tr><td>Origine</td><td>de / du / des</td><td>from</td><td>من</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>Le livre est sur la table, devant la fenêtre.</em></li><li>🇬🇧 <em>The book is on the table, in front of the window.</em></li><li>🇸🇦 <em>الكتاب على الطاولة، أمام النافذة.</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇫🇷 'en' + pays féminin vs 'au' + pays masculin (en France / au Maroc)</li><li>🇬🇧 'in' pour les villes ET les pays (in Paris, in France)</li><li>🇸🇦 'في' est la préposition universelle pour le lieu en arabe</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-fr-lieu-fill",
+      "type": "fill",
+      "question": "Complétez : 'Je vais _______ Maroc cet été.'",
+      "options": [
+        "en",
+        "au",
+        "à",
+        "dans le"
+      ],
+      "answer": 1
+    },
+    "q_order": {
+      "id": "orig-fr-lieu-ord",
+      "type": "order",
+      "instruction": "Remettez dans l'ordre :",
+      "words": [
+        "la",
+        "chat",
+        "Le",
+        "est",
+        "table",
+        "sur"
+      ],
+      "answer": [
+        "Le",
+        "chat",
+        "est",
+        "sur",
+        "la",
+        "table"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-fr-lieu-vf",
+      "type": "vf",
+      "question": "On dit 'en France' et 'en Maroc' car les deux pays sont féminins.",
+      "answer": false,
+      "explanation": "Le Maroc est masculin — on dit 'au Maroc'. La règle : 'en' + pays féminin (en France, en Espagne) / 'au' + pays masculin (au Maroc, au Japon)."
+    }
+  },
+  {
+    "titre": "Expressing a Place in English — Grammar & Exercises",
+    "langue": "Anglais",
+    "bridge_page": {
+      "id": "orig-en-lieu-bridge",
+      "type": "bridge",
+      "title": "Expressing place across 3 languages",
+      "content": "<h3>📖 Expressing place across 3 languages</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>On a surface</td><td>on</td><td>sur</td><td>على</td></tr><tr><td>Inside</td><td>in / inside</td><td>dans</td><td>في / داخل</td></tr><tr><td>In front of</td><td>in front of</td><td>devant</td><td>أمام</td></tr><tr><td>Next to</td><td>next to / beside</td><td>à côté de</td><td>بجانب</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>The book is on the table, in front of the window.</em></li><li>🇬🇧 <em>Le livre est sur la table, devant la fenêtre.</em></li><li>🇸🇦 <em>الكتاب على الطاولة، أمام النافذة.</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇬🇧 'in' for cities AND countries (in Paris, in France) unlike French</li><li>🇫🇷 Different prepositions for countries: en France / au Maroc / aux USA</li><li>🇸🇦 'في' is the main locative preposition — very versatile</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-en-lieu-fill",
+      "type": "fill",
+      "question": "Complete: 'The cat is _______ the box.'",
+      "options": [
+        "in",
+        "on",
+        "at",
+        "to"
+      ],
+      "answer": 0
+    },
+    "q_order": {
+      "id": "orig-en-lieu-ord",
+      "type": "order",
+      "instruction": "Put the words in order:",
+      "words": [
+        "the",
+        "table",
+        "on",
+        "keys",
+        "The",
+        "are"
+      ],
+      "answer": [
+        "The",
+        "keys",
+        "are",
+        "on",
+        "the",
+        "table"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-en-lieu-vf",
+      "type": "vf",
+      "question": "In English, we say 'at' for both cities and countries.",
+      "answer": false,
+      "explanation": "We use 'in' for cities and countries (in Paris, in France). 'At' is used for specific points or addresses (at school, at 10 Main Street)."
+    }
+  },
+  {
+    "titre": "التعبير عن المكان — Expressing Place in Arabic",
+    "langue": "Arabe",
+    "bridge_page": {
+      "id": "orig-ar-lieu-bridge",
+      "type": "bridge",
+      "title": "التعبير عن المكان في اللغات الثلاث",
+      "content": "<h3>📖 التعبير عن المكان في اللغات الثلاث</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>على السطح</td><td>على</td><td>sur / on</td><td>على</td></tr><tr><td>داخل</td><td>في / داخل</td><td>dans / in</td><td>في / داخل</td></tr><tr><td>أمام</td><td>أمام</td><td>devant / in front of</td><td>أمام</td></tr><tr><td>بجانب</td><td>بجانب / إلى جانب</td><td>à côté / next to</td><td>بجانب</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>الكتاب على الطاولة، أمام النافذة.</em></li><li>🇬🇧 <em>The book is on the table, in front of the window.</em></li><li>🇸🇦 <em>Le livre est sur la table, devant la fenêtre.</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇸🇦 'في' في العربية أشمل من 'in' الإنجليزية — تشمل المدن والدول والأماكن</li><li>🇫🇷 تختلف حروف الجر حسب جنس البلد (en France / au Maroc)</li><li>🇬🇧 'in' للمدن والدول — أبسط من الفرنسية</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-ar-lieu-fill",
+      "type": "fill",
+      "question": "أكمل : 'أسكن _______ المدينة القديمة.'",
+      "options": [
+        "على",
+        "في",
+        "من",
+        "إلى"
+      ],
+      "answer": 1
+    },
+    "q_order": {
+      "id": "orig-ar-lieu-ord",
+      "type": "order",
+      "instruction": "رتّب الكلمات :",
+      "words": [
+        "الكتاب",
+        "على",
+        "الطاولة"
+      ],
+      "answer": [
+        "الكتاب",
+        "على",
+        "الطاولة"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-ar-lieu-vf",
+      "type": "vf",
+      "question": "حرف الجر 'إلى' يُستخدم للدلالة على المكان الثابت.",
+      "answer": false,
+      "explanation": "'إلى' يدل على الاتجاه والحركة نحو مكان. للدلالة على المكان الثابت نستخدم 'في': أنا في البيت. للحركة: أذهب إلى البيت."
+    }
+  },
+  {
+    "titre": "Grammaire-Toutes les prépositions",
+    "langue": "Francais",
+    "bridge_page": {
+      "id": "orig-fr-prep-bridge",
+      "type": "bridge",
+      "title": "Les prépositions dans les 3 langues",
+      "content": "<h3>📖 Les prépositions dans les 3 langues</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>Lieu</td><td>à, en, dans, sur, sous</td><td>at, in, on, under</td><td>في، على، تحت</td></tr><tr><td>Temps</td><td>à, en, dans, depuis</td><td>at, in, on, for, since</td><td>في، منذ، خلال</td></tr><tr><td>Cause</td><td>à cause de, grâce à</td><td>because of, thanks to</td><td>بسبب، بفضل</td></tr><tr><td>Moyen</td><td>par, avec</td><td>by, with</td><td>بـ، مع</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>Je vais à Paris en train depuis Lyon.</em></li><li>🇬🇧 <em>I go to Paris by train from Lyon.</em></li><li>🇸🇦 <em>أذهب إلى باريس بالقطار من ليون.</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇫🇷 La même préposition peut avoir plusieurs sens : 'à' = à Paris / à 8h / à pied</li><li>🇬🇧 'at' pour les heures (at 8pm), 'on' pour les jours (on Monday), 'in' pour les mois</li><li>🇸🇦 'بـ' (préfixe) = by/with/in : بالقطار = by train, بالعربية = in Arabic</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-fr-prep-fill",
+      "type": "fill",
+      "question": "Complétez : 'La réunion est _______ lundi _______ 9h.'",
+      "options": [
+        "en / à",
+        "le / à",
+        "à / en",
+        "au / à"
+      ],
+      "answer": 1
+    },
+    "q_order": {
+      "id": "orig-fr-prep-ord",
+      "type": "order",
+      "instruction": "Remettez dans l'ordre :",
+      "words": [
+        "pied",
+        "à",
+        "vais",
+        "Je",
+        "travail",
+        "au"
+      ],
+      "answer": [
+        "Je",
+        "vais",
+        "au",
+        "travail",
+        "à",
+        "pied"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-fr-prep-vf",
+      "type": "vf",
+      "question": "En français, on dit 'au lundi' pour exprimer un jour de la semaine.",
+      "answer": false,
+      "explanation": "Pour les jours de la semaine, on dit 'le lundi' (habitude) ou simplement 'lundi' (prochain). 'Au' s'utilise avec les pays masculins (au Maroc) et les lieux (au cinéma)."
+    }
+  },
+  {
+    "titre": "All English Prepositions (A1–A2)",
+    "langue": "Anglais",
+    "bridge_page": {
+      "id": "orig-en-prep-bridge",
+      "type": "bridge",
+      "title": "Prepositions across 3 languages",
+      "content": "<h3>📖 Prepositions across 3 languages</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>Time — hours</td><td>at 8pm</td><td>à 20h</td><td>في الساعة 8</td></tr><tr><td>Time — days</td><td>on Monday</td><td>le lundi</td><td>يوم الاثنين</td></tr><tr><td>Time — months</td><td>in January</td><td>en janvier</td><td>في يناير</td></tr><tr><td>Place</td><td>in/on/at</td><td>dans/sur/à</td><td>في/على/عند</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>I go to work on Monday at 9am.</em></li><li>🇬🇧 <em>Je vais au travail le lundi à 9h.</em></li><li>🇸🇦 <em>أذهب إلى العمل يوم الاثنين في الساعة 9.</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇬🇧 AT/ON/IN for time: at 8pm / on Monday / in January — memorise this pattern</li><li>🇫🇷 'le' for habitual days (le lundi), 'à' for hours (à 9h), 'en' for months</li><li>🇸🇦 'في' used for all time periods in Arabic</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-en-prep-fill",
+      "type": "fill",
+      "question": "Complete: 'The meeting is _______ Monday _______ 9am.'",
+      "options": [
+        "in / at",
+        "on / at",
+        "at / on",
+        "at / in"
+      ],
+      "answer": 1
+    },
+    "q_order": {
+      "id": "orig-en-prep-ord",
+      "type": "order",
+      "instruction": "Put the words in order:",
+      "words": [
+        "at",
+        "arrives",
+        "She",
+        "8am",
+        "work",
+        "at"
+      ],
+      "answer": [
+        "She",
+        "arrives",
+        "at",
+        "work",
+        "at",
+        "8am"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-en-prep-vf",
+      "type": "vf",
+      "question": "We say 'in the morning' but 'at night' in English.",
+      "answer": true,
+      "explanation": "Yes — 'in the morning/afternoon/evening' but 'at night' and 'at noon'. These are fixed expressions in English that must be memorised."
+    }
+  },
+  {
+    "titre": "حروف الجر — Arabic Prepositions (A1–A2)",
+    "langue": "Arabe",
+    "bridge_page": {
+      "id": "orig-ar-prep-bridge",
+      "type": "bridge",
+      "title": "حروف الجر في اللغات الثلاث",
+      "content": "<h3>📖 حروف الجر في اللغات الثلاث</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>الوقت</td><td>في / منذ / خلال</td><td>à/en/depuis (FR) / at/in/for (EN)</td><td>في / منذ / خلال</td></tr><tr><td>المكان</td><td>في / على / تحت</td><td>dans/sur/sous / in/on/under</td><td>في / على / تحت</td></tr><tr><td>الاتجاه</td><td>إلى / نحو</td><td>à / vers / to / towards</td><td>إلى / نحو</td></tr><tr><td>الوسيلة</td><td>بـ / مع</td><td>avec/par / with/by</td><td>بـ / مع</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>أذهب إلى العمل بالقطار في الساعة 9.</em></li><li>🇬🇧 <em>I go to work by train at 9am.</em></li><li>🇸🇦 <em>Je vais au travail en train à 9h.</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇸🇦 'بـ' (Ba) يُضاف مباشرة للكلمة كبادئة: بالقطار، بالسيارة، بالعربية</li><li>🇫🇷 تتنوع حروف الجر حسب السياق: en train (وسيلة) / en France (مكان)</li><li>🇬🇧 'by' للوسائل (by train) و'with' للأدوات (with a pen)</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-ar-prep-fill",
+      "type": "fill",
+      "question": "أكمل : 'أسافر _______ الطائرة.'",
+      "options": [
+        "في",
+        "بـ",
+        "إلى",
+        "مع"
+      ],
+      "answer": 1
+    },
+    "q_order": {
+      "id": "orig-ar-prep-ord",
+      "type": "order",
+      "instruction": "رتّب الكلمات :",
+      "words": [
+        "إلى",
+        "أذهب",
+        "القطار",
+        "العمل",
+        "بـ"
+      ],
+      "answer": [
+        "أذهب",
+        "إلى",
+        "العمل",
+        "بـ",
+        "القطار"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-ar-prep-vf",
+      "type": "vf",
+      "question": "حرف الجر 'إلى' يُستخدم للدلالة على الوسيلة في العربية.",
+      "answer": false,
+      "explanation": "'إلى' يدل على الاتجاه والغاية (أذهب إلى البيت). للوسيلة نستخدم 'بـ' (أسافر بالقطار) وللمرافقة 'مع' (أذهب مع صديقي)."
+    }
+  },
+  {
+    "titre": "Lettre de Londres — Niveau A1",
+    "langue": "Francais",
+    "bridge_page": {
+      "id": "orig-fr-lettre-bridge",
+      "type": "bridge",
+      "title": "Écrire une lettre dans les 3 langues",
+      "content": "<h3>📖 Écrire une lettre dans les 3 langues</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>Formule d'ouverture</td><td>Cher(e) / Bonjour</td><td>Dear / Hello</td><td>عزيزي / مرحباً</td></tr><tr><td>Présenter nouvelles</td><td>Je t'écris de...</td><td>I am writing from...</td><td>أكتب إليك من...</td></tr><tr><td>Décrire un lieu</td><td>Il y a... / C'est...</td><td>There is... / It is...</td><td>يوجد... / إنه...</td></tr><tr><td>Formule de clôture</td><td>Amicalement / Bisous</td><td>Best wishes / Love</td><td>مع التحية / بالود</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>Chère Marie, je t'écris de Londres où il pleut souvent !</em></li><li>🇬🇧 <em>Dear Marie, I am writing from London where it often rains!</em></li><li>🇸🇦 <em>عزيزتي ماري، أكتب إليك من لندن حيث تمطر كثيراً!</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇫🇷 'Cher' + prénom masculin / 'Chère' + prénom féminin</li><li>🇬🇧 'Dear' est neutre — pas d'accord de genre</li><li>🇸🇦 'عزيزي' (masc.) / 'عزيزتي' (fém.) — accord obligatoire</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-fr-lettre-fill",
+      "type": "fill",
+      "question": "Pour commencer une lettre formelle, on écrit :",
+      "options": [
+        "Salut !",
+        "Cher Monsieur,",
+        "Bonjour toi,",
+        "Coucou,"
+      ],
+      "answer": 1
+    },
+    "q_order": {
+      "id": "orig-fr-lettre-ord",
+      "type": "order",
+      "instruction": "Remettez dans l'ordre :",
+      "words": [
+        "Paris",
+        "t'écris",
+        "de",
+        "Je",
+        "te"
+      ],
+      "answer": [
+        "Je",
+        "t'écris",
+        "de",
+        "Paris",
+        "te"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-fr-lettre-vf",
+      "type": "vf",
+      "question": "On utilise 'Cher' pour écrire à une femme que l'on connaît.",
+      "answer": false,
+      "explanation": "Pour une femme, on écrit 'Chère' (avec accent et -e final). 'Cher' est réservé au masculin. Exemple : 'Chère Sophie' / 'Cher Paul'."
+    }
+  },
+  {
+    "titre": "A Letter from London (Reading & Writing)",
+    "langue": "Anglais",
+    "bridge_page": {
+      "id": "orig-en-lettre-bridge",
+      "type": "bridge",
+      "title": "Writing a letter in 3 languages",
+      "content": "<h3>📖 Writing a letter in 3 languages</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>Opening</td><td>Dear + name</td><td>Cher(e) + prénom</td><td>عزيزي / عزيزتي</td></tr><tr><td>Writing from</td><td>I am writing from...</td><td>Je t'écris de...</td><td>أكتب إليك من...</td></tr><tr><td>Description</td><td>There is... / It is...</td><td>Il y a... / C'est...</td><td>يوجد... / إنه...</td></tr><tr><td>Closing</td><td>Best wishes / Love</td><td>Amicalement / Bisous</td><td>مع التحية / بالود</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>Dear Marie, I am writing from London where it often rains!</em></li><li>🇬🇧 <em>Chère Marie, je t'écris de Londres où il pleut souvent !</em></li><li>🇸🇦 <em>عزيزتي ماري، أكتب إليك من لندن حيث تمطر كثيراً!</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇬🇧 'Dear' is gender-neutral — same for men and women</li><li>🇫🇷 'Cher' (masc.) / 'Chère' (fém.) — gender agreement required</li><li>🇸🇦 'عزيزي' (masc.) / 'عزيزتي' (fém.) — gender agreement required</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-en-lettre-fill",
+      "type": "fill",
+      "question": "Complete the opening of a formal letter:",
+      "options": [
+        "Hey there,",
+        "Dear Mr Smith,",
+        "Hello you,",
+        "Hi!"
+      ],
+      "answer": 1
+    },
+    "q_order": {
+      "id": "orig-en-lettre-ord",
+      "type": "order",
+      "instruction": "Put the words in order:",
+      "words": [
+        "London",
+        "from",
+        "writing",
+        "am",
+        "I"
+      ],
+      "answer": [
+        "I",
+        "am",
+        "writing",
+        "from",
+        "London"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-en-lettre-vf",
+      "type": "vf",
+      "question": "'Dear' in English changes form depending on whether you write to a man or woman.",
+      "answer": false,
+      "explanation": "'Dear' is gender-neutral in English — it stays the same for men and women (Dear Mr Smith / Dear Ms Jones). Unlike French 'Cher/Chère' or Arabic 'عزيزي/عزيزتي'."
+    }
+  },
+  {
+    "titre": "رسالة من لندن — A Letter from London (Arabic)",
+    "langue": "Arabe",
+    "bridge_page": {
+      "id": "orig-ar-lettre-bridge",
+      "type": "bridge",
+      "title": "كتابة الرسائل في اللغات الثلاث",
+      "content": "<h3>📖 كتابة الرسائل في اللغات الثلاث</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>التحية</td><td>عزيزي / عزيزتي</td><td>Dear (EN) / Cher/Chère (FR)</td><td>عزيزي / عزيزتي</td></tr><tr><td>الكتابة من</td><td>أكتب إليك من...</td><td>I am writing from... / Je t'écris de...</td><td>أكتب إليك من...</td></tr><tr><td>الوصف</td><td>يوجد... / إنه...</td><td>There is... / Il y a...</td><td>يوجد... / إنه...</td></tr><tr><td>الختام</td><td>مع التحية / بالود</td><td>Best wishes / Amicalement</td><td>مع التحية / بالود</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>عزيزتي ماري، أكتب إليك من لندن حيث تمطر كثيراً!</em></li><li>🇬🇧 <em>Dear Marie, I am writing from London where it often rains!</em></li><li>🇸🇦 <em>Chère Marie, je t'écris de Londres où il pleut souvent !</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇸🇦 'عزيزي' للمذكر و'عزيزتي' للمؤنث — المطابقة واجبة</li><li>🇬🇧 'Dear' محايد — لا يتغير حسب الجنس</li><li>🇫🇷 'Cher' للمذكر و'Chère' للمؤنث — مثل العربية</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-ar-lettre-fill",
+      "type": "fill",
+      "question": "ما هي التحية المناسبة للكتابة لصديقة؟",
+      "options": [
+        "عزيزي",
+        "عزيزتي",
+        "مرحباً يا صديق",
+        "إلى من يهمه الأمر"
+      ],
+      "answer": 1
+    },
+    "q_order": {
+      "id": "orig-ar-lettre-ord",
+      "type": "order",
+      "instruction": "رتّب الكلمات :",
+      "words": [
+        "أكتب",
+        "لندن",
+        "من",
+        "إليك"
+      ],
+      "answer": [
+        "أكتب",
+        "إليك",
+        "من",
+        "لندن"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-ar-lettre-vf",
+      "type": "vf",
+      "question": "في الرسائل الرسمية بالعربية، يُستخدم 'عزيزي' للمذكر والمؤنث معاً.",
+      "answer": false,
+      "explanation": "في العربية نُميّز بين 'عزيزي' للمذكر و'عزيزتي' للمؤنث. هذا الفرق مهم في الرسائل الرسمية وغير الرسمية على حد سواء."
+    }
+  },
+  {
+    "titre": "Le voyage — Texte de lecture A1",
+    "langue": "Francais",
+    "bridge_page": {
+      "id": "orig-fr-voyage-bridge",
+      "type": "bridge",
+      "title": "Le vocabulaire du voyage dans 3 langues",
+      "content": "<h3>📖 Le vocabulaire du voyage dans 3 langues</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>Transports</td><td>avion, train, bus</td><td>plane, train, bus</td><td>طائرة، قطار، حافلة</td></tr><tr><td>Logement</td><td>hôtel, auberge</td><td>hotel, hostel</td><td>فندق، نزل</td></tr><tr><td>Documents</td><td>passeport, billet</td><td>passport, ticket</td><td>جواز سفر، تذكرة</td></tr><tr><td>Demander chemin</td><td>Où est... ? / C'est loin ?</td><td>Where is...? / Is it far?</td><td>أين... ؟ / هل هو بعيد؟</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>Je prends le train pour aller à Paris. L'hôtel est près de la gare.</em></li><li>🇬🇧 <em>I take the train to go to Paris. The hotel is near the station.</em></li><li>🇸🇦 <em>أركب القطار للذهاب إلى باريس. الفندق قريب من المحطة.</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇫🇷 'prendre' est le verbe universel pour les transports : prendre le bus/train/avion</li><li>🇬🇧 'take' for transport: take the bus / take a taxi</li><li>🇸🇦 'ركب' للنقل العام: ركب القطار / ركب الحافلة</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-fr-voyage-fill",
+      "type": "fill",
+      "question": "Complétez : 'Je _______ l'avion demain matin.'",
+      "options": [
+        "monte",
+        "prends",
+        "fais",
+        "pars"
+      ],
+      "answer": 1
+    },
+    "q_order": {
+      "id": "orig-fr-voyage-ord",
+      "type": "order",
+      "instruction": "Remettez dans l'ordre :",
+      "words": [
+        "la",
+        "est",
+        "gare",
+        "La",
+        "près",
+        "de",
+        "hôtel"
+      ],
+      "answer": [
+        "La",
+        "gare",
+        "est",
+        "près",
+        "de",
+        "la",
+        "hôtel"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-fr-voyage-vf",
+      "type": "vf",
+      "question": "Pour parler des transports en français, on utilise le verbe 'aller' : 'aller le train'.",
+      "answer": false,
+      "explanation": "On utilise le verbe 'prendre' pour les transports : prendre le train, prendre le bus. 'Aller' indique la destination : aller à Paris en train."
+    }
+  },
+  {
+    "titre": "Travel & Adventure (Reading & Speaking)",
+    "langue": "Anglais",
+    "bridge_page": {
+      "id": "orig-en-voyage-bridge",
+      "type": "bridge",
+      "title": "Travel vocabulary across 3 languages",
+      "content": "<h3>📖 Travel vocabulary across 3 languages</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>Transport</td><td>plane, train, bus</td><td>avion, train, bus</td><td>طائرة، قطار، حافلة</td></tr><tr><td>Accommodation</td><td>hotel, hostel</td><td>hôtel, auberge</td><td>فندق، نزل</td></tr><tr><td>Documents</td><td>passport, ticket</td><td>passeport, billet</td><td>جواز سفر، تذكرة</td></tr><tr><td>Asking directions</td><td>Where is...? / How far?</td><td>Où est... ? / C'est loin ?</td><td>أين...؟ / كم البعد؟</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>I take the train to Paris. The hotel is near the station.</em></li><li>🇬🇧 <em>Je prends le train pour aller à Paris. L'hôtel est près de la gare.</em></li><li>🇸🇦 <em>أركب القطار إلى باريس. الفندق قريب من المحطة.</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇬🇧 'take' for transport (take the bus), 'go by' also common (go by train)</li><li>🇫🇷 'prendre' is the main verb for transport</li><li>🇸🇦 'ركب' for riding/taking transport</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-en-voyage-fill",
+      "type": "fill",
+      "question": "Complete: 'I always _______ the bus to work.'",
+      "options": [
+        "ride",
+        "take",
+        "go",
+        "bring"
+      ],
+      "answer": 1
+    },
+    "q_order": {
+      "id": "orig-en-voyage-ord",
+      "type": "order",
+      "instruction": "Put the words in order:",
+      "words": [
+        "the",
+        "station",
+        "hotel",
+        "The",
+        "near",
+        "is"
+      ],
+      "answer": [
+        "The",
+        "hotel",
+        "is",
+        "near",
+        "the",
+        "station"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-en-voyage-vf",
+      "type": "vf",
+      "question": "We say 'go the train' to talk about taking transport in English.",
+      "answer": false,
+      "explanation": "We say 'take the train' or 'go by train'. The verb 'take' is the standard choice for transport in English (take the bus, take a taxi, take a plane)."
+    }
+  },
+  {
+    "titre": "السفر والمغامرة — Travel & Adventure (Arabic)",
+    "langue": "Arabe",
+    "bridge_page": {
+      "id": "orig-ar-voyage-bridge",
+      "type": "bridge",
+      "title": "مفردات السفر في اللغات الثلاث",
+      "content": "<h3>📖 مفردات السفر في اللغات الثلاث</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>وسائل النقل</td><td>طائرة، قطار، حافلة</td><td>avion/train/bus (FR) / plane/train/bus (EN)</td><td>طائرة، قطار، حافلة</td></tr><tr><td>الإقامة</td><td>فندق، نزل</td><td>hôtel/auberge / hotel/hostel</td><td>فندق، نزل</td></tr><tr><td>الوثائق</td><td>جواز سفر، تذكرة</td><td>passeport/billet / passport/ticket</td><td>جواز سفر، تذكرة</td></tr><tr><td>السؤال عن الطريق</td><td>أين...؟ / كم المسافة؟</td><td>Où est? / Is it far?</td><td>أين...؟ / كم المسافة؟</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>أركب القطار إلى باريس. الفندق قريب من المحطة.</em></li><li>🇬🇧 <em>I take the train to Paris. The hotel is near the station.</em></li><li>🇸🇦 <em>Je prends le train pour aller à Paris. L'hôtel est près de la gare.</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇸🇦 'ركب' للنقل العام: ركب القطار، ركب الحافلة</li><li>🇫🇷 'prendre' للنقل: prendre le train/bus/avion</li><li>🇬🇧 'take' للنقل: take the train/bus/plane</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-ar-voyage-fill",
+      "type": "fill",
+      "question": "أكمل : 'أحتاج _______ سفر للسفر إلى الخارج.'",
+      "options": [
+        "تذكرة",
+        "جواز",
+        "فندق",
+        "حافلة"
+      ],
+      "answer": 1
+    },
+    "q_order": {
+      "id": "orig-ar-voyage-ord",
+      "type": "order",
+      "instruction": "رتّب الكلمات :",
+      "words": [
+        "المطار",
+        "إلى",
+        "الحافلة",
+        "أركب"
+      ],
+      "answer": [
+        "أركب",
+        "الحافلة",
+        "إلى",
+        "المطار"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-ar-voyage-vf",
+      "type": "vf",
+      "question": "كلمة 'تذكرة' في العربية تعادل كلمة 'passeport' في الفرنسية.",
+      "answer": false,
+      "explanation": "'تذكرة' تعادل 'billet/ticket' (تذكرة قطار، تذكرة طيران). أما 'passeport' فيُترجم بـ 'جواز سفر'. الفرق مهم جداً في سياق السفر."
+    }
+  },
+  {
+    "titre": "Tests et DELF Prim",
+    "langue": "Francais",
+    "bridge_page": {
+      "id": "orig-fr-tests-bridge",
+      "type": "bridge",
+      "title": "Les examens de langues dans 3 systèmes",
+      "content": "<h3>📖 Les examens de langues dans 3 systèmes</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>Niveau A1</td><td>DELF A1 / TCF A1</td><td>Cambridge Starter / A1 Key</td><td>مستوى A1</td></tr><tr><td>Niveau A2</td><td>DELF A2</td><td>A2 Key (KET)</td><td>مستوى A2</td></tr><tr><td>Compétences</td><td>Lire, Écrire, Écouter, Parler</td><td>Read, Write, Listen, Speak</td><td>قراءة، كتابة، استماع، كلام</td></tr><tr><td>Score A1</td><td>Sur 100 pts / seuil 50</td><td>Score / Pass mark</td><td>درجة / حد النجاح</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>Pour réussir le DELF A1, il faut obtenir 50/100 et ne pas avoir de zéro.</em></li><li>🇬🇧 <em>To pass A1 Key, you need to pass all four skills.</em></li><li>🇸🇦 <em>للنجاح في مستوى A1، يجب إتقان المهارات الأربع.</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇫🇷 DELF = Diplôme officiel reconnu internationalement, non périmé</li><li>🇬🇧 Cambridge A1 Key = international certification</li><li>🇸🇦 شهادات اللغة العربية كـ CIMA لها نظام مماثل</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-fr-tests-fill",
+      "type": "fill",
+      "question": "Le DELF évalue combien de compétences ?",
+      "options": [
+        "2 (lire et écrire)",
+        "3 (lire, écrire, parler)",
+        "4 (lire, écrire, écouter, parler)",
+        "5 compétences"
+      ],
+      "answer": 2
+    },
+    "q_order": {
+      "id": "orig-fr-tests-ord",
+      "type": "order",
+      "instruction": "Remettez dans l'ordre :",
+      "words": [
+        "DELF",
+        "le",
+        "passer",
+        "veux",
+        "Je"
+      ],
+      "answer": [
+        "Je",
+        "veux",
+        "passer",
+        "le",
+        "DELF"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-fr-tests-vf",
+      "type": "vf",
+      "question": "Le DELF a une date d'expiration — il faut le repasser tous les 5 ans.",
+      "answer": false,
+      "explanation": "Le DELF (Diplôme d'Études en Langue Française) est valable à vie — il n'expire jamais. C'est un diplôme officiel du Ministère français de l'Éducation nationale."
+    }
+  },
+  {
+    "titre": "Tests & Assessments (A1 English)",
+    "langue": "Anglais",
+    "bridge_page": {
+      "id": "orig-en-tests-bridge",
+      "type": "bridge",
+      "title": "Language certifications across 3 systems",
+      "content": "<h3>📖 Language certifications across 3 systems</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>A1 level</td><td>A1 Key (Cambridge)</td><td>DELF A1 (French)</td><td>مستوى A1</td></tr><tr><td>A2 level</td><td>A2 Key (KET)</td><td>DELF A2</td><td>مستوى A2</td></tr><tr><td>Skills tested</td><td>Read, Write, Listen, Speak</td><td>Lire, Écrire, Écouter, Parler</td><td>قراءة، كتابة، استماع، كلام</td></tr><tr><td>Validity</td><td>Lifetime</td><td>À vie</td><td>مدى الحياة</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>To pass A1 Key, you need to show skills in reading, writing, listening and speaking.</em></li><li>🇬🇧 <em>Pour réussir le DELF A1, il faut maîtriser les 4 compétences.</em></li><li>🇸🇦 <em>للنجاح في مستوى A1، يجب إتقان مهارات القراءة والكتابة والاستماع والكلام.</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇬🇧 Cambridge exams never expire — unlike some other certificates</li><li>🇫🇷 DELF also never expires — lifetime validity</li><li>🇸🇦 Always verify expiry policy for each specific certification</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-en-tests-fill",
+      "type": "fill",
+      "question": "The Cambridge A1 Key tests how many skills?",
+      "options": [
+        "2 skills",
+        "3 skills",
+        "4 skills",
+        "5 skills"
+      ],
+      "answer": 2
+    },
+    "q_order": {
+      "id": "orig-en-tests-ord",
+      "type": "order",
+      "instruction": "Put the words in order:",
+      "words": [
+        "exam",
+        "take",
+        "to",
+        "want",
+        "the",
+        "I"
+      ],
+      "answer": [
+        "I",
+        "want",
+        "to",
+        "take",
+        "the",
+        "exam"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-en-tests-vf",
+      "type": "vf",
+      "question": "The Cambridge A1 Key certificate expires after 5 years.",
+      "answer": false,
+      "explanation": "Cambridge English certificates do not expire. Once earned, they are valid for life. This is the same policy as the French DELF."
+    }
+  },
+  {
+    "titre": "اختبارات وتقييمات — Tests & Assessments (A1)",
+    "langue": "Arabe",
+    "bridge_page": {
+      "id": "orig-ar-tests-bridge",
+      "type": "bridge",
+      "title": "شهادات اللغة في أنظمة مختلفة",
+      "content": "<h3>📖 شهادات اللغة في أنظمة مختلفة</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>المستوى A1</td><td>DALF/DELF A1</td><td>Cambridge A1 Key</td><td>مستوى A1 عربي</td></tr><tr><td>المهارات</td><td>قراءة، كتابة، استماع، كلام</td><td>Read/Write/Listen/Speak</td><td>المهارات الأربع</td></tr><tr><td>الصلاحية</td><td>مدى الحياة</td><td>Lifetime / À vie</td><td>مدى الحياة</td></tr><tr><td>الاعتراف</td><td>دولي</td><td>International</td><td>دولي</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>للنجاح في اختبار A1، يجب إتقان مهارات القراءة والكتابة والاستماع والكلام.</em></li><li>🇬🇧 <em>To pass A1, you need reading, writing, listening and speaking skills.</em></li><li>🇸🇦 <em>Pour réussir le niveau A1, il faut maîtriser les 4 compétences.</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇸🇦 شهادات DELF و Cambridge صالحة مدى الحياة — لا تنتهي صلاحيتها</li><li>🇫🇷 DELF شهادة رسمية من وزارة التربية الفرنسية</li><li>🇬🇧 Cambridge من أعرق مراكز الامتحانات في العالم</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-ar-tests-fill",
+      "type": "fill",
+      "question": "كم عدد المهارات التي تقيسها اختبارات اللغة عادةً؟",
+      "options": [
+        "مهارتان (قراءة وكتابة)",
+        "ثلاث مهارات",
+        "أربع مهارات",
+        "خمس مهارات"
+      ],
+      "answer": 2
+    },
+    "q_order": {
+      "id": "orig-ar-tests-ord",
+      "type": "order",
+      "instruction": "رتّب الكلمات :",
+      "words": [
+        "المستوى",
+        "اجتياز",
+        "أريد",
+        "A1"
+      ],
+      "answer": [
+        "أريد",
+        "اجتياز",
+        "المستوى",
+        "A1"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-ar-tests-vf",
+      "type": "vf",
+      "question": "شهادة DELF تنتهي صلاحيتها بعد خمس سنوات.",
+      "answer": false,
+      "explanation": "شهادة DELF صالحة مدى الحياة ولا تنتهي صلاحيتها. إنها شهادة رسمية من وزارة التربية الفرنسية معترف بها دولياً."
+    }
+  },
+  {
+    "titre": "L'alphabet français — Niveau A0/A1",
+    "langue": "Francais",
+    "bridge_page": {
+      "id": "orig-fr-alpha-bridge",
+      "type": "bridge",
+      "title": "Les alphabets dans les 3 langues",
+      "content": "<h3>📖 Les alphabets dans les 3 langues</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>Nombre de lettres</td><td>26 lettres</td><td>26 letters</td><td>28 حرفاً</td></tr><tr><td>Sens de lecture</td><td>gauche → droite</td><td>left → right</td><td>يمين → يسار</td></tr><tr><td>Accents</td><td>à, é, è, ê, ç, î...</td><td>none (standard)</td><td>حركات (فتحة، كسرة، ضمة)</td></tr><tr><td>Voyelles</td><td>a, e, i, o, u, y</td><td>a, e, i, o, u</td><td>أ، و، ي (+ الحركات)</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>En français, l'alphabet a 26 lettres et se lit de gauche à droite.</em></li><li>🇬🇧 <em>In English, the alphabet has 26 letters and is read left to right.</em></li><li>🇸🇦 <em>الأبجدية العربية تضم 28 حرفاً وتُقرأ من اليمين إلى اليسار.</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇫🇷 Le français ajoute des accents qui changent la prononciation : e ≠ é ≠ è ≠ ê</li><li>🇬🇧 English has no accents in standard spelling</li><li>🇸🇦 L'arabe s'écrit de droite à gauche — opposé du français et de l'anglais</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-fr-alpha-fill",
+      "type": "fill",
+      "question": "Combien de lettres compte l'alphabet français ?",
+      "options": [
+        "24 lettres",
+        "25 lettres",
+        "26 lettres",
+        "28 lettres"
+      ],
+      "answer": 2
+    },
+    "q_order": {
+      "id": "orig-fr-alpha-ord",
+      "type": "order",
+      "instruction": "Remettez dans l'ordre alphabétique :",
+      "words": [
+        "D",
+        "A",
+        "C",
+        "B"
+      ],
+      "answer": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-fr-alpha-vf",
+      "type": "vf",
+      "question": "En français, la lettre 'e' se prononce toujours de la même façon.",
+      "answer": false,
+      "explanation": "En français, le 'e' a plusieurs prononciations selon l'accent : 'e' (muet ou ouvert), 'é' (fermé), 'è' (ouvert), 'ê' (ouvert long). Les accents sont essentiels à la prononciation."
+    }
+  },
+  {
+    "titre": "The English Alphabet — Level A0/A1",
+    "langue": "Anglais",
+    "bridge_page": {
+      "id": "orig-en-alpha-bridge",
+      "type": "bridge",
+      "title": "Alphabets across 3 languages",
+      "content": "<h3>📖 Alphabets across 3 languages</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>Number of letters</td><td>26 letters</td><td>26 lettres</td><td>28 حرفاً</td></tr><tr><td>Reading direction</td><td>left → right</td><td>gauche → droite</td><td>يمين → يسار</td></tr><tr><td>Accents/marks</td><td>none (standard)</td><td>à,é,è,ê,ç...</td><td>حركات: فتحة،كسرة،ضمة</td></tr><tr><td>Vowels</td><td>a,e,i,o,u</td><td>a,e,i,o,u,y</td><td>أ،و،ي</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>In English, the alphabet has 26 letters read from left to right.</em></li><li>🇬🇧 <em>En français, l'alphabet a 26 lettres et se lit de gauche à droite.</em></li><li>🇸🇦 <em>الأبجدية العربية تضم 28 حرفاً وتُقرأ من اليمين إلى اليسار.</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇬🇧 English has no written accents — pronunciation must be memorised</li><li>🇫🇷 French accents (é, è, ê, ç) change pronunciation significantly</li><li>🇸🇦 Arabic is written right-to-left and has short vowel marks (harakat)</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-en-alpha-fill",
+      "type": "fill",
+      "question": "How many letters are in the English alphabet?",
+      "options": [
+        "24",
+        "25",
+        "26",
+        "28"
+      ],
+      "answer": 2
+    },
+    "q_order": {
+      "id": "orig-en-alpha-ord",
+      "type": "order",
+      "instruction": "Put these letters in alphabetical order:",
+      "words": [
+        "D",
+        "A",
+        "C",
+        "B"
+      ],
+      "answer": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-en-alpha-vf",
+      "type": "vf",
+      "question": "The English alphabet has more letters than the French alphabet.",
+      "answer": false,
+      "explanation": "Both the English and French alphabets have exactly 26 letters (A to Z). French adds accented versions (é, è, ê, ç) but these are not counted as separate letters of the alphabet."
+    }
+  },
+  {
+    "titre": "الحروف العربية — Arabic Alphabet (A0/A1)",
+    "langue": "Arabe",
+    "bridge_page": {
+      "id": "orig-ar-alpha-bridge",
+      "type": "bridge",
+      "title": "الأبجديات في اللغات الثلاث",
+      "content": "<h3>📖 الأبجديات في اللغات الثلاث</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>عدد الحروف</td><td>28 حرفاً</td><td>26 (FR) / 26 (EN)</td><td>28 حرفاً</td></tr><tr><td>اتجاه القراءة</td><td>يمين ← يسار</td><td>gauche → droite / left → right</td><td>يمين ← يسار</td></tr><tr><td>الحركات</td><td>فتحة، كسرة، ضمة، سكون</td><td>accents (FR) / none (EN)</td><td>حركات</td></tr><tr><td>الحروف الصوتية</td><td>أ، و، ي</td><td>a,e,i,o,u</td><td>a,e,i,o,u</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>الأبجدية العربية تضم 28 حرفاً وتُكتب من اليمين إلى اليسار.</em></li><li>🇬🇧 <em>The Arabic alphabet has 28 letters and is written right to left.</em></li><li>🇸🇦 <em>L'alphabet arabe a 28 lettres et s'écrit de droite à gauche.</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇸🇦 الكتابة العربية من اليمين إلى اليسار — عكس الفرنسية والإنجليزية</li><li>🇫🇷 الفرنسية 26 حرفاً + حركات (accents) تغير النطق</li><li>🇬🇧 الإنجليزية 26 حرفاً بدون حركات — النطق يُحفظ</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-ar-alpha-fill",
+      "type": "fill",
+      "question": "كم عدد حروف الأبجدية العربية؟",
+      "options": [
+        "24 حرفاً",
+        "26 حرفاً",
+        "28 حرفاً",
+        "30 حرفاً"
+      ],
+      "answer": 2
+    },
+    "q_order": {
+      "id": "orig-ar-alpha-ord",
+      "type": "order",
+      "instruction": "رتّب الحروف ترتيباً أبجدياً صحيحاً :",
+      "words": [
+        "ب",
+        "أ",
+        "ث",
+        "ت"
+      ],
+      "answer": [
+        "أ",
+        "ب",
+        "ت",
+        "ث"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-ar-alpha-vf",
+      "type": "vf",
+      "question": "الأبجدية العربية والفرنسية لهما نفس عدد الحروف.",
+      "answer": false,
+      "explanation": "الأبجدية العربية تضم 28 حرفاً، بينما الأبجدية الفرنسية والإنجليزية تضمان 26 حرفاً فقط. فضلاً عن ذلك، اتجاه الكتابة مختلف تماماً."
+    }
+  },
+  {
+    "titre": "L'impératif — Exercices A1",
+    "langue": "Francais",
+    "bridge_page": {
+      "id": "orig-fr-imp-bridge",
+      "type": "bridge",
+      "title": "L'impératif dans les 3 langues",
+      "content": "<h3>📖 L'impératif dans les 3 langues</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>Formation</td><td>Verbe seul (sans pronom)</td><td>Base verb (no subject)</td><td>فعل الأمر مباشرة</td></tr><tr><td>2e pers. sing.</td><td>Mange ! / Parle !</td><td>Eat! / Speak!</td><td>كُل! / تكلَّم!</td></tr><tr><td>1e pers. plur.</td><td>Mangeons ! / Parlons !</td><td>Let's eat! / Let's speak!</td><td>لنأكل! / لنتكلم!</td></tr><tr><td>Négation</td><td>Ne mange pas ! / Ne parle pas !</td><td>Don't eat! / Don't speak!</td><td>لا تأكل! / لا تتكلم!</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>Parle plus fort ! Ne cours pas dans le couloir !</em></li><li>🇬🇧 <em>Speak louder! Don't run in the corridor!</em></li><li>🇸🇦 <em>تكلَّم بصوت أعلى! لا تركض في الممر!</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇫🇷 Le 'tu' disparaît : 'tu manges' → 'Mange !' (pas de 's' pour -ER au sing.)</li><li>🇬🇧 No change in verb form: 'you eat' → 'Eat!' — simple and direct</li><li>🇸🇦 فعل الأمر له وزن خاص يختلف عن المضارع</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-fr-imp-fill",
+      "type": "fill",
+      "question": "Mettez à l'impératif (tu) : 'Vous finissez vos devoirs.'",
+      "options": [
+        "Finissez vos devoirs !",
+        "Finissons vos devoirs !",
+        "Finis tes devoirs !",
+        "Finir tes devoirs !"
+      ],
+      "answer": 2
+    },
+    "q_order": {
+      "id": "orig-fr-imp-ord",
+      "type": "order",
+      "instruction": "Remettez dans l'ordre :",
+      "words": [
+        "vite",
+        "Mange",
+        "ta",
+        "soupe"
+      ],
+      "answer": [
+        "Mange",
+        "ta",
+        "soupe",
+        "vite"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-fr-imp-vf",
+      "type": "vf",
+      "question": "À l'impératif affirmatif en français, on garde toujours le pronom sujet.",
+      "answer": false,
+      "explanation": "À l'impératif, le pronom sujet (tu, nous, vous) DISPARAÎT : 'tu manges' → 'Mange !'. C'est une des caractéristiques fondamentales de l'impératif en français."
+    }
+  },
+  {
+    "titre": "The Imperative — Commands and Instructions (A1)",
+    "langue": "Anglais",
+    "bridge_page": {
+      "id": "orig-en-imp-bridge",
+      "type": "bridge",
+      "title": "The imperative across 3 languages",
+      "content": "<h3>📖 The imperative across 3 languages</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>Affirmative</td><td>Eat! / Speak!</td><td>Mange ! / Parle !</td><td>كُل! / تكلَّم!</td></tr><tr><td>Negative</td><td>Don't eat! / Don't speak!</td><td>Ne mange pas ! / Ne parle pas !</td><td>لا تأكل! / لا تتكلم!</td></tr><tr><td>Plural</td><td>Eat! (same form)</td><td>Mangez !</td><td>كلوا!</td></tr><tr><td>Polite request</td><td>Please sit down.</td><td>Veuillez vous asseoir.</td><td>من فضلك اجلس.</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>Please sit down and open your books.</em></li><li>🇬🇧 <em>Veuillez vous asseoir et ouvrir vos livres.</em></li><li>🇸🇦 <em>من فضلك اجلس وافتح كتابك.</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇬🇧 English imperative is the base verb — same for singular and plural</li><li>🇫🇷 French has 3 imperative forms: tu/nous/vous (Mange/Mangeons/Mangez)</li><li>🇸🇦 Arabic has separate forms for masc./fem. singular and plural</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-en-imp-fill",
+      "type": "fill",
+      "question": "Change to imperative: 'You should close the door.'",
+      "options": [
+        "Closing the door!",
+        "Close the door!",
+        "You close the door!",
+        "Closed the door!"
+      ],
+      "answer": 1
+    },
+    "q_order": {
+      "id": "orig-en-imp-ord",
+      "type": "order",
+      "instruction": "Put the words in order:",
+      "words": [
+        "your",
+        "Open",
+        "please",
+        "books"
+      ],
+      "answer": [
+        "Open",
+        "your",
+        "books",
+        "please"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-en-imp-vf",
+      "type": "vf",
+      "question": "In English, the imperative form changes depending on whether you speak to one person or many.",
+      "answer": false,
+      "explanation": "In English, the imperative form is always the same base verb regardless of how many people you are addressing: 'Eat!' works for both one person and a group. This differs from French and Arabic."
+    }
+  },
+  {
+    "titre": "صيغة الأمر — The Imperative in Arabic (A1)",
+    "langue": "Arabe",
+    "bridge_page": {
+      "id": "orig-ar-imp-bridge",
+      "type": "bridge",
+      "title": "صيغة الأمر في اللغات الثلاث",
+      "content": "<h3>📖 صيغة الأمر في اللغات الثلاث</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>المفرد المذكر</td><td>اكتب! / تكلَّم!</td><td>Écris! / Write!</td><td>اكتب! / تكلَّم!</td></tr><tr><td>المفرد المؤنث</td><td>اكتبي! / تكلَّمي!</td><td>Écris! / Write! (same)</td><td>اكتبي!</td></tr><tr><td>الجمع</td><td>اكتبوا! / تكلَّموا!</td><td>Écrivez! / Write! (same)</td><td>اكتبوا!</td></tr><tr><td>النهي</td><td>لا تكتب! / لا تتكلم!</td><td>Ne cris pas! / Don't write!</td><td>لا تكتب!</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>اكتب اسمك وافتح كتابك من فضلك.</em></li><li>🇬🇧 <em>Write your name and open your book please.</em></li><li>🇸🇦 <em>Écris ton nom et ouvre ton livre s'il te plaît.</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇸🇦 العربية تُفرّق بين المذكر والمؤنث في صيغة الأمر: اكتب / اكتبي</li><li>🇫🇷 الفرنسية لها 3 صيغ: tu/nous/vous — لكن لا تمييز بين المذكر والمؤنث</li><li>🇬🇧 الإنجليزية: صيغة واحدة للجميع — أبسط نظام</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-ar-imp-fill",
+      "type": "fill",
+      "question": "ما هو فعل الأمر الصحيح للمفردة المؤنث من 'كتب'؟",
+      "options": [
+        "اكتب",
+        "اكتبوا",
+        "اكتبي",
+        "يكتب"
+      ],
+      "answer": 2
+    },
+    "q_order": {
+      "id": "orig-ar-imp-ord",
+      "type": "order",
+      "instruction": "رتّب الكلمات :",
+      "words": [
+        "الكتاب",
+        "افتح",
+        "فضلك",
+        "من"
+      ],
+      "answer": [
+        "افتح",
+        "الكتاب",
+        "من",
+        "فضلك"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-ar-imp-vf",
+      "type": "vf",
+      "question": "صيغة الأمر في العربية هي نفسها للمذكر والمؤنث.",
+      "answer": false,
+      "explanation": "في العربية، صيغة الأمر تختلف حسب الجنس: اكتب (للمذكر) / اكتبي (للمؤنث). هذا يختلف عن الإنجليزية التي لها صيغة واحدة للجميع."
+    }
+  },
+  {
+    "titre": "L'hypothèse sur le futur — Exercices A1",
+    "langue": "Francais",
+    "bridge_page": {
+      "id": "orig-fr-cond-bridge",
+      "type": "bridge",
+      "title": "L'hypothèse dans les 3 langues",
+      "content": "<h3>📖 L'hypothèse dans les 3 langues</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>Structure</td><td>Si + présent, futur</td><td>If + present, will</td><td>إذا + مضارع، مستقبل</td></tr><tr><td>Condition possible</td><td>Si tu travailles, tu réussiras.</td><td>If you work, you will succeed.</td><td>إذا عملت، ستنجح.</td></tr><tr><td>Impossibilité</td><td>Si j'avais de l'argent, j'achèterais...</td><td>If I had money, I would buy...</td><td>لو كان معي مال، لاشتريت...</td></tr><tr><td>Négatif</td><td>Si tu ne travailles pas...</td><td>If you don't work...</td><td>إذا لم تعمل...</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>Si tu étudies tous les jours, tu réussiras l'examen.</em></li><li>🇬🇧 <em>If you study every day, you will pass the exam.</em></li><li>🇸🇦 <em>إذا درست كل يوم، ستنجح في الامتحان.</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇫🇷 Si + présent → futur simple (jamais 'si + futur')</li><li>🇬🇧 If + present simple → will + infinitive (Type 1 conditional)</li><li>🇸🇦 إذا + فعل مضارع → سـ/سوف + مضارع للمستقبل</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-fr-cond-fill",
+      "type": "fill",
+      "question": "Complétez : 'Si tu _______ (venir) demain, nous _______ (aller) au cinéma.'",
+      "options": [
+        "viens / irons",
+        "viendras / allons",
+        "viens / aller",
+        "venais / irions"
+      ],
+      "answer": 0
+    },
+    "q_order": {
+      "id": "orig-fr-cond-ord",
+      "type": "order",
+      "instruction": "Remettez dans l'ordre :",
+      "words": [
+        "travailles",
+        "réussiras",
+        "Si",
+        "tu",
+        "tu"
+      ],
+      "answer": [
+        "Si",
+        "tu",
+        "travailles",
+        "tu",
+        "réussiras"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-fr-cond-vf",
+      "type": "vf",
+      "question": "On peut dire 'Si tu viendras, nous partirons' en français.",
+      "answer": false,
+      "explanation": "En français, on ne peut JAMAIS mettre le futur après 'si' conditionnel. La règle est : Si + présent de l'indicatif → futur. Donc : 'Si tu viens, nous partirons.' ✓"
+    }
+  },
+  {
+    "titre": "The First Conditional — If Clauses (A2)",
+    "langue": "Anglais",
+    "bridge_page": {
+      "id": "orig-en-cond-bridge",
+      "type": "bridge",
+      "title": "Conditionals across 3 languages",
+      "content": "<h3>📖 Conditionals across 3 languages</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>Type 1 (real)</td><td>If + present → will</td><td>Si + présent → futur</td><td>إذا + مضارع → سـ + مضارع</td></tr><tr><td>Type 2 (unreal)</td><td>If + past → would</td><td>Si + imparfait → conditionnel</td><td>لو + ماضٍ → لـ + ماضٍ</td></tr><tr><td>Negative</td><td>If you don't..., you won't...</td><td>Si tu ne... pas...</td><td>إذا لم تـ...</td></tr><tr><td>Question</td><td>What will you do if...?</td><td>Que feras-tu si... ?</td><td>ماذا ستفعل إذا...؟</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>If you study every day, you will pass the exam.</em></li><li>🇬🇧 <em>Si tu étudies tous les jours, tu réussiras l'examen.</em></li><li>🇸🇦 <em>إذا درست كل يوم، ستنجح في الامتحان.</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇬🇧 NEVER 'If you will come' — always present tense in the if-clause</li><li>🇫🇷 NEVER 'si + futur' — same rule as English</li><li>🇸🇦 'إذا' for real conditions / 'لو' for hypothetical — important distinction</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-en-cond-fill",
+      "type": "fill",
+      "question": "Complete: 'If it _______ tomorrow, we _______ stay home.'",
+      "options": [
+        "rains / will",
+        "will rain / will",
+        "rained / would",
+        "rains / would"
+      ],
+      "answer": 0
+    },
+    "q_order": {
+      "id": "orig-en-cond-ord",
+      "type": "order",
+      "instruction": "Put the words in order:",
+      "words": [
+        "pass",
+        "you",
+        "study",
+        "will",
+        "If",
+        "you"
+      ],
+      "answer": [
+        "If",
+        "you",
+        "study",
+        "you",
+        "will",
+        "pass"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-en-cond-vf",
+      "type": "vf",
+      "question": "We can say 'If you will come, I will be happy' in English.",
+      "answer": false,
+      "explanation": "In the if-clause of a first conditional, we NEVER use 'will'. Correct form: 'If you come, I will be happy.' The if-clause uses present simple, and the result clause uses will + infinitive."
+    }
+  },
+  {
+    "titre": "الجملة الشرطية — Conditional Sentences (A2)",
+    "langue": "Arabe",
+    "bridge_page": {
+      "id": "orig-ar-cond-bridge",
+      "type": "bridge",
+      "title": "الجملة الشرطية في اللغات الثلاث",
+      "content": "<h3>📖 الجملة الشرطية في اللغات الثلاث</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>الشرط الحقيقي</td><td>إذا + مضارع، سـ + مضارع</td><td>If + present → will (EN)</td><td>Si + présent → futur (FR)</td></tr><tr><td>الشرط الافتراضي</td><td>لو + ماضٍ، لـ + ماضٍ</td><td>If + past → would (EN)</td><td>Si + imparfait → conditionnel (FR)</td></tr><tr><td>النفي</td><td>إذا لم تدرس...</td><td>If you don't study...</td><td>Si tu ne travailles pas...</td></tr><tr><td>السؤال</td><td>ماذا ستفعل إذا...؟</td><td>What will you do if...?</td><td>Que ferez-vous si...?</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>إذا درست كل يوم، ستنجح في الامتحان.</em></li><li>🇬🇧 <em>If you study every day, you will pass the exam.</em></li><li>🇸🇦 <em>Si tu étudies tous les jours, tu réussiras l'examen.</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇸🇦 'إذا' للشرط الحقيقي الممكن / 'لو' للشرط الافتراضي غير المتوقع</li><li>🇬🇧 If + present → will (Type 1) / If + past → would (Type 2)</li><li>🇫🇷 Si + présent → futur / Si + imparfait → conditionnel</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-ar-cond-fill",
+      "type": "fill",
+      "question": "أكمل : '_______ درست جيداً، ستنجح في الامتحان.'",
+      "options": [
+        "لو",
+        "إذا",
+        "حين",
+        "لأن"
+      ],
+      "answer": 1
+    },
+    "q_order": {
+      "id": "orig-ar-cond-ord",
+      "type": "order",
+      "instruction": "رتّب الكلمات :",
+      "words": [
+        "ستنجح",
+        "درست",
+        "إذا"
+      ],
+      "answer": [
+        "إذا",
+        "درست",
+        "ستنجح"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-ar-cond-vf",
+      "type": "vf",
+      "question": "'لو' و'إذا' في العربية لهما نفس المعنى تماماً ويمكن استبدال إحداهما بالأخرى دائماً.",
+      "answer": false,
+      "explanation": "'إذا' تُستخدم للشرط المتوقع الحدوث (إذا جاء الصيف)، بينما 'لو' تُستخدم للشرط الافتراضي غير المتوقع (لو كان معي مال). الفرق في درجة الاحتمال."
+    }
+  },
+  {
+    "titre": "Les articles partitifs — Exercices A1",
+    "langue": "Francais",
+    "bridge_page": {
+      "id": "orig-fr-art-bridge",
+      "type": "bridge",
+      "title": "Les articles dans les 3 langues",
+      "content": "<h3>📖 Les articles dans les 3 langues</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>Défini</td><td>le, la, les, l'</td><td>the</td><td>الـ (التعريف)</td></tr><tr><td>Indéfini</td><td>un, une, des</td><td>a, an, some</td><td>نكرة (بدون أداة)</td></tr><tr><td>Partitif</td><td>du, de la, de l'</td><td>some / no equivalent</td><td>بعض (غير دقيق)</td></tr><tr><td>Négatif</td><td>pas de / pas d'</td><td>no / not any</td><td>لا + نكرة</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>Je mange du pain et je bois de l'eau.</em></li><li>🇬🇧 <em>I eat some bread and I drink some water.</em></li><li>🇸🇦 <em>آكل الخبز وأشرب الماء.</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇫🇷 L'article partitif (du/de la) n'existe pas en anglais ni en arabe</li><li>🇬🇧 'some' remplace le partitif français mais n'est pas obligatoire</li><li>🇸🇦 L'arabe utilise le défini (الـ) ou la forme nue (sans article) — pas de partitif</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-fr-art-fill",
+      "type": "fill",
+      "question": "Complétez : 'Je voudrais _______ café et _______ eau, s'il vous plaît.'",
+      "options": [
+        "du / de l'",
+        "le / la",
+        "un / une",
+        "de / d'"
+      ],
+      "answer": 0
+    },
+    "q_order": {
+      "id": "orig-fr-art-ord",
+      "type": "order",
+      "instruction": "Remettez dans l'ordre :",
+      "words": [
+        "de",
+        "mange",
+        "la",
+        "Je",
+        "soupe"
+      ],
+      "answer": [
+        "Je",
+        "mange",
+        "de",
+        "la",
+        "soupe"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-fr-art-vf",
+      "type": "vf",
+      "question": "Après une négation, on garde l'article partitif : 'Je ne mange pas du pain.'",
+      "answer": false,
+      "explanation": "Après une négation, l'article partitif devient 'de' (ou 'd'') : 'Je ne mange pas DE pain.' / 'Je ne bois pas D'eau.' Cette règle est fondamentale en français."
+    }
+  },
+  {
+    "titre": "Quantifiers: Some, Any, Much, Many (A1–A2)",
+    "langue": "Anglais",
+    "bridge_page": {
+      "id": "orig-en-quant-bridge",
+      "type": "bridge",
+      "title": "Quantifiers across 3 languages",
+      "content": "<h3>📖 Quantifiers across 3 languages</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>Affirmative</td><td>some</td><td>du/de la/des</td><td>بعض</td></tr><tr><td>Negative/Question</td><td>any</td><td>de (après négation)</td><td>أي / لا</td></tr><tr><td>Uncountable</td><td>much (neg/q)</td><td>beaucoup de</td><td>كثير من</td></tr><tr><td>Countable</td><td>many (neg/q)</td><td>beaucoup de</td><td>كثير من</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>I have some money but I don't have any time.</em></li><li>🇬🇧 <em>J'ai de l'argent mais je n'ai pas de temps.</em></li><li>🇸🇦 <em>لدي بعض المال لكن ليس لدي وقت.</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇬🇧 'some' in affirmatives → 'any' in negatives and questions</li><li>🇫🇷 'du/de la' → 'de/d'' after negation — simpler than English some/any</li><li>🇸🇦 Arabic uses 'بعض' (some) / 'لا' (no/not any) — no some/any distinction</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-en-quant-fill",
+      "type": "fill",
+      "question": "Complete: 'I don't have _______ money left.'",
+      "options": [
+        "some",
+        "any",
+        "much",
+        "many"
+      ],
+      "answer": 1
+    },
+    "q_order": {
+      "id": "orig-en-quant-ord",
+      "type": "order",
+      "instruction": "Put the words in order:",
+      "words": [
+        "any",
+        "don't",
+        "I",
+        "have",
+        "time"
+      ],
+      "answer": [
+        "I",
+        "don't",
+        "have",
+        "any",
+        "time"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-en-quant-vf",
+      "type": "vf",
+      "question": "We use 'many' with uncountable nouns like water, money, and time.",
+      "answer": false,
+      "explanation": "'Many' is used with countable nouns (many books, many people). For uncountable nouns, we use 'much' (much water, much money, much time). In informal speech, 'a lot of' works for both."
+    }
+  },
+  {
+    "titre": "النكرة والمعرفة — Definite and Indefinite (A1)",
+    "langue": "Arabe",
+    "bridge_page": {
+      "id": "orig-ar-art-bridge",
+      "type": "bridge",
+      "title": "التعريف والتنكير في اللغات الثلاث",
+      "content": "<h3>📖 التعريف والتنكير في اللغات الثلاث</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>أداة التعريف</td><td>الـ (Al-)</td><td>le/la/les (FR) / the (EN)</td><td>الـ</td></tr><tr><td>النكرة</td><td>بدون أداة (كتابٌ)</td><td>un/une/des (FR) / a/an (EN)</td><td>بدون أداة</td></tr><tr><td>نكرة غير محددة</td><td>بعض + نكرة</td><td>du/de la (FR) / some (EN)</td><td>بعض</td></tr><tr><td>بعد النفي</td><td>لا + نكرة</td><td>pas de (FR) / not any (EN)</td><td>لا + نكرة</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>الكتاب على الطاولة. أريد كتاباً.</em></li><li>🇬🇧 <em>The book is on the table. I want a book.</em></li><li>🇸🇦 <em>Le livre est sur la table. Je veux un livre.</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇸🇦 'الـ' تُضاف في بداية الكلمة مباشرة: كتاب → الكتاب</li><li>🇫🇷 المعرفة: le/la/les + الاسم / النكرة: un/une/des + الاسم</li><li>🇬🇧 المعرفة: the + الاسم / النكرة: a/an + الاسم</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-ar-art-fill",
+      "type": "fill",
+      "question": "أكمل : 'أريد _______ كتاب.' (نكرة غير معروفة)",
+      "options": [
+        "الـ + كتاب",
+        "كتاباً",
+        "الكتاب",
+        "بعض كتاب"
+      ],
+      "answer": 1
+    },
+    "q_order": {
+      "id": "orig-ar-art-ord",
+      "type": "order",
+      "instruction": "رتّب الكلمات :",
+      "words": [
+        "على",
+        "الكتاب",
+        "الطاولة"
+      ],
+      "answer": [
+        "الكتاب",
+        "على",
+        "الطاولة"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-ar-art-vf",
+      "type": "vf",
+      "question": "أداة التعريف في العربية توضع قبل الاسم كلمة مستقلة.",
+      "answer": false,
+      "explanation": "أداة التعريف 'الـ' في العربية تُضاف مباشرة إلى بداية الكلمة كبادئة: كتاب → الكتاب، مدرسة → المدرسة. وليست كلمة مستقلة كـ 'le/la' في الفرنسية أو 'the' في الإنجليزية."
+    }
+  },
+  {
+    "titre": "La phrase interrogative — Exercices A0/A1",
+    "langue": "Francais",
+    "bridge_page": {
+      "id": "orig-fr-interr-bridge",
+      "type": "bridge",
+      "title": "L'interrogation dans les 3 langues",
+      "content": "<h3>📖 L'interrogation dans les 3 langues</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>Qui?</td><td>Qui est-ce ? / Qui ?</td><td>Who?</td><td>مَن؟</td></tr><tr><td>Quoi?</td><td>Qu'est-ce que... ? / Que... ?</td><td>What?</td><td>ماذا؟ / ما؟</td></tr><tr><td>Où?</td><td>Où... ?</td><td>Where?</td><td>أين؟</td></tr><tr><td>Quand?</td><td>Quand... ?</td><td>When?</td><td>متى؟</td></tr><tr><td>Pourquoi?</td><td>Pourquoi... ?</td><td>Why?</td><td>لماذا؟</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>Où est-ce que tu habites ? Qu'est-ce que tu fais ?</em></li><li>🇬🇧 <em>Where do you live? What do you do?</em></li><li>🇸🇦 <em>أين تسكن؟ ماذا تفعل؟</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇫🇷 3 façons de poser une question: intonation / est-ce que / inversion</li><li>🇬🇧 Auxiliary verb needed: 'Do you...?' / 'Are you...?' / 'Can you...?'</li><li>🇸🇦 أداة الاستفهام تأتي في بداية الجملة مباشرة — أبسط من الفرنسية</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-fr-interr-fill",
+      "type": "fill",
+      "question": "Posez la question sur le mot souligné : 'Il habite [à Paris].'",
+      "options": [
+        "Il habite où ?",
+        "Qui habite ?",
+        "Qu'est-ce qu'il habite ?",
+        "Comment il habite ?"
+      ],
+      "answer": 0
+    },
+    "q_order": {
+      "id": "orig-fr-interr-ord",
+      "type": "order",
+      "instruction": "Formez une question (est-ce que) :",
+      "words": [
+        "est-ce",
+        "tu",
+        "habites",
+        "que",
+        "Où"
+      ],
+      "answer": [
+        "Où",
+        "est-ce",
+        "que",
+        "tu",
+        "habites"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-fr-interr-vf",
+      "type": "vf",
+      "question": "En français familier, on peut poser une question par simple intonation montante.",
+      "answer": true,
+      "explanation": "Oui — 'Tu habites où ?' ou 'T'habites Paris ?' avec intonation montante sont corrects à l'oral familier. C'est la forme la plus simple et la plus courante en français parlé."
+    }
+  },
+  {
+    "titre": "L'interrogation — Registres de langue — Exercices A1",
+    "langue": "Francais",
+    "bridge_page": {
+      "id": "orig-fr-reg-bridge",
+      "type": "bridge",
+      "title": "Les registres de langue dans les 3 langues",
+      "content": "<h3>📖 Les registres de langue dans les 3 langues</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>Soutenu</td><td>Où demeurez-vous ?</td><td>Where do you reside?</td><td>أين تقطنون؟</td></tr><tr><td>Standard</td><td>Où habitez-vous ?</td><td>Where do you live?</td><td>أين تسكن؟</td></tr><tr><td>Familier</td><td>T'habites où ?</td><td>Where d'you live?</td><td>فين تسكن؟ (عامية)</td></tr><tr><td>Très familier</td><td>T'es d'où ?</td><td>Where ya from?</td><td>منين انت؟ (عامية)</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>Où habitez-vous ? (standard) / T'habites où ? (familier)</em></li><li>🇬🇧 <em>Where do you live? (standard) / Where ya live? (informal)</em></li><li>🇸🇦 <em>أين تسكن؟ (فصحى) / فين تسكن؟ (عامية)</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇫🇷 Le français a 3 niveaux : soutenu / standard / familier — distinctions très marquées</li><li>🇬🇧 English formal/informal differences are less drastic than French</li><li>🇸🇦 الفصحى vs العامية في العربية : فجوة أكبر بكثير من الفرنسية والإنجليزية</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-fr-reg-fill",
+      "type": "fill",
+      "question": "Quelle est la version formelle de 'T'as quoi comme nom ?'",
+      "options": [
+        "Quel est votre prénom ?",
+        "C'est quoi ton nom ?",
+        "Tu t'appelles quoi ?",
+        "T'appelles comment ?"
+      ],
+      "answer": 0
+    },
+    "q_order": {
+      "id": "orig-fr-reg-ord",
+      "type": "order",
+      "instruction": "Remettez dans l'ordre (version formelle) :",
+      "words": [
+        "votre",
+        "Quel",
+        "nom",
+        "est",
+        "?"
+      ],
+      "answer": [
+        "Quel",
+        "est",
+        "votre",
+        "nom",
+        "?"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-fr-reg-vf",
+      "type": "vf",
+      "question": "Le registre familier est acceptable dans tous les contextes professionnels.",
+      "answer": false,
+      "explanation": "Le registre familier est réservé aux contextes informels (amis, famille). Dans un contexte professionnel, académique ou officiel, il faut utiliser le registre standard ou soutenu."
+    }
+  },
+  {
+    "titre": "Forming Questions in English — Wh- and Yes/No (A1)",
+    "langue": "Anglais",
+    "bridge_page": {
+      "id": "orig-en-interr-bridge",
+      "type": "bridge",
+      "title": "Forming questions across 3 languages",
+      "content": "<h3>📖 Forming questions across 3 languages</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>Who?</td><td>Who is it?</td><td>Qui est-ce ?</td><td>مَن هذا؟</td></tr><tr><td>What?</td><td>What do you do?</td><td>Qu'est-ce que tu fais ?</td><td>ماذا تفعل؟</td></tr><tr><td>Where?</td><td>Where do you live?</td><td>Où habites-tu ?</td><td>أين تسكن؟</td></tr><tr><td>Yes/No</td><td>Do you like...? / Are you...?</td><td>Est-ce que... ? / intonation</td><td>هل...؟ / أ...؟</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>Where do you live? What do you do for work?</em></li><li>🇬🇧 <em>Où habites-tu ? Qu'est-ce que tu fais comme travail ?</em></li><li>🇸🇦 <em>أين تسكن؟ ماذا تعمل؟</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇬🇧 Yes/No questions need an auxiliary: Do/Does/Did/Is/Are/Can</li><li>🇫🇷 'est-ce que' is the easiest question form (no inversion needed)</li><li>🇸🇦 'هل' or 'أ' at the start makes yes/no questions — very simple</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-en-interr-fill",
+      "type": "fill",
+      "question": "Form a question: '_______ you like coffee?'",
+      "options": [
+        "Are",
+        "Do",
+        "Have",
+        "Is"
+      ],
+      "answer": 1
+    },
+    "q_order": {
+      "id": "orig-en-interr-ord",
+      "type": "order",
+      "instruction": "Put the words in order:",
+      "words": [
+        "you",
+        "live",
+        "Where",
+        "do"
+      ],
+      "answer": [
+        "Where",
+        "do",
+        "you",
+        "live"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-en-interr-vf",
+      "type": "vf",
+      "question": "In English, we can form a yes/no question just by using rising intonation.",
+      "answer": true,
+      "explanation": "Yes — 'You like coffee?' with rising intonation is an informal yes/no question in spoken English. However, the standard written form uses an auxiliary: 'Do you like coffee?'"
+    }
+  },
+  {
+    "titre": "أسلوب الاستفهام — Question Words in Arabic (A1)",
+    "langue": "Arabe",
+    "bridge_page": {
+      "id": "orig-ar-interr-bridge",
+      "type": "bridge",
+      "title": "أسلوب الاستفهام في اللغات الثلاث",
+      "content": "<h3>📖 أسلوب الاستفهام في اللغات الثلاث</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>مَن؟</td><td>مَن هذا؟</td><td>Qui ? / Who?</td><td>مَن؟</td></tr><tr><td>ماذا؟</td><td>ماذا تفعل؟</td><td>Que... ? / What?</td><td>ماذا؟</td></tr><tr><td>أين؟</td><td>أين تسكن؟</td><td>Où... ? / Where?</td><td>أين؟</td></tr><tr><td>هل؟</td><td>هل تحب القهوة؟</td><td>Est-ce que... ? / Do you...?</td><td>هل؟</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>أين تسكن؟ ماذا تعمل؟ هل تحب القهوة؟</em></li><li>🇬🇧 <em>Where do you live? What do you do? Do you like coffee?</em></li><li>🇸🇦 <em>Où habites-tu ? Qu'est-ce que tu fais ? Tu aimes le café ?</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇸🇦 'هل' لأسئلة نعم/لا — تأتي في بداية الجملة فقط</li><li>🇸🇦 'أ' بديل لـ'هل' في الأسلوب الرسمي</li><li>🇫🇷 'est-ce que' مقابل 'هل' — كلاهما يسبق الجملة مباشرة</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-ar-interr-fill",
+      "type": "fill",
+      "question": "أي أداة استفهام تُستخدم لسؤال نعم/لا؟",
+      "options": [
+        "أين",
+        "ماذا",
+        "هل",
+        "متى"
+      ],
+      "answer": 2
+    },
+    "q_order": {
+      "id": "orig-ar-interr-ord",
+      "type": "order",
+      "instruction": "رتّب الكلمات :",
+      "words": [
+        "تسكن؟",
+        "أين"
+      ],
+      "answer": [
+        "أين",
+        "تسكن؟"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-ar-interr-vf",
+      "type": "vf",
+      "question": "'هل' و'ماذا' في العربية لهما نفس الوظيفة — كلاهما لأسئلة نعم/لا.",
+      "answer": false,
+      "explanation": "'هل' تُستخدم للأسئلة التي جوابها نعم أو لا (هل تحب القهوة؟). أما 'ماذا' فتُستخدم للسؤال عن شيء محدد (ماذا تأكل؟). وظيفتهما مختلفة تماماً."
+    }
+  },
+  {
+    "titre": "L'accord et la place des adjectifs — Exercices A1",
+    "langue": "Francais",
+    "bridge_page": {
+      "id": "orig-fr-adj-bridge",
+      "type": "bridge",
+      "title": "Les adjectifs dans les 3 langues",
+      "content": "<h3>📖 Les adjectifs dans les 3 langues</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>Position</td><td>Après le nom (général)</td><td>Before the noun</td><td>بعد الاسم</td></tr><tr><td>Accord genre</td><td>petit/petite, grand/grande</td><td>no change</td><td>كبير/كبيرة</td></tr><tr><td>Accord nombre</td><td>+s ou +x au pluriel</td><td>no change</td><td>+ون/-ات</td></tr><tr><td>BAGS adjectives</td><td>Avant le nom: beau, bon, grand...</td><td>All adjectives before noun</td><td>بعض الصفات قبل الاسم</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>Une belle grande maison bleue.</em></li><li>🇬🇧 <em>A beautiful large blue house.</em></li><li>🇸🇦 <em>منزل جميل كبير أزرق.</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇫🇷 La plupart des adjectifs sont APRÈS le nom — exception: BAGS (Beauty Age Goodness Size)</li><li>🇬🇧 ALL adjectives are BEFORE the noun — no agreement needed</li><li>🇸🇦 La plupart des adjectifs sont APRÈS le nom ET s'accordent en genre ET en nombre</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-fr-adj-fill",
+      "type": "fill",
+      "question": "Accordez l'adjectif : 'Une _______ (petit) fille _______ (content).'",
+      "options": [
+        "petite / contente",
+        "petit / content",
+        "petits / contents",
+        "petite / content"
+      ],
+      "answer": 0
+    },
+    "q_order": {
+      "id": "orig-fr-adj-ord",
+      "type": "order",
+      "instruction": "Remettez dans l'ordre :",
+      "words": [
+        "vieille",
+        "une",
+        "rouge",
+        "voiture"
+      ],
+      "answer": [
+        "une",
+        "vieille",
+        "voiture",
+        "rouge"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-fr-adj-vf",
+      "type": "vf",
+      "question": "En français, tous les adjectifs se placent après le nom.",
+      "answer": false,
+      "explanation": "La plupart des adjectifs français se placent après le nom, mais certains se placent AVANT : les adjectifs BAGS (Beauty, Age, Goodness, Size) : beau, vieux, grand, petit, bon, mauvais... Ces adjectifs très courants précèdent le nom."
+    }
+  },
+  {
+    "titre": "Adjectives in English — Position and Comparison (A1–A2)",
+    "langue": "Anglais",
+    "bridge_page": {
+      "id": "orig-en-adj-bridge",
+      "type": "bridge",
+      "title": "Adjectives across 3 languages",
+      "content": "<h3>📖 Adjectives across 3 languages</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>Position</td><td>BEFORE the noun</td><td>APRÈS le nom (général)</td><td>APRÈS le nom (arabe)</td></tr><tr><td>Gender agreement</td><td>no change</td><td>grand/grande, petit/petite</td><td>كبير/كبيرة</td></tr><tr><td>Number agreement</td><td>no change</td><td>+s/-aux</td><td>+ون/-ات</td></tr><tr><td>Comparison</td><td>tall/taller/tallest</td><td>grand/plus grand/le plus grand</td><td>كبير/أكبر/الأكبر</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>A beautiful large blue house.</em></li><li>🇬🇧 <em>Une belle grande maison bleue.</em></li><li>🇸🇦 <em>منزل جميل كبير أزرق.</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇬🇧 All adjectives BEFORE the noun — no gender or number agreement</li><li>🇫🇷 Most adjectives AFTER the noun, with gender and number agreement</li><li>🇸🇦 All adjectives AFTER the noun, with gender, number AND definiteness agreement</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-en-adj-fill",
+      "type": "fill",
+      "question": "Choose the correct order: 'a _______ house'",
+      "options": [
+        "big old red brick",
+        "red old big brick",
+        "old big red brick",
+        "big red old brick"
+      ],
+      "answer": 0
+    },
+    "q_order": {
+      "id": "orig-en-adj-ord",
+      "type": "order",
+      "instruction": "Put the words in order:",
+      "words": [
+        "car",
+        "a",
+        "red",
+        "fast"
+      ],
+      "answer": [
+        "a",
+        "fast",
+        "red",
+        "car"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-en-adj-vf",
+      "type": "vf",
+      "question": "In English, adjectives must agree with the noun in gender and number.",
+      "answer": false,
+      "explanation": "English adjectives NEVER change form — there is no gender or number agreement. 'beautiful' stays the same for a man, woman, or group. This is unlike French and Arabic where agreement is required."
+    }
+  },
+  {
+    "titre": "الصفة والموصوف — Adjectives in Arabic (A1)",
+    "langue": "Arabe",
+    "bridge_page": {
+      "id": "orig-ar-adj-bridge",
+      "type": "bridge",
+      "title": "الصفات في اللغات الثلاث",
+      "content": "<h3>📖 الصفات في اللغات الثلاث</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>الموضع</td><td>بعد الاسم دائماً</td><td>avant le nom (EN) / après (FR général)</td><td>بعد الاسم</td></tr><tr><td>المطابقة جنساً</td><td>كبير/كبيرة</td><td>grand/grande (FR) / no change (EN)</td><td>كبير/كبيرة</td></tr><tr><td>المطابقة عدداً</td><td>كبير/كبيران/كبيرون</td><td>+s (FR/EN)</td><td>كبير/كبيران/كبيرون</td></tr><tr><td>التعريف</td><td>البيت الكبير (الصفة معرّفة)</td><td>la grande maison / the big house</td><td>البيت الكبير</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>المنزل الكبير الجميل.</em></li><li>🇬🇧 <em>The big beautiful house.</em></li><li>🇸🇦 <em>La grande belle maison.</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇸🇦 الصفة في العربية تتبع الاسم في الجنس والعدد والتعريف</li><li>🇫🇷 معظم الصفات بعد الاسم + مطابقة في الجنس والعدد</li><li>🇬🇧 جميع الصفات قبل الاسم + لا مطابقة إطلاقاً</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-ar-adj-fill",
+      "type": "fill",
+      "question": "أكمل : 'رأيتُ طالبةً _______ .' (ذكي — مؤنث)",
+      "options": [
+        "ذكياً",
+        "ذكية",
+        "أذكى",
+        "الذكية"
+      ],
+      "answer": 1
+    },
+    "q_order": {
+      "id": "orig-ar-adj-ord",
+      "type": "order",
+      "instruction": "رتّب الكلمات :",
+      "words": [
+        "الجميلة",
+        "البنت",
+        "ذهبت"
+      ],
+      "answer": [
+        "ذهبت",
+        "البنت",
+        "الجميلة"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-ar-adj-vf",
+      "type": "vf",
+      "question": "في العربية، الصفة توضع دائماً قبل الاسم الموصوف.",
+      "answer": false,
+      "explanation": "في العربية، الصفة (النعت) تأتي دائماً بعد الاسم الموصوف: 'البيت الكبير' لا 'الكبير البيت'. هذا عكس الإنجليزية تماماً حيث الصفة تسبق الاسم."
+    }
+  },
+  {
+    "titre": "Formal & Informal English — Language Registers (A1)",
+    "langue": "Anglais",
+    "bridge_page": {
+      "id": "orig-en-reg-bridge",
+      "type": "bridge",
+      "title": "Language registers across 3 languages",
+      "content": "<h3>📖 Language registers across 3 languages</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>Formal</td><td>I would like to...</td><td>Je voudrais...</td><td>أودّ أن...</td></tr><tr><td>Standard</td><td>I want to...</td><td>Je veux...</td><td>أريد أن...</td></tr><tr><td>Informal</td><td>I wanna...</td><td>Je veux...</td><td>بغيت... (عامية)</td></tr><tr><td>Very formal</td><td>I wish to inform you...</td><td>Je vous informe que...</td><td>أحيطكم علماً...</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>Could you please help me? (formal) / Can you help? (informal)</em></li><li>🇬🇧 <em>Pourriez-vous m'aider ? (formel) / Tu peux m'aider ? (familier)</em></li><li>🇸🇦 <em>هل يمكنك مساعدتي؟ (رسمي) / ساعدني. (غير رسمي)</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇬🇧 'could' is more polite than 'can' — use 'could' in formal situations</li><li>🇫🇷 'vous' (formal) vs 'tu' (informal) — this choice changes the register entirely</li><li>🇸🇦 Arabic diglossia: فصحى (formal) vs عامية (informal) — big gap between the two</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-en-reg-fill",
+      "type": "fill",
+      "question": "Which is the most formal way to ask for help?",
+      "options": [
+        "Hey, can you help?",
+        "Could you please assist me?",
+        "Help me!",
+        "Wanna help?"
+      ],
+      "answer": 1
+    },
+    "q_order": {
+      "id": "orig-en-reg-ord",
+      "type": "order",
+      "instruction": "Put the words in order (formal):",
+      "words": [
+        "your",
+        "assistance",
+        "for",
+        "you",
+        "thank",
+        "I"
+      ],
+      "answer": [
+        "I",
+        "thank",
+        "you",
+        "for",
+        "your",
+        "assistance"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-en-reg-vf",
+      "type": "vf",
+      "question": "'Can you help me?' and 'Could you please help me?' mean the same thing and have the same level of formality.",
+      "answer": false,
+      "explanation": "Both ask for help, but 'Could you please help me?' is significantly more formal and polite than 'Can you help me?'. 'Could' is the polite/formal modal, while 'can' is more casual."
+    }
+  },
+  {
+    "titre": "مستويات اللغة العربية — الفصحى والعامية (A1)",
+    "langue": "Arabe",
+    "bridge_page": {
+      "id": "orig-ar-reg-bridge",
+      "type": "bridge",
+      "title": "مستويات اللغة في اللغات الثلاث",
+      "content": "<h3>📖 مستويات اللغة في اللغات الثلاث</h3>\n<div class=\"rule-box\"><h4>📊 Tableau comparatif FR | EN | AR</h4>\n<table><thead><tr><th>Concept</th><th>🇫🇷 Français</th><th>🇬🇧 English</th><th>🇸🇦 العربية</th></tr></thead>\n<tbody><tr><td>الرسمي</td><td>الفصحى المعاصرة</td><td>soutenu / formal</td><td>الفصحى</td></tr><tr><td>اليومي</td><td>العامية (لهجات)</td><td>standard / conversational</td><td>العامية</td></tr><tr><td>الكتابي</td><td>الفصحى دائماً</td><td>écrit standard</td><td>الفصحى</td></tr><tr><td>الفجوة</td><td>كبيرة جداً</td><td>faible (FR) / modérée (EN)</td><td>كبيرة</td></tr></tbody></table></div>\n<div class=\"example-box\"><h4>✏️ La même idée dans 3 langues</h4>\n<ul><li>🇫🇷 <em>الفصحى: أين تسكن؟ / العامية المغربية: فين كاين؟ / العامية المصرية: فين بتسكن؟</em></li><li>🇬🇧 <em>Formal EN: Where do you reside? / Informal EN: Where d'you live?</em></li><li>🇸🇦 <em>Formel FR: Où demeurez-vous ? / Familier FR: T'habites où ?</em></li></ul></div>\n<div class=\"tip-box\"><h4>⚠️ Pièges fréquents</h4><ul><li>🇸🇦 الفجوة بين الفصحى والعامية في العربية أكبر بكثير من الفرنسية والإنجليزية</li><li>🇫🇷 La diglossie française est modérée: tu/vous + niveaux de vocabulaire</li><li>🇬🇧 English has a more gradual register spectrum without major formal/informal gaps</li></ul></div>"
+    },
+    "q_fill": {
+      "id": "orig-ar-reg-fill",
+      "type": "fill",
+      "question": "في أي سياق يجب استخدام الفصحى العربية؟",
+      "options": [
+        "مع الأصدقاء فقط",
+        "في الرسائل الرسمية والكتابة",
+        "في الحديث اليومي العائلي",
+        "في كل الحالات بلا استثناء"
+      ],
+      "answer": 1
+    },
+    "q_order": {
+      "id": "orig-ar-reg-ord",
+      "type": "order",
+      "instruction": "رتّب الكلمات (فصحى) :",
+      "words": [
+        "المساعدة؟",
+        "يمكنك",
+        "هل"
+      ],
+      "answer": [
+        "هل",
+        "يمكنك",
+        "المساعدة؟"
+      ]
+    },
+    "q_vf": {
+      "id": "orig-ar-reg-vf",
+      "type": "vf",
+      "question": "يمكن استخدام العامية العربية في جميع السياقات الرسمية والمهنية.",
+      "answer": false,
+      "explanation": "العامية مناسبة للتواصل اليومي وغير الرسمي. في السياقات الرسمية (الكتابة، الإعلام، التعليم، الخطابة) يجب استخدام الفصحى المعاصرة. استخدام العامية في سياق رسمي يُعدّ غير لائق."
+    }
+  }
+]

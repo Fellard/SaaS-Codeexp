@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Env
+.env
+
+# Logs
+*.log
+
+# Builds
+dist/
+build/
+app.tar.gz
+
+# Databases
+*.db
+*.db-shm
+*.db-wal
+
+# PocketBase runtime data (IMPORTANT: ne jamais versionner)
+apps/pocketbase/pb_data/
+apps/pocketbase/pb_data_new/
+
+# PocketBase binary (Windows + Linux)
+apps/pocketbase/pocketbase
+apps/pocketbase/pocketbase.exe
+
+# Uploads / storage (si hors PB data)
+**/storage/

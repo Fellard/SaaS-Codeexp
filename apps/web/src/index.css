@@ -1,0 +1,161 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* IWS LAAYOUNE SARL AU Branding */
+    --primary: 210 100% 12%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 35 100% 50%;
+    --secondary-foreground: 210 100% 12%;
+    
+    --accent: 35 100% 50%;
+    --accent-foreground: 210 100% 12%;
+
+    --background: 0 0% 100%;
+    --foreground: 210 100% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 210 100% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 100% 12%;
+
+    --muted: 210 20% 96%;
+    --muted-foreground: 210 20% 40%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 210 20% 90%;
+    --input: 210 20% 90%;
+    --ring: 35 100% 50%;
+
+    --radius: 0.75rem;
+
+    /* Admin Layout Tokens */
+    --admin-sidebar-width: 280px;
+    --admin-header-height: 72px;
+    
+    /* Admin Specific Colors */
+    --admin-primary: 211 100% 40%;
+    --admin-secondary: 35 100% 50%;
+    --admin-background: 0 0% 96%;
+    --admin-success: 160 84% 39%;
+    --admin-warning: 38 92% 50%;
+    --admin-danger: 0 84% 60%;
+    --admin-info: 217 91% 60%;
+  }
+
+  .dark {
+    --background: 210 50% 5%;
+    --foreground: 0 0% 100%;
+    
+    --card: 210 50% 8%;
+    --card-foreground: 0 0% 100%;
+    
+    --popover: 210 50% 8%;
+    --popover-foreground: 0 0% 100%;
+    
+    --primary: 35 100% 50%;
+    --primary-foreground: 210 100% 12%;
+    
+    --secondary: 210 50% 15%;
+    --secondary-foreground: 0 0% 100%;
+    
+    --muted: 210 50% 12%;
+    --muted-foreground: 210 20% 65%;
+
+    --success: 142 60% 40%;
+    --success-foreground: 0 0% 100%;
+    
+    --accent: 35 100% 50%;
+    --accent-foreground: 210 100% 12%;
+    
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 210 50% 15%;
+    --input: 210 50% 15%;
+    --ring: 35 100% 50%;
+    
+    --admin-background: 210 50% 5%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground antialiased selection:bg-accent selection:text-accent-foreground;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    line-height: 1.625;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    text-wrap: balance;
+    @apply tracking-tight;
+  }
+}
+
+@layer components {
+  .dashboard-card {
+    @apply bg-card border border-border rounded-2xl shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md;
+  }
+  .dashboard-header {
+    @apply text-2xl font-bold text-primary mb-6;
+  }
+  .admin-table-container {
+    @apply w-full overflow-auto rounded-xl border border-border bg-card;
+  }
+  .admin-table {
+    @apply w-full text-sm text-left;
+  }
+  .admin-table th {
+    @apply bg-muted/50 px-4 py-3 font-medium text-muted-foreground border-b border-border whitespace-nowrap;
+  }
+  .admin-table td {
+    @apply px-4 py-3 border-b border-border/50;
+  }
+  .admin-table tr:last-child td {
+    @apply border-b-0;
+  }
+  .admin-stat-card {
+    @apply relative overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
+  }
+}
+
+@layer utilities {
+  .section-padding {
+    @apply py-20 md:py-28;
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+  .animate-slide-up {
+    animation: slideUp 0.5s ease-out forwards;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
